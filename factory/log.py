@@ -8,7 +8,7 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 _SECRET_ENV = ("YT_CLIENT_SECRET", "YT_REFRESH_TOKEN", "GITHUB_MODELS_TOKEN", "GEMINI_API_KEY",
-               "GROQ_API_KEY", "GITHUB_TOKEN", "GH_TOKEN")
+               "GROQ_API_KEY", "GITHUB_TOKEN", "GH_TOKEN", "TELEGRAM_BOT_TOKEN")
 _TOKEN_RE = re.compile(r"(ya29\.[\w\-\.]+|1//[\w\-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_\w{20,}|AIza[\w\-]{30,}|gsk_\w{20,})")
 
 

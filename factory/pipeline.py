@@ -227,6 +227,12 @@ class Factory:
     def produce(self, vid: str) -> str:
         """Leva um vídeo até VALIDATED. Retorna o estado final."""
         v = self.db.video(vid)
+        if v["state"] in ("RENDERED", "VALIDATED") and v.get("video_path") and not Path(v["video_path"]).exists():
+            from factory.delivery.telegram import _find_file
+            kept = _find_file(v["video_path"])   # cópia guardada no release entre execuções
+            if kept is not None and kept.exists():
+                self.db.set_fields(vid, video_path=str(kept))
+                v = self.db.video(vid)
         if v["state"] in [s.value for s in LOCAL_STATES]:
             needed = v.get("video_path") if v["state"] in ("RENDERED", "VALIDATED") else v.get("audio_path")
             if not needed or not Path(needed).exists():
@@ -325,7 +331,11 @@ class Factory:
             rows = self.db.q(f"SELECT id, publish_at_utc, attempts, state FROM videos WHERE state IN "
                              f"({','.join('?' * len(ACTIVE))}) AND slot_time NOT LIKE 'test-%' "
                              f"ORDER BY publish_at_utc", *[s.value for s in ACTIVE])
+            from factory.youtube import client as yt
+            can_publish = yt.configured() and not self.cfg.dry_run
             for r in rows:
+                if r["state"] == State.VALIDATED.value and not can_publish:
+                    continue   # já aprovado; aguarda credenciais do YouTube (não re-renderiza à toa)
                 if not self.budget_left():
                     log.warning("Orçamento de tempo da execução esgotado; restante fica para a próxima")
                     break
@@ -359,8 +369,9 @@ class Factory:
                         log.error("LLM indisponível; interrompendo produção nesta execução")
                         break
             try:
-                from factory.delivery.telegram import deliver_due
+                from factory.delivery.telegram import deliver_due, release_manifest
                 self.summary["telegram_sent"] = deliver_due(self.db)
+                release_manifest(self.db, self.out_root)
             except Exception as e:
                 self.db.record_error(None, "telegram", e)
             self._maybe_metrics()

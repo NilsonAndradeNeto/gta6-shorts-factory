@@ -1,10 +1,11 @@
 name: factory
 
-# Execução agendada (sem servidor 24h). Horários em UTC = 23:17, 02:17, 05:17, 08:17, 11:17, 17:17 BRT.
-# Cada execução: pesquisa -> preenche slots das próximas 10h -> produz -> QA -> envia agendado -> confirma.
+# Execução agendada (sem servidor 24h). BRT: 23:17 (produz os 4 do dia seguinte), 02:17 e 05:17
+# (retentativas), 09:02 (entrega os 4 no Telegram), 11:17 e 17:17 (retentativas/confirmações).
 on:
   schedule:
-    - cron: "17 2,5,8,11,14,20 * * *"
+    - cron: "17 2,5,8,14,20 * * *"
+    - cron: "2 12 * * *"
   workflow_dispatch:
     inputs:
       dry_run:
@@ -13,8 +14,7 @@ on:
         default: false
 
 permissions:
-  contents: write   # gravar o snapshot do banco no branch 'state'
-  models: read      # GitHub Models (LLM gratuito) via GITHUB_TOKEN
+  contents: write   # snapshot do banco no branch 'state' + release temporário dos vídeos
 
 concurrency:
   group: factory
@@ -25,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 100
     env:
+      GH_TOKEN: ${{ github.token }}
+      FACTORY_PENDING_DIR: ${{ github.workspace }}/pending
       FACTORY_DATA_DIR: ${{ github.workspace }}/state/data
       FACTORY_LOG_DIR: ${{ github.workspace }}/logs
       HF_HUB_DISABLE_TELEMETRY: "1"
@@ -40,7 +42,10 @@ jobs:
           else
             echo "Branch state ainda não existe; começando do zero."
           fi
-          mkdir -p state/data logs
+          mkdir -p state/data logs pending
+          # vídeos aprovados aguardando a entrega das 9h (release privado usado como depósito temporário)
+          gh release download videos-pendentes --dir pending --pattern "*.mp4" --clobber 2>/dev/null || true
+          ls -la pending
 
       - uses: actions/setup-python@v5
         with:
@@ -62,7 +67,6 @@ jobs:
 
       - name: Rodar fábrica
         env:
-          GITHUB_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
@@ -72,6 +76,23 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           FACTORY_DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '1' || vars.FACTORY_DRY_RUN || '0' }}
         run: python -m factory.cli run
+
+      - name: Guardar vídeos aprovados até a entrega / limpar entregues
+        if: always()
+        run: |
+          gh release view videos-pendentes >/dev/null 2>&1 || \
+            gh release create videos-pendentes --title "Vídeos aguardando entrega" \
+              --notes "Depósito temporário automático: os MP4 ficam aqui só até a entrega das 9h." --latest=false
+          if [ -s output/release_upload.txt ]; then
+            while IFS= read -r f; do [ -f "$f" ] && gh release upload videos-pendentes "$f" --clobber; done < output/release_upload.txt
+          fi
+          if [ -s output/release_cleanup.txt ]; then
+            existing=$(gh release view videos-pendentes --json assets --jq '.assets[].name')
+            while IFS= read -r n; do
+              echo "$existing" | grep -qxF "$n" && gh release delete-asset videos-pendentes "$n" -y
+            done < output/release_cleanup.txt
+          fi
+          true
 
       - name: Persistir estado (snapshot único, sempre)
         if: always()

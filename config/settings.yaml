@@ -50,20 +50,19 @@ subtitles:
 
 llm:
   # Ordem de tentativa. Todos são endpoints compatíveis com OpenAI.
+  # GitHub Models foi descontinuado em 30/07/2026. Camadas gratuitas atuais (nov/2026):
+  # Gemini Flash-Lite ~500 req/dia; Groq ~1.000 req/dia. Uso da fábrica: ~40 req/dia.
+  # "model" pode ser uma lista: o primeiro que existir na conta é usado.
   providers:
-    - name: github
-      base_url: https://models.github.ai/inference
-      model: openai/gpt-4.1-mini
-      api_key_env: GITHUB_MODELS_TOKEN
     - name: gemini
       base_url: https://generativelanguage.googleapis.com/v1beta/openai
-      model: gemini-2.5-flash
+      model: [gemini-3.5-flash-lite, gemini-3.1-flash-lite, gemini-2.5-flash-lite]
       api_key_env: GEMINI_API_KEY
     - name: groq
       base_url: https://api.groq.com/openai/v1
-      model: llama-3.3-70b-versatile
+      model: [openai/gpt-oss-120b, llama-3.3-70b-versatile]
       api_key_env: GROQ_API_KEY
-  max_input_chars: 22000      # GitHub Models (free) limita ~8k tokens de entrada
+  max_input_chars: 22000
   temperature: 0.8
 
 research:
@@ -82,15 +81,16 @@ music:
 tiktok:
   # O TikTok não permite postagem automática pública por ferramenta própria (ver docs/LEGAL.md).
   # O vídeo + legenda chegam no Telegram logo após a aprovação, com o horário sugerido de postagem.
-  deliver_lead_hours: 12
+  deliver_time: "09:00"         # os 4 vídeos do dia chegam juntos no Telegram nesse horário (BRT)
   extra_hashtags: []
 
 automation:
   # Deve espelhar o cron de .github/workflows/factory.yml (UTC). Usado no painel.
-  # 23:17, 02:17, 05:17, 08:17, 11:17 e 17:17 (BRT): cada slot tem 2 a 4 oportunidades de produção
-  cron_hours_utc: [2, 5, 8, 11, 14, 20]
+  # 23:17, 02:17, 05:17 (produção do dia, com 2 retentativas), 09:02 (entrega no Telegram),
+  # 11:17 e 17:17 (retentativas/confirmações). Espelha .github/workflows/factory.yml.
+  cron_hours_utc: [2, 5, 8, 12, 14, 20]
   cron_minute: 17
-  produce_window_hours: 10      # produz slots que publicam nas próximas N horas
+  produce_window_hours: 23      # a execução das 23h produz todos os slots do dia seguinte
   min_lead_minutes: 40          # não inicia produção para slot a menos de N minutos
   max_attempts: 4
   run_time_budget_minutes: 70   # não inicia nova renderização após esse tempo de execução

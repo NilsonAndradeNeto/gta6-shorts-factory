@@ -49,12 +49,25 @@ class LLM:
         self.providers = []
         for p in settings().get("llm.providers", []):
             key = os.environ.get(p["api_key_env"], "").strip()
-            if p["name"] == "github" and not key:
-                key = os.environ.get("GITHUB_TOKEN", "").strip()
             if key:
-                self.providers.append({**p, "key": key})
+                models = p["model"] if isinstance(p["model"], list) else [p["model"]]
+                self.providers.append({**p, "key": key, "candidates": models, "model": None})
         self.max_chars = int(settings().get("llm.max_input_chars", 22000))
         self._disabled: set[str] = set()
+
+    def _resolve_model(self, p: dict[str, Any]) -> str:
+        """Escolhe o primeiro modelo configurado que a conta realmente oferece (nomes mudam com o tempo)."""
+        if p["model"]:
+            return p["model"]
+        try:
+            r = requests.get(f"{p['base_url'].rstrip('/')}/models", timeout=30,
+                             headers={"Authorization": f"Bearer {p['key']}"})
+            ids = {m["id"].split("/", 1)[-1] if m["id"].startswith("models/") else m["id"] for m in r.json().get("data", [])}
+            p["model"] = next((m for m in p["candidates"] if m in ids), p["candidates"][0])
+        except (requests.RequestException, ValueError, KeyError, TypeError):
+            p["model"] = p["candidates"][0]
+        log.info("LLM %s usando modelo %s", p["name"], p["model"])
+        return p["model"]
 
     @property
     def available(self) -> bool:
@@ -73,7 +86,7 @@ class LLM:
     def chat(self, system: str, user: str, *, purpose: str, temperature: float | None = None,
              json_mode: bool = True, max_tokens: int = 3000, images: list[bytes] | None = None) -> str:
         if not self.providers:
-            raise LLMError("Nenhum provedor LLM configurado (defina GITHUB_MODELS_TOKEN, GEMINI_API_KEY ou GROQ_API_KEY)")
+            raise LLMError("Nenhum provedor LLM configurado (defina GEMINI_API_KEY e/ou GROQ_API_KEY)")
         if len(system) + len(user) > self.max_chars:
             user = user[: max(2000, self.max_chars - len(system))]
             log.warning("Prompt truncado para %d caracteres (%s)", self.max_chars, purpose)
@@ -89,7 +102,7 @@ class LLM:
                     {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64," + base64.b64encode(b).decode(),
                                                         "detail": "low"}} for b in images]
             body: dict[str, Any] = {
-                "model": p["model"],
+                "model": self._resolve_model(p),
                 "messages": [{"role": "system", "content": system}, {"role": "user", "content": user_content}],
                 "temperature": temp,
                 "max_tokens": max_tokens,
@@ -109,7 +122,11 @@ class LLM:
                         continue
                     if r.status_code >= 400:
                         raise LLMError(f"{p['name']} HTTP {r.status_code}: {r.text[:300]}")
-                    content = r.json()["choices"][0]["message"]["content"] or ""
+                    try:
+                        content = r.json()["choices"][0]["message"]["content"] or ""
+                    except ValueError:
+                        raise LLMError(f"{p['name']}: resposta não é JSON da API ({r.headers.get('content-type')}: "
+                                       f"{r.text[:80]!r}); endpoint pode ter mudado") from None
                     self._log_usage(p["name"], p["model"], purpose, True, len(system) + len(user), len(content))
                     return content
                 except (requests.RequestException, KeyError, LLMError) as e:

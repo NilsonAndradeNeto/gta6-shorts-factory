@@ -41,7 +41,8 @@ VALIDATED → UPLOADED → SCHEDULED → PUBLISHED`, com `FAILED` (retomável), 
 | YouTube `videos.insert` | doc atual: 1 unidade no balde "Video Uploads", 100 chamadas/dia | 4/dia | OK |
 | YouTube — vídeos de projeto API não auditado | a referência atual de `videos.insert` diz que **não** ficam mais restritos a privado | — | O sistema detecta e alerta caso o vídeo fique preso como privado |
 | OAuth em modo "Testing" | refresh token expira em 7 dias | — | **Publique o app OAuth em "In production"** (passo 3) |
-| GitHub Models (LLM) | gratuito com rate limit por modelo; ~8k tokens de entrada por chamada | ~25–40 chamadas/dia | OK; Gemini/Groq gratuitos como reserva opcional |
+| LLM | GitHub Models foi **descontinuado em 30/07/2026**. Gemini Flash-Lite (camada grátis ~500 req/dia) + Groq (~1.000 req/dia) | ~40 chamadas/dia | OK com as duas chaves gratuitas |
+| TikTok | API só publica em **privado** sem auditoria, e as diretrizes vetam ferramentas para a própria conta | 4/dia | Entrega no Telegram às 09:00 → postagem em 1 toque |
 | Geração de vídeo realista por IA | não há opção gratuita sustentável em CPU de runner | — | **Não usado**: editor cinematográfico automatizado com material oficial |
 
 ## Impedimentos e decisões
