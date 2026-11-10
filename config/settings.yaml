@@ -1,0 +1,102 @@
+# Configuração principal da fábrica de Shorts GTA 6.
+# Segredos NUNCA ficam aqui — use variáveis de ambiente / GitHub Secrets (ver .env.example).
+
+channel:
+  language: pt-BR
+  timezone: America/Sao_Paulo
+  # Horários de publicação (Brasília). Configuráveis.
+  publish_slots: ["09:00", "12:30", "17:30", "21:00"]
+  videos_per_day: 4
+  # "private" + publishAt = agendamento nativo do YouTube.
+  # Use dry_run=true para renderizar sem enviar.
+  upload_privacy: private
+  category_id: "20"          # Gaming
+  made_for_kids: false
+  # Narração sintética de um narrador fictício (não imita pessoa real) e imagens oficiais não
+  # alteradas: pelas regras do YouTube não exige o rótulo de conteúdo alterado. Ajuste se mudar.
+  contains_synthetic_media: false
+  default_hashtags: ["#GTA6", "#GTAVI"]
+
+video:
+  width: 1080
+  height: 1920
+  fps: 30
+  min_seconds: 15
+  target_min_seconds: 25
+  target_max_seconds: 50
+  max_seconds: 59
+  crf: 20
+  preset: medium
+  # Selo OFICIAL/REPORTADO e crédito "Imagens: Rockstar Games" na tela (desligados a pedido do dono do canal;
+  # o status e o crédito continuam na descrição de cada vídeo).
+  show_badge: false
+  show_credit: false
+
+voice:
+  # Motor principal e reserva. "piper" é local/offline (licença MIT, sem cobrança).
+  # "edge" usa o serviço de leitura do Microsoft Edge: gratuito, porém NÃO oficial e sem garantia.
+  primary: piper
+  fallback: edge
+  piper_voice: pt_BR-faber-medium
+  edge_voice: pt-BR-AntonioNeural
+  speed: 1.08                # >1 = mais rápido
+  sentence_pause_ms: 140
+  target_lufs: -14
+
+subtitles:
+  whisper_model: small        # tiny|base|small — small é bom em PT no CPU
+  max_words_per_chunk: 3
+  min_alignment_ratio: 0.80   # % mínimo de palavras do roteiro reconhecidas no áudio
+
+llm:
+  # Ordem de tentativa. Todos são endpoints compatíveis com OpenAI.
+  providers:
+    - name: github
+      base_url: https://models.github.ai/inference
+      model: openai/gpt-4.1-mini
+      api_key_env: GITHUB_MODELS_TOKEN
+    - name: gemini
+      base_url: https://generativelanguage.googleapis.com/v1beta/openai
+      model: gemini-2.5-flash
+      api_key_env: GEMINI_API_KEY
+    - name: groq
+      base_url: https://api.groq.com/openai/v1
+      model: llama-3.3-70b-versatile
+      api_key_env: GROQ_API_KEY
+  max_input_chars: 22000      # GitHub Models (free) limita ~8k tokens de entrada
+  temperature: 0.8
+
+research:
+  max_article_age_days: 21
+  fetch_article_text: true
+  user_agent: "Mozilla/5.0 (compatible; gta6-shorts-research/1.0)"
+
+editorial:
+  min_topic_score: 45
+  similarity_block: 82        # rapidfuzz token_set_ratio contra pautas já usadas
+  evergreen_cooldown_days: 30
+
+music:
+  enabled: true               # trilha procedural gerada pelo próprio sistema (sem licença de terceiros)
+  bed_db: -24                 # volume da música relativo à narração
+tiktok:
+  # O TikTok não permite postagem automática pública por ferramenta própria (ver docs/LEGAL.md).
+  # O vídeo + legenda chegam no Telegram logo após a aprovação, com o horário sugerido de postagem.
+  deliver_lead_hours: 12
+  extra_hashtags: []
+
+automation:
+  # Deve espelhar o cron de .github/workflows/factory.yml (UTC). Usado no painel.
+  # 23:17, 02:17, 05:17, 08:17, 11:17 e 17:17 (BRT): cada slot tem 2 a 4 oportunidades de produção
+  cron_hours_utc: [2, 5, 8, 11, 14, 20]
+  cron_minute: 17
+  produce_window_hours: 10      # produz slots que publicam nas próximas N horas
+  min_lead_minutes: 40          # não inicia produção para slot a menos de N minutos
+  max_attempts: 4
+  run_time_budget_minutes: 70   # não inicia nova renderização após esse tempo de execução
+  tag_assets_per_run: 12
+
+paths:
+  data_dir: data
+  cache_dir: .cache
+  output_dir: output

@@ -1,0 +1,96 @@
+# Fontes monitoradas. tier define confiabilidade:
+#   official   -> pode CONFIRMAR fatos (Rockstar / Take-Two)
+#   press      -> REPORTA fatos (jornalismo especializado identificado)
+#   aggregator -> só descobre links; o status vem da fonte original
+#   community  -> apenas ideias/teorias, NUNCA confirma nada
+feeds:
+  - id: rockstar_newswire_gnews
+    name: Rockstar Newswire (via Google News)
+    url: "https://news.google.com/rss/search?q=site:rockstargames.com+%22Grand+Theft+Auto+VI%22&hl=en-US&gl=US&ceid=US:en"
+    tier: official
+    require_domain: rockstargames.com
+  - id: rockstar_youtube
+    name: Rockstar Games (YouTube oficial)
+    url: "https://www.youtube.com/feeds/videos.xml?user=RockstarGames"
+    tier: official
+    keyword_filter: true
+  - id: ign
+    name: IGN
+    url: "https://www.ign.com/rss/articles/feed"
+    tier: press
+    keyword_filter: true
+  - id: gamespot
+    name: GameSpot
+    url: "https://www.gamespot.com/feeds/news/"
+    tier: press
+    keyword_filter: true
+  - id: eurogamer
+    name: Eurogamer
+    url: "https://www.eurogamer.net/feed"
+    tier: press
+    keyword_filter: true
+  - id: vgc
+    name: Video Games Chronicle
+    url: "https://www.videogameschronicle.com/feed/"
+    tier: press
+    keyword_filter: true
+  - id: pcgamer
+    name: PC Gamer
+    url: "https://www.pcgamer.com/rss/"
+    tier: press
+    keyword_filter: true
+  - id: gamesradar
+    name: GamesRadar+
+    url: "https://www.gamesradar.com/feeds/all/"
+    tier: press
+    keyword_filter: true
+  - id: theverge
+    name: The Verge Games
+    url: "https://www.theverge.com/rss/games/index.xml"
+    tier: press
+    keyword_filter: true
+  - id: gnews_ptbr
+    name: Google News PT-BR
+    url: "https://news.google.com/rss/search?q=%22GTA+6%22+OR+%22GTA+VI%22&hl=pt-BR&gl=BR&ceid=BR:pt-419"
+    tier: aggregator
+  - id: reddit_gta6
+    name: r/GTA6 (comunidade)
+    url: "https://www.reddit.com/r/GTA6/top/.rss?t=day"
+    tier: community
+
+# Páginas oficiais usadas como evidência para pautas atemporais.
+official_pages:
+  - id: only_in_leonida
+    url: "https://www.rockstargames.com/VI/only-in-leonida"
+  - id: vi_home
+    url: "https://www.rockstargames.com/VI"
+
+# Domínios jornalísticos reconhecidos (para itens vindos de agregadores).
+press_domains:
+  - ign.com
+  - gamespot.com
+  - eurogamer.net
+  - videogameschronicle.com
+  - pcgamer.com
+  - gamesradar.com
+  - theverge.com
+  - polygon.com
+  - kotaku.com
+  - bloomberg.com
+  - reuters.com
+  - gamerant.com
+  - thegamer.com
+  - techtudo.com.br
+  - theenemy.com.br
+  - ign.com.br
+  - tecmundo.com.br
+  - voxel.com.br
+  - uol.com.br
+  - g1.globo.com
+  - adrenaline.com.br
+official_domains:
+  - rockstargames.com
+  - take2games.com
+  - youtube.com/@RockstarGames
+
+keywords: ["gta 6", "gta vi", "grand theft auto vi", "grand theft auto 6", "gta6", "leonida", "vice city", "lucia caminos", "jason duval"]
