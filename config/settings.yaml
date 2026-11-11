@@ -5,7 +5,7 @@ channel:
   language: pt-BR
   timezone: America/Sao_Paulo
   # Horários de publicação (Brasília). Configuráveis.
-  publish_slots: ["09:00", "12:30", "17:30", "21:00"]
+  publish_slots: ["09:00", "09:02", "09:04", "09:06"]   # tudo às 9h (2 min entre eles mantém a ordem)
   videos_per_day: 4
   # "private" + publishAt = agendamento nativo do YouTube.
   # Use dry_run=true para renderizar sem enviar.
@@ -84,7 +84,7 @@ music:
 longform:
   # Vídeo longo diário "Games Hoje" (16:9) publicado no YouTube. Não vai para o TikTok.
   enabled: true
-  publish_time: "19:00"
+  publish_time: "09:08"
   chapters: 9                   # ~9-10 min com abertura, vinhetas e encerramento
   min_chapters: 6
   min_minutes: 6

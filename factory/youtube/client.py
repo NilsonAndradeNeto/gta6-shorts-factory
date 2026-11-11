@@ -94,9 +94,10 @@ def upload(path: Path, meta: dict[str, Any], publish_at_utc: str | None) -> str:
         pa = datetime.fromisoformat(publish_at_utc)
         min_pa = datetime.now(timezone.utc) + timedelta(minutes=15)
         if pa < min_pa:
-            pa = min_pa
-        status["privacyStatus"] = "private"   # exigido pela API para agendar
-        status["publishAt"] = pa.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            status["privacyStatus"] = "public"    # horário já chegou/passou: publica na hora
+        else:
+            status["privacyStatus"] = "private"   # exigido pela API para agendar
+            status["publishAt"] = pa.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     body = {"snippet": {"title": meta["title"], "description": meta["description"], "tags": meta["tags"],
                         "categoryId": str(cfg.get("channel.category_id", "20")), "defaultLanguage": "pt-BR",
                         "defaultAudioLanguage": "pt-BR"},

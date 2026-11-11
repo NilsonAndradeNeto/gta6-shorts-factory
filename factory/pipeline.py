@@ -430,9 +430,9 @@ class Factory:
                 # vídeo do dia (ou aprovado ontem) que perdeu o horário: reagenda em vez de descartar
                 if pa < now + timedelta(minutes=15) and (slot_day >= today or
                                                          (r["state"] == State.VALIDATED.value and (today - slot_day).days <= 1)):
-                    new_pa = self.next_free_time()
+                    new_pa = datetime.now(timezone.utc)   # pronto e atrasado: publica na hora
                     self.db.set_fields(r["id"], publish_at_utc=new_pa.isoformat())
-                    self.db.event(f"horário perdido; reagendado para {new_pa.astimezone(BRT):%d/%m %H:%M}", r["id"])
+                    self.db.event(f"horário perdido; publicação imediata em {new_pa.astimezone(BRT):%d/%m %H:%M}", r["id"])
                 elif slot_day < today:
                     self.db.advance(r["id"], State.ABANDONED, "dia do slot passou sem vídeo aprovado")
                     continue
