@@ -450,7 +450,10 @@ class Factory:
                     from factory.youtube.client import QuotaExceeded
                     self.db.record_error(r["id"], "produce", e)
                     cur = self.db.video(r["id"])
-                    if cur["state"] not in (State.BLOCKED.value, State.UPLOADED.value, State.SCHEDULED.value):
+                    if isinstance(e, QuotaExceeded):
+                        # limite diário de uploads do canal: o vídeo continua aprovado e sai na próxima execução
+                        self.db.event("limite diário de uploads do YouTube atingido; vídeo aguarda o próximo dia", r["id"])
+                    elif cur["state"] not in (State.BLOCKED.value, State.UPLOADED.value, State.SCHEDULED.value):
                         self.db.advance(r["id"], State.FAILED, str(e)[:500], attempts=cur["attempts"] + 1,
                                         last_error=str(e)[:500])
                     self.summary["errors"].append(f"{r['id']}: {e}")
