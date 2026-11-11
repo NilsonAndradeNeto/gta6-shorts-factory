@@ -136,6 +136,8 @@ class DB:
         cols = {r[1] for r in self.conn.execute("PRAGMA table_info(videos)")}
         if "tiktok_sent_at" not in cols:
             self.conn.execute("ALTER TABLE videos ADD COLUMN tiktok_sent_at TEXT")
+        if "format" not in cols:
+            self.conn.execute("ALTER TABLE videos ADD COLUMN format TEXT NOT NULL DEFAULT 'short'")
 
     def close(self) -> None:
         self.conn.close()

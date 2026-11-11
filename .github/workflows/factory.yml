@@ -24,7 +24,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 100
+    timeout-minutes: 170
     env:
       GH_TOKEN: ${{ github.token }}
       FACTORY_PENDING_DIR: ${{ github.workspace }}/pending

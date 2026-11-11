@@ -81,6 +81,15 @@ editorial:
 music:
   enabled: true               # trilha procedural gerada pelo próprio sistema (sem licença de terceiros)
   bed_db: -24                 # volume da música relativo à narração
+longform:
+  # Vídeo longo diário "Games Hoje" (16:9) publicado no YouTube. Não vai para o TikTok.
+  enabled: true
+  publish_time: "19:00"
+  chapters: 9                   # ~9-10 min com abertura, vinhetas e encerramento
+  min_chapters: 6
+  min_minutes: 6
+  max_minutes: 14
+
 tiktok:
   # O TikTok não permite postagem automática pública por ferramenta própria (ver docs/LEGAL.md).
   # O vídeo + legenda chegam no Telegram logo após a aprovação, com o horário sugerido de postagem.
@@ -96,7 +105,7 @@ automation:
   produce_window_hours: 23      # a execução das 23h produz todos os slots do dia seguinte
   min_lead_minutes: 40          # não inicia produção para slot a menos de N minutos
   max_attempts: 4
-  run_time_budget_minutes: 70   # não inicia nova renderização após esse tempo de execução
+  run_time_budget_minutes: 120  # não inicia nova renderização após esse tempo (o vídeo longo leva ~25 min)
   tag_assets_per_run: 12
 
 paths:

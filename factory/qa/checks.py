@@ -41,8 +41,17 @@ def _ff_filter(path: Path, args: list[str]) -> str:
                           capture_output=True, text=True).stderr
 
 
-def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], align_ratio: float | None) -> dict[str, Any]:
+def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], align_ratio: float | None,
+              fmt: str = "short") -> dict[str, Any]:
     cfg = settings()
+    from factory.renderer.compositor import PROFILES
+    exp_w, exp_h = PROFILES[fmt]["W"], PROFILES[fmt]["H"]
+    if fmt == "long":
+        lim = (60 * float(cfg.get("longform.min_minutes", 7)), 60 * float(cfg.get("longform.max_minutes", 13)),
+               60 * float(cfg.get("longform.min_minutes", 7)), 60 * float(cfg.get("longform.max_minutes", 13)))
+    else:
+        lim = (float(cfg.get("video.min_seconds")), float(cfg.get("video.max_seconds")),
+               float(cfg.get("video.target_min_seconds")), float(cfg.get("video.target_max_seconds")) + 5)
     fails, warns, info = [], [], {}
     if not path.exists() or path.stat().st_size < 100_000:
         return {"passed": False, "fails": ["arquivo inexistente ou vazio"], "warns": [], "info": {}}
@@ -54,8 +63,8 @@ def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], a
     if not v:
         fails.append("sem trilha de vídeo")
     else:
-        if (int(v["width"]), int(v["height"])) != (int(cfg.get("video.width")), int(cfg.get("video.height"))):
-            fails.append(f"resolução {v['width']}x{v['height']} (esperado 1080x1920)")
+        if (int(v["width"]), int(v["height"])) != (exp_w, exp_h):
+            fails.append(f"resolução {v['width']}x{v['height']} (esperado {exp_w}x{exp_h})")
         if v["codec_name"] != "h264" or v.get("pix_fmt") != "yuv420p":
             fails.append(f"codec/pix_fmt incompatível: {v['codec_name']}/{v.get('pix_fmt')}")
         num, den = v["r_frame_rate"].split("/")
@@ -65,9 +74,9 @@ def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], a
         fails.append("sem áudio")
     elif a["codec_name"] != "aac":
         fails.append(f"áudio {a['codec_name']} (esperado aac)")
-    if not (float(cfg.get("video.min_seconds")) <= dur <= float(cfg.get("video.max_seconds"))):
+    if not (lim[0] <= dur <= lim[1]):
         fails.append(f"duração {dur:.1f}s fora do permitido")
-    elif not (float(cfg.get("video.target_min_seconds")) <= dur <= float(cfg.get("video.target_max_seconds")) + 5):
+    elif not (lim[2] <= dur <= lim[3]):
         warns.append(f"duração {dur:.1f}s fora da faixa preferida")
     # reprodutível do início ao fim
     dec = subprocess.run(["ffmpeg", "-v", "error", "-i", str(path), "-f", "null", "-"], capture_output=True, text=True)
@@ -103,7 +112,8 @@ def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], a
         fails.append("sem legendas")
     elif covered / max(speech, 0.1) < 0.85:
         fails.append(f"legendas cobrem só {covered / speech:.0%} da fala")
-    if any(len(c["words"]) > int(cfg.get("subtitles.max_words_per_chunk", 3)) for c in chunks):
+    max_words = 6 if fmt == "long" else int(cfg.get("subtitles.max_words_per_chunk", 3))
+    if any(len(c["words"]) > max_words for c in chunks):
         fails.append("legenda com palavras demais por bloco")
     info["align_ratio"] = align_ratio
     if align_ratio is None:
@@ -113,7 +123,7 @@ def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], a
     return {"passed": not fails, "fails": fails, "warns": warns, "info": info}
 
 
-def visual(path: Path, storyboard: dict[str, Any]) -> dict[str, Any]:
+def visual(path: Path, storyboard: dict[str, Any], fmt: str = "short") -> dict[str, Any]:
     fails, warns = [], []
     cap = cv2.VideoCapture(str(path))
     fps = cap.get(cv2.CAP_PROP_FPS) or 30
@@ -144,9 +154,10 @@ def visual(path: Path, storyboard: dict[str, Any]) -> dict[str, Any]:
     cap.release()
     scenes = storyboard["scenes"]
     durs = [s["end"] - s["start"] for s in scenes]
-    if durs and max(durs) > 4.6:
+    max_scene, per_cut = (7.5, 7.0) if fmt == "long" else (4.6, 4.0)
+    if durs and max(durs) > max_scene:
         fails.append(f"cena longa demais ({max(durs):.1f}s): ritmo lento")
-    if len(scenes) < storyboard["duration"] / 4.0:
+    if len(scenes) < storyboard["duration"] / per_cut:
         fails.append("poucos cortes para a duração")
     return {"passed": not fails, "fails": sorted(set(fails))[:10], "warns": warns}
 

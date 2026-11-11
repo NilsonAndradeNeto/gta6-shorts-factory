@@ -35,7 +35,7 @@ THEORY = re.compile(r"\b(teoria|teorias|especula|f[ãa]s acreditam|comunidade|hi
 SAFE_NUMBERS = {"6", "1", "2", "3", "4", "5", "0"}
 NUM_WORDS = {"um": "1", "uma": "1", "dois": "2", "duas": "2", "três": "3", "tres": "3", "quatro": "4", "cinco": "5",
              "seis": "6", "sete": "7", "oito": "8", "nove": "9", "dez": "10", "trinta": "30", "sessenta": "60",
-             "cem": "100", "mil": "1000"}
+             "cem": "100"}   # "mil" fica de fora: aparece em anos por extenso ("dois mil e vinte e seis")
 
 IMAGINATION = re.compile(r"\b(imagina|imagine|e se|já pensou|ja pensou|na minha cabeça|vamos supor|supondo|"
                          r"na imaginação|fingindo|de mentirinha|tipo assim)", re.I)
@@ -61,7 +61,8 @@ Responda JSON: {"claims":[{"i":0,"verdict":"supported","why":"..."}],
 COMMON_NAMES = {norm(x) for x in (
     "GTA", "Rockstar", "Rockstar Games", "Take-Two", "Sony", "Microsoft", "Nintendo", "PlayStation", "Xbox", "Steam",
     "Epic", "PC", "YouTube", "TikTok", "Instagram", "Twitch", "Discord", "Brasil", "Estados Unidos", "Miami", "Flórida",
-    "Florida", "Vice City", "Leonida", "Liberty City", "Los Santos", "San Andreas", "Grand Theft Auto", "Google")}
+    "Florida", "Vice City", "Leonida", "Liberty City", "Los Santos", "San Andreas", "Grand Theft Auto", "Google",
+    "Deus", "Meu Deus", "Nossa Senhora", "Jesus", "Greenwich", "GMT", "Japão", "Europa", "São Paulo", "Rio de Janeiro")}
 
 
 def _norm_quote(s: str) -> str:
@@ -94,7 +95,14 @@ def programmatic_check(script: dict[str, Any], evidence: list[dict[str, Any]]) -
     names = known_names() | COMMON_NAMES
     for e in evidence:   # nomes dos veículos/fontes (ex.: "PlayStation Blog") podem ser citados na narração
         names |= {norm(e["source"])} | {w for w in norm(e["source"]).split() if len(w) > 2}
-    attributed: set[str] = set()   # evidências cuja fonte já foi citada na narração (atribuição vale para o resto)
+    # evidências cuja fonte é citada em QUALQUER ponto do roteiro (a atribuição vale para todo o texto)
+    attributed: set[str] = set()
+    for seg in script.get("segments", []):
+        t = seg.get("text", "")
+        for c in seg.get("claims", []) or []:
+            e = ev_by_id.get(str(c.get("evidence", "")).strip())
+            if e and (ATTRIBUTION.search(t) or (norm(e["source"]) and norm(e["source"]).split()[0] in norm(t))):
+                attributed.add(e["id"])
 
     for si, seg in enumerate(script.get("segments", [])):
         text = seg.get("text", "")

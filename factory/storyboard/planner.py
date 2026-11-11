@@ -77,11 +77,12 @@ def _recent_asset_use(db: DB, n_videos: int = 10) -> dict[str, int]:
     return {r["asset_id"]: r["c"] for r in rows}
 
 
-def _split_sentence(sent: dict[str, Any], words: list[dict[str, Any]]) -> list[tuple[float, float, str]]:
+def _split_sentence(sent: dict[str, Any], words: list[dict[str, Any]], max_scene: float = MAX_SCENE,
+                    target: float = 2.6) -> list[tuple[float, float, str]]:
     dur = sent["end"] - sent["start"]
-    if dur <= MAX_SCENE or not words:
+    if dur <= max_scene or not words:
         return [(sent["start"], sent["end"], sent["text"])]
-    n = max(2, round(dur / 2.6))
+    n = max(2, round(dur / target))
     target = dur / n
     parts, cur, cur_start = [], [], sent["start"]
     for w in words:
@@ -210,17 +211,22 @@ class Matcher:
 
 
 def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], words: list[dict[str, Any]],
-         topic: dict[str, Any], workdir: Path) -> dict[str, Any]:
-    m = Matcher(db, topic, workdir, seed=video_id)
+         topic: dict[str, Any], workdir: Path, max_scene: float = MAX_SCENE, target_scene: float = 2.6,
+         matcher: "Matcher | None" = None, record_usage: bool = True, prefer_images: bool = False) -> dict[str, Any]:
+    m = matcher or Matcher(db, topic, workdir, seed=video_id)
     scenes: list[dict[str, Any]] = []
     eff_i = 0
     seg_first_scene: set[int] = set()
     for si_idx, sent in enumerate(voice["sentences"]):
         seg = script["segments"][sent["seg"]]
-        vis = seg.get("visual") or {}
+        vis = seg.get("visual") if isinstance(seg.get("visual"), dict) else {}
         sent_ents = find_entities(sent["text"])
         seg_ents = []
-        for e in (vis.get("entities") or []):
+        for e in (vis.get("entities") or []) if isinstance(vis.get("entities"), list) else []:
+            if isinstance(e, dict):   # o LLM às vezes devolve {"id": ...} / {"name": ...}
+                e = e.get("id") or e.get("name") or ""
+            if not isinstance(e, str) or not e:
+                continue
             if e in BY_ID:
                 seg_ents.append(e)
             elif str(e).startswith("game:") and len(str(e)) > 6:
@@ -234,7 +240,7 @@ def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], w
         if "jason_lucia" in ents and ents[0] != "jason_lucia" and {"jason", "lucia"} <= set(ents):
             ents = ["jason_lucia"] + [e for e in ents if e not in ("jason", "lucia", "jason_lucia")]
         sw = [w for w in words if sent["start"] - 0.01 <= w["start"] < sent["end"] + 0.01]
-        parts = _split_sentence(sent, sw)
+        parts = _split_sentence(sent, sw, max_scene, target_scene)
         for pi, (st, en, ptxt) in enumerate(parts):
             if si_idx == 0 and pi == 0:
                 st = 0.0
@@ -243,7 +249,8 @@ def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], w
             has_number = bool(num_label)
             asset, conf, reason = m.best(ents, vis.get("intent", "") + " " + ptxt, role, allow_video=True)
             stype = "image"
-            if asset is None or (not ents and has_number and conf < 0.8):
+            # vídeo longo: card tipográfico só quando não há NENHUMA imagem do assunto (o dado vai por cima da imagem)
+            if asset is None or (not prefer_images and not ents and has_number and conf < 0.8):
                 # card tipográfico honesto: destaca o dado sobre imagem oficial desfocada
                 bg, _, _ = m.best([], "capa oficial", "cta", allow_video=False)
                 if bg:
@@ -260,6 +267,8 @@ def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], w
                 seg_first_scene.add(sent["seg"])
             if stype == "title_card":
                 text_on = num_label or text_on   # sem número, só repete o título no 1º card do segmento
+            elif prefer_images and num_label and not text_on:
+                text_on = num_label              # vídeo longo: o dado aparece em destaque sobre a imagem oficial
             orient = (asset or {}).get("orientation", "landscape")
             effects = EFFECTS_PORT if orient == "portrait" else EFFECTS_LAND
             effect = effects[eff_i % len(effects)]
@@ -305,7 +314,7 @@ def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], w
         scenes[-1]["end"] = round(voice["duration"], 3)
         for a, b in zip(scenes, scenes[1:]):
             a["end"] = b["start"]
-    for s in scenes:
+    for s in scenes if record_usage else []:
         if s["asset_id"]:
             db.x("INSERT OR IGNORE INTO assets_used(video_id,asset_id,start,end) VALUES (?,?,?,?)",
                  video_id, s["asset_id"], s["start"], s["end"])

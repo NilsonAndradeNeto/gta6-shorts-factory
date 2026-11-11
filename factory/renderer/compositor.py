@@ -27,7 +27,22 @@ log = get_logger("render")
 
 BADGE_COLORS = {"OFICIAL": (46, 204, 113), "REPORTADO": (255, 176, 32), "TEORIA": (186, 104, 255)}
 # Área segura (px) para 1080x1920
-SAFE = {"caption_cy": 1240, "caption_cx": 500, "caption_maxw": 880, "headline_y": 330, "top_y": 150}
+# Perfis de layout. "short" = 9:16 (área segura dos Shorts/TikTok); "long" = 16:9 para vídeos longos do YouTube.
+PROFILES = {
+    "short": {"W": 1080, "H": 1920, "caption_cy": 1240, "caption_cx": 500, "caption_maxw": 880, "caption_size": 76,
+              "headline_y": 330, "top_y": 150, "card_box": (1010, 1300), "card_cy": 820, "title_cy": 800,
+              "title_maxw": 960, "headline_maxw": 880, "title_size": 170, "headline_size": 88, "vertical": True},
+    "long": {"W": 1920, "H": 1080, "caption_cy": 965, "caption_cx": 960, "caption_maxw": 1500, "caption_size": 56,
+             "headline_y": 70, "top_y": 40, "card_box": (1500, 900), "card_cy": 520, "title_cy": 500,
+             "title_maxw": 1600, "headline_maxw": 1300, "title_size": 150, "headline_size": 70, "vertical": False},
+}
+SAFE: dict[str, Any] = dict(PROFILES["short"])
+
+
+def use_profile(name: str) -> dict[str, Any]:
+    SAFE.clear()
+    SAFE.update(PROFILES[name])
+    return SAFE
 
 
 def imread(path: str) -> np.ndarray:
@@ -61,7 +76,10 @@ class ImageScene:
         layout = scene.get("layout", "auto")
         if layout == "auto":
             layout = "card" if self.effect in ("zoom_in", "zoom_out") else "fullbleed"
-        self.card = landscape and layout == "card" and scene.get("type") != "title_card"
+        if SAFE["vertical"]:
+            self.card = landscape and layout == "card" and scene.get("type") != "title_card"
+        else:   # 16:9: imagens largas em tela cheia; verticais/quadradas viram card sobre fundo desfocado
+            self.card = (w / h) < 1.5 and scene.get("type") != "title_card"
         self.focus_known = bool(scene.get("focus_known"))
         if scene.get("type") == "title_card":
             self.effect = "zoom_in"
@@ -74,9 +92,11 @@ class ImageScene:
             bg = cv2.resize(small, (int(w * s), int(h * s)), interpolation=cv2.INTER_LINEAR)
             y0, x0 = (bg.shape[0] - H) // 2, (bg.shape[1] - W) // 2
             self.bg = (bg[y0:y0 + H, x0:x0 + W].astype(np.float32) * 0.42).astype(np.uint8)
-            self.cw = W - 70
-            self.ch = int(self.cw * h / w)
-            self.cy = 820 - self.ch // 2
+            bw, bh = SAFE["card_box"]
+            fit = min(bw / w, bh / h)
+            self.cw, self.ch = int(w * fit) // 2 * 2, int(h * fit) // 2 * 2
+            self.cx0 = (W - self.cw) // 2
+            self.cy = SAFE["card_cy"] - self.ch // 2
             self.src = cv2.resize(img, (int(self.cw * self.zmax), int(self.ch * self.zmax)), interpolation=cv2.INTER_AREA)
             mask = np.zeros((self.ch, self.cw), np.uint8)
             cv2.rectangle(mask, (28, 0), (self.cw - 29, self.ch - 1), 255, -1)
@@ -86,7 +106,7 @@ class ImageScene:
             self.mask = (mask.astype(np.float32) / 255.0)[:, :, None]
             # sombra do card no fundo
             sh = np.zeros((H, W), np.float32)
-            sh[self.cy + 18:self.cy + self.ch + 18, 35 + 10:35 + self.cw + 10] = 1
+            sh[self.cy + 18:self.cy + self.ch + 18, self.cx0 + 10:self.cx0 + self.cw + 10] = 1
             sh = cv2.GaussianBlur(sh, (0, 0), 18)[:, :, None]
             self.bg = (self.bg.astype(np.float32) * (1 - 0.6 * sh)).astype(np.uint8)
             self.fx, self.fy = fx, fy
@@ -134,8 +154,9 @@ class ImageScene:
             k = self.cw / cw
             M = np.float32([[k, 0, -k * (cx - cw / 2)], [0, k, -k * (cy - ch / 2)]])
             card = cv2.warpAffine(self.src, M, (self.cw, self.ch), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
-            roi = out[self.cy:self.cy + self.ch, 35:35 + self.cw].astype(np.float32)
-            out[self.cy:self.cy + self.ch, 35:35 + self.cw] = (card * self.mask + roi * (1 - self.mask)).astype(np.uint8)
+            x0 = self.cx0
+            roi = out[self.cy:self.cy + self.ch, x0:x0 + self.cw].astype(np.float32)
+            out[self.cy:self.cy + self.ch, x0:x0 + self.cw] = (card * self.mask + roi * (1 - self.mask)).astype(np.uint8)
             return out
         W, H = self.W, self.H
         sw, sh = self.src.shape[1], self.src.shape[0]
@@ -167,7 +188,11 @@ class VideoScene:
         self.ow, self.oh = int(W * 1.06) // 2 * 2, int(H * 1.06) // 2 * 2
         length = max(0.2, clip["out"] - clip["in"])
         need = min(length, self.dur)
-        vf = f"crop=ih*9/16:ih:(iw-ih*9/16)/2:0,scale={self.ow}:{self.oh}:flags=lanczos,fps={fps}"
+        if SAFE["vertical"]:
+            vf = f"crop=ih*9/16:ih:(iw-ih*9/16)/2:0,scale={self.ow}:{self.oh}:flags=lanczos,fps={fps}"
+        else:
+            vf = (f"scale={self.ow}:{self.oh}:force_original_aspect_ratio=increase:flags=lanczos,"
+                  f"crop={self.ow}:{self.oh},fps={fps}")
         cmd = ["ffmpeg", "-v", "error", "-ss", f"{clip['in']:.3f}", "-t", f"{need + 0.05:.3f}", "-i", src,
                "-vf", vf, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"]
         raw = subprocess.run(cmd, capture_output=True, check=True).stdout
@@ -206,7 +231,7 @@ class CaptionLayer:
         if key in self.cache:
             return self.cache[key]
         words = [w["text"].upper() for w in self.chunks[ci]["words"]]
-        out = T.caption_rgba(words, active, 76, SAFE["caption_maxw"])
+        out = T.caption_rgba(words, active, SAFE["caption_size"], SAFE["caption_maxw"])
         self.cache[key] = out
         return out
 
@@ -252,9 +277,11 @@ def _apply_transition(kind: str, cur: np.ndarray, prev: np.ndarray | None, p: fl
     return cur
 
 
-def render(storyboard: dict[str, Any], chunks: list[dict[str, Any]], audio_path: str, out_path: Path) -> Path:
+def render(storyboard: dict[str, Any], chunks: list[dict[str, Any]], audio_path: str, out_path: Path,
+           profile: str = "short") -> Path:
     cfg = settings()
-    W, H, FPS = int(cfg.get("video.width")), int(cfg.get("video.height")), int(cfg.get("video.fps"))
+    prof = use_profile(profile)
+    W, H, FPS = prof["W"], prof["H"], int(cfg.get("video.fps"))
     duration = float(storyboard["duration"])
     nframes = int(math.ceil(duration * FPS))
     scenes = storyboard["scenes"]
@@ -303,17 +330,17 @@ def render(storyboard: dict[str, Any], chunks: list[dict[str, Any]], audio_path:
             if sc.get("text"):
                 if si not in headline_cache:
                     if sc["type"] == "title_card":
-                        headline_cache[si] = T.text_rgba(sc["text"], "anton", 170, fill=T.YELLOW, stroke=6, shadow=10)
+                        headline_cache[si] = T.text_rgba(sc["text"], "anton", SAFE["title_size"], fill=T.YELLOW, stroke=6, shadow=10)
                     else:
-                        headline_cache[si] = T.boxed_text(sc["text"], "anton", 88, rotate=-2.0)
-                    maxw = 960 if sc["type"] == "title_card" else 880   # respeita coluna de botões
+                        headline_cache[si] = T.boxed_text(sc["text"], "anton", SAFE["headline_size"], rotate=-2.0)
+                    maxw = SAFE["title_maxw"] if sc["type"] == "title_card" else SAFE["headline_maxw"]   # área segura
                     if headline_cache[si].shape[1] > maxw:
                         headline_cache[si] = T.scale_rgba(headline_cache[si], maxw / headline_cache[si].shape[1])
                 img = headline_cache[si]
                 pop = ease_out_back(lt / 0.28)
                 fade = min(1.0, (sc["end"] - t) / 0.15)
                 im2 = T.scale_rgba(img, 0.6 + 0.4 * pop)
-                cy = 800 if sc["type"] == "title_card" else SAFE["headline_y"] + img.shape[0] // 2
+                cy = SAFE["title_cy"] if sc["type"] == "title_card" else SAFE["headline_y"] + img.shape[0] // 2
                 T.blend(fr, im2, W // 2 - im2.shape[1] // 2, cy - im2.shape[0] // 2, opacity=fade)
             if badge is not None:
                 T.blend(fr, badge, 48, SAFE["top_y"])

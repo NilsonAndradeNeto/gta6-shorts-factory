@@ -36,5 +36,15 @@ def domain_of(url: str) -> str:
 
 def numbers_in(s: str) -> set[str]:
     """Números/dados relevantes num texto (anos, valores, datas), normalizados."""
-    s2 = s.replace(".", "").replace(",", ".")
-    return {n.rstrip(".") for n in re.findall(r"\d+(?:\.\d+)?", s2)}
+    out: set[str] = set()
+    for tok in re.findall(r"\d[\d.,]*\d|\d", s):
+        # "1.500" (pt, milhar) e "5.2" (en, decimal) / "5,2" (pt, decimal) e "1,500" (en, milhar):
+        # guarda todas as leituras para comparar textos em idiomas diferentes
+        for v in (tok.replace(".", "").replace(",", "."), tok.replace(",", ""), tok.replace(",", ".")):
+            try:
+                f = float(v) if v.count(".") <= 1 else None
+            except ValueError:
+                f = None
+            if f is not None:
+                out.add(str(int(f)) if f.is_integer() else str(f))
+    return out

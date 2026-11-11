@@ -130,6 +130,18 @@ def upload(path: Path, meta: dict[str, Any], publish_at_utc: str | None) -> str:
     return response["id"]
 
 
+def set_thumbnail(video_id: str, path: Path) -> bool:
+    """Thumbnail personalizada (exige canal verificado por telefone; falha não impede a publicação)."""
+    from googleapiclient.errors import HttpError
+    from googleapiclient.http import MediaFileUpload
+    try:
+        service().thumbnails().set(videoId=video_id, media_body=MediaFileUpload(str(path), mimetype="image/jpeg")).execute()
+        return True
+    except HttpError as e:
+        log.warning("Thumbnail não enviada (canal precisa estar verificado?): %s", e)
+        return False
+
+
 def get_status(video_id: str) -> dict[str, Any] | None:
     res = service().videos().list(part="status,processingDetails,snippet", id=video_id).execute()
     items = res.get("items", [])

@@ -81,3 +81,20 @@ def test_humor_shape_rules():
     assert validate_shape(base, []) == []
     no_fact = {**base, "segments": [dict(s, tipo="humor") for s in base["segments"]]}
     assert any("pelo menos 2 segmentos" in p for p in validate_shape(no_fact, []))
+
+
+def test_numbers_across_languages_and_years():
+    from factory.textutil import numbers_in
+    assert "5.2" in numbers_in("vendeu 5,2 milhões") and "5.2" in numbers_in("sold 5.2 million")
+    assert "1500" in numbers_in("1.500 pedidos") and "1500" in numbers_in("1,500 orders")
+    from factory.verification.factcheck import _numbers_pt
+    assert "1000" not in _numbers_pt("em novembro de dois mil e vinte e seis")
+
+
+def test_attribution_anywhere_in_script(evidence):
+    q = "GTA 6 will run at 30 frames per second on all consoles"
+    s = {"segments": [
+        {"tipo": "fato", "text": "Meu Deus, GTA 6 vai rodar a 30 FPS!", "claims": [{"evidence": "E2", "quote": q, "status": "REPORTADO"}]},
+        {"tipo": "fato", "text": "Segundo a IGN, isso vale em todos os consoles.", "claims": [{"evidence": "E2", "quote": q, "status": "REPORTADO"}]},
+    ], "title": "t", "confirmation": "REPORTADO"}
+    assert programmatic_check(s, evidence) == []

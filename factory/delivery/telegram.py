@@ -102,6 +102,7 @@ def deliver_due(db: DB, now: datetime | None = None) -> int:
     today = now_brt.date().isoformat()
     rows = db.q(f"SELECT id, publish_at_utc, video_path, metadata, youtube_url FROM videos WHERE tiktok_sent_at IS NULL "
                 f"AND state IN ({','.join('?' * len(APPROVED))}) AND slot_date=? AND slot_time NOT LIKE 'test-%' "
+                f"AND COALESCE(format,'short')='short' "
                 f"ORDER BY slot_time", *APPROVED, today)
     sent = 0
     for i, r in enumerate(rows):
@@ -129,7 +130,7 @@ def release_manifest(db: DB, out_dir: Path) -> tuple[list[str], list[str]]:
     today = datetime.now(BRT).date().isoformat()
     upload, cleanup = [], []
     for r in db.q(f"SELECT video_path, tiktok_sent_at, slot_date, state FROM videos WHERE video_path IS NOT NULL "
-                  f"AND slot_time NOT LIKE 'test-%'"):
+                  f"AND slot_time NOT LIKE 'test-%' AND COALESCE(format,'short')='short'"):
         name = Path(r["video_path"]).name
         if r["tiktok_sent_at"] or r["slot_date"] < today or r["state"] not in APPROVED:
             cleanup.append(name)

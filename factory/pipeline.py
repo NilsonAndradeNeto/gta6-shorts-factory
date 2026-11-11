@@ -242,9 +242,14 @@ class Factory:
         if v["state"] == State.FAILED.value:
             back = State.SCRIPTED if v.get("script") else State.VERIFIED
             self.db.advance(vid, back, "nova tentativa após falha")
-        steps = {State.VERIFIED.value: self.step_script, State.SCRIPTED.value: self.step_audio,
-                 State.AUDIO_READY.value: self.step_assets, State.ASSETS_READY.value: self.step_render,
-                 State.RENDERED.value: self.step_qa}
+        if v.get("format") == "long":
+            steps = {State.VERIFIED.value: self.long_script, State.SCRIPTED.value: self.long_audio,
+                     State.AUDIO_READY.value: self.long_assets, State.ASSETS_READY.value: self.long_render,
+                     State.RENDERED.value: self.long_qa}
+        else:
+            steps = {State.VERIFIED.value: self.step_script, State.SCRIPTED.value: self.step_audio,
+                     State.AUDIO_READY.value: self.step_assets, State.ASSETS_READY.value: self.step_render,
+                     State.RENDERED.value: self.step_qa}
         for _ in range(12):
             v = self.db.video(vid)
             fn = steps.get(v["state"])
@@ -252,6 +257,63 @@ class Factory:
                 return v["state"]
             fn(v)
         return self.db.video(vid)["state"]
+
+    # ------------------------------------------------------------------ vídeo longo (16:9)
+    def long_script(self, v: dict[str, Any]) -> None:
+        from factory.longform import write_episode
+        script = write_episode(self.db, self.llm)
+        self.db.advance(v["id"], State.SCRIPTED, f"episódio com {len(script['chapters'])} capítulos", script=script,
+                        hook_style=script["hook_style"], angle=script["angle"])
+
+    def long_audio(self, v: dict[str, Any]) -> None:
+        from factory.longform import synthesize_episode
+        voice = synthesize_episode(v["script"], self._work(v["id"]) / "voice")
+        self.db.advance(v["id"], State.AUDIO_READY, f"narração {voice['duration']:.0f}s", audio_path=voice["wav"],
+                        storyboard={"voice": voice})
+
+    def long_assets(self, v: dict[str, Any]) -> None:
+        from factory.longform import plan_episode
+        work = v["storyboard"]
+        self.db.x("DELETE FROM assets_used WHERE video_id=?", v["id"])
+        plan_ = plan_episode(self.db, v["id"], v["script"], work["voice"], self._work(v["id"]) / "voice")
+        work.update(plan={k: plan_[k] for k in plan_ if k != "chunks"}, chunks=plan_["chunks"],
+                    align_ratio=plan_["align_ratio"])
+        self.db.advance(v["id"], State.ASSETS_READY, f"{len(plan_['scenes'])} cenas", storyboard=work)
+
+    def long_render(self, v: dict[str, Any]) -> None:
+        from factory.longform import episode_metadata, make_thumbnail
+        from factory.renderer.audio import mix
+        from factory.renderer.compositor import render
+        work, wd = v["storyboard"], self._work(v["id"])
+        meta = episode_metadata(v["script"], work["voice"], work["plan"], self.db, v["id"])
+        mixed = mix(work["voice"]["wav"], work["plan"], work["voice"]["duration"], wd, v["id"])
+        out = wd / f"{v['slot_date']}_LONG_{v['id']}.mp4"
+        render(work["plan"], work["chunks"], str(mixed), out, profile="long")
+        thumb = make_thumbnail(v["script"], work["plan"], wd / "thumbnail.jpg")
+        meta["thumbnail"] = str(thumb) if thumb else None
+        self.db.advance(v["id"], State.RENDERED, out.name, video_path=str(out), file_sha256=sha256_file(out),
+                        metadata=meta, duration=work["voice"]["duration"])
+
+    def long_qa(self, v: dict[str, Any]) -> None:
+        from factory.assets.catalog import ALLOWED_LICENSE_PREFIXES
+        from factory.qa.checks import technical, visual
+        work, path = v["storyboard"], Path(v["video_path"])
+        tech = technical(path, work["voice"], work["chunks"], work.get("align_ratio"), fmt="long")
+        vis = visual(path, work["plan"], fmt="long")
+        edi_fails = []
+        if not all(c.get("factcheck", {}).get("passed") for c in v["script"]["chapters"]):
+            edi_fails.append("capítulo sem checagem factual aprovada")
+        for s in work["plan"]["scenes"]:
+            if s.get("license") and not s["license"].startswith(ALLOWED_LICENSE_PREFIXES):
+                edi_fails.append(f"cena {s['i']} com licença não permitida")
+        if work["plan"]["avg_confidence"] < 0.55:
+            edi_fails.append(f"correspondência visual média baixa ({work['plan']['avg_confidence']})")
+        qa = {"technical": tech, "visual": vis, "editorial": {"passed": not edi_fails, "fails": edi_fails, "warns": []}}
+        if tech["passed"] and vis["passed"] and not edi_fails:
+            self.db.advance(v["id"], State.VALIDATED, "QA aprovado (vídeo longo)", qa=qa)
+            return
+        self.db.set_fields(v["id"], qa=qa)
+        raise RuntimeError("QA do vídeo longo reprovado: " + "; ".join((tech["fails"] + vis["fails"] + edi_fails)[:4]))
 
     # ------------------------------------------------------------------ YouTube
     def publish(self, vid: str) -> str:
@@ -271,8 +333,12 @@ class Factory:
                             youtube_id=existing, youtube_url=f"https://youtube.com/shorts/{existing}")
         else:
             ytid = yt.upload(Path(v["video_path"]), v["metadata"], v["publish_at_utc"])
+            is_long = v.get("format") == "long"
             self.db.advance(vid, State.UPLOADED, "upload concluído", youtube_id=ytid,
-                            youtube_url=f"https://youtube.com/shorts/{ytid}")
+                            youtube_url=(f"https://youtu.be/{ytid}" if is_long else f"https://youtube.com/shorts/{ytid}"))
+            thumb = (v.get("metadata") or {}).get("thumbnail")
+            if is_long and thumb and Path(thumb).exists():
+                yt.set_thumbnail(ytid, Path(thumb))
         self.summary["uploaded"].append(vid)
         return self.confirm(vid)
 
@@ -297,6 +363,17 @@ class Factory:
         if st["privacyStatus"] == "private" and not st.get("publishAt"):
             self.db.event("ATENÇÃO: vídeo ficou privado sem agendamento (projeto da API ainda sem auditoria?)", vid)
         return v["state"]
+
+    def next_free_time(self, gap_minutes: int = 75) -> datetime:
+        """Próximo horário livre para publicar (>= agora+20 min e afastado dos vídeos já agendados)."""
+        t = datetime.now(timezone.utc) + timedelta(minutes=20)
+        taken = sorted(datetime.fromisoformat(r["publish_at_utc"]) for r in self.db.q(
+            "SELECT publish_at_utc FROM videos WHERE state NOT IN ('ABANDONED','BLOCKED') AND publish_at_utc IS NOT NULL "
+            "AND COALESCE(format,'short')='short'"))
+        for x in taken:
+            if abs((x - t).total_seconds()) < gap_minutes * 60:
+                t = x + timedelta(minutes=gap_minutes)
+        return t.replace(microsecond=0)
 
     def check_published(self) -> None:
         from factory.youtube import client as yt
@@ -326,6 +403,13 @@ class Factory:
                 except Exception as e:
                     self.db.record_error(None, "tagger", e)
             self.summary["new_slots"] = self.plan_slots()
+            try:
+                from factory.longform import ensure_slot
+                long_vid = ensure_slot(self.db)
+                if long_vid:
+                    self.summary["new_slots"].append(long_vid)
+            except Exception as e:
+                self.db.record_error(None, "longform_slot", e)
             self.check_published()
             max_att = int(self.cfg.get("automation.max_attempts", 4))
             now = datetime.now(timezone.utc)
@@ -342,11 +426,15 @@ class Factory:
                     break
                 pa = datetime.fromisoformat(r["publish_at_utc"])
                 slot_day = pa.astimezone(BRT).date()
-                late_for_youtube = can_publish and now > pa + timedelta(minutes=90)
-                # sem YouTube, o vídeo ainda serve ao TikTok durante o próprio dia
-                late_for_tiktok = slot_day < datetime.now(BRT).date()
-                if late_for_youtube or late_for_tiktok:
-                    self.db.advance(r["id"], State.ABANDONED, "horário do slot passou sem vídeo aprovado")
+                today = datetime.now(BRT).date()
+                # vídeo do dia (ou aprovado ontem) que perdeu o horário: reagenda em vez de descartar
+                if pa < now + timedelta(minutes=15) and (slot_day >= today or
+                                                         (r["state"] == State.VALIDATED.value and (today - slot_day).days <= 1)):
+                    new_pa = self.next_free_time()
+                    self.db.set_fields(r["id"], publish_at_utc=new_pa.isoformat())
+                    self.db.event(f"horário perdido; reagendado para {new_pa.astimezone(BRT):%d/%m %H:%M}", r["id"])
+                elif slot_day < today:
+                    self.db.advance(r["id"], State.ABANDONED, "dia do slot passou sem vídeo aprovado")
                     continue
                 if r["attempts"] >= max_att:
                     self.db.advance(r["id"], State.ABANDONED, f"excedeu {max_att} tentativas")
