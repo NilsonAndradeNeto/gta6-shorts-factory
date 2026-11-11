@@ -27,17 +27,21 @@ log = get_logger("verify")
 CONF_ORDER = {"NAO_VERIFICADO": 0, "TEORIA": 1, "REPORTADO": 2, "CONFIRMADO": 3}
 SPECULATIVE_KINDS = {"rumor", "leak", "theory", "speculation"}
 
-CLUSTER_SYSTEM = """Você é editor-chefe de um canal sobre GTA 6 (Grand Theft Auto VI).
+CLUSTER_SYSTEM = """Você é editor-chefe de um canal brasileiro de GAMES (Shorts/TikTok de humor + notícia) cujo objetivo é
+crescer em visualizações e monetização.
 Agrupe as manchetes recebidas em HISTÓRIAS (o mesmo fato noticiado por veículos diferentes, em qualquer idioma, deve ficar junto).
 Regras:
 - Use somente as informações das manchetes/trechos. Não invente nada.
 - Se a manchete combina com uma história existente (lista EXISTENTES), use a mesma "key".
 - "key": slug curto em inglês, estável e descritivo (ex.: "gta6-preorder-record-psstore").
-- "kind": news (fato), rumor (não confirmado/vazamento), theory (teoria de fã), opinion (opinião/coluna), guide (tutorial/como fazer), commerce (promoção/loja/brinde), offtopic (não é sobre GTA 6).
-- "interest": 0-10, potencial de interesse para o público brasileiro de Shorts.
-- "retention": 0-10, potencial de prender a atenção por 30-45 segundos (curiosidade, revelação, número marcante).
-- "visual": 0-10, quanto o tema pode ser ilustrado com material oficial (personagens, locais, trailers, capa).
-Responda JSON: {"stories":[{"key":"...","title_pt":"manchete curta em português","item_ids":[1,2],"kind":"news","interest":7,"retention":6,"visual":5}]}"""
+- "kind": news (fato), rumor (não confirmado/vazamento), theory (teoria de fã), opinion (opinião/coluna), guide (tutorial/como fazer),
+  commerce (promoção/desconto/loja), offtopic (não é sobre games/jogos/consoles/cultura gamer).
+- "games": nomes oficiais dos jogos citados, como aparecem nas lojas (ex.: ["Elden Ring", "Minecraft"]); [] se nenhum.
+- "interest": 0-10, potencial VIRAL para o público gamer brasileiro (jogos populares no Brasil, polêmica, número absurdo,
+  surpresa, nostalgia, preço, anúncio grande, algo engraçado). Notícia de nicho/corporativa chata = nota baixa.
+- "retention": 0-10, potencial de prender por 30-45 segundos e render piada/história.
+- "visual": 0-10, quanto o tema pode ser ilustrado com imagens oficiais do jogo citado.
+Responda JSON: {"stories":[{"key":"...","title_pt":"manchete curta em português","item_ids":[1,2],"kind":"news","games":["..."],"interest":7,"retention":6,"visual":5}]}"""
 
 
 def _fallback_clusters(items: list[dict[str, Any]], existing: dict[str, str]) -> list[dict[str, Any]]:
@@ -153,6 +157,7 @@ def cluster_and_classify(db: DB, llm: LLM, days: int = 10) -> int:
             db.x("UPDATE news_items SET confirmation=? WHERE id=?", conf, m["id"])
         evidence = build_evidence(members)
         ents = sorted({e for m in members for e in find_entities(m["title"] + " " + (m.get("body") or "")[:1500])})
+        ents += [f"game:{g}" for g in (s.get("games") or []) if isinstance(g, str) and g.strip()][:4]
         detail = {"kind": kind, "interest": s.get("interest", 5), "retention": s.get("retention", 5),
                   "visual": s.get("visual", 5), "sources": len({m["source_name"] for m in members}),
                   "newest": max((m.get("published_at") or "") for m in members)}

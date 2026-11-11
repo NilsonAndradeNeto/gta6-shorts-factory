@@ -194,7 +194,8 @@ class Factory:
         from factory.youtube.metadata import build
         work = v["storyboard"]
         topic = self._topic(v["topic_id"])
-        meta = build(v["script"], json.loads(topic["evidence"]), topic["confirmation"], v["id"])
+        meta = build(v["script"], json.loads(topic["evidence"]), topic["confirmation"], v["id"],
+                     credits=[sc.get("credit") for sc in work["plan"]["scenes"] if sc.get("credit")])
         mixed = mix(work["voice"]["wav"], work["plan"], work["voice"]["duration"], self._work(v["id"]), v["id"])
         out = self._work(v["id"]) / f"{v['slot_date']}_{v['slot_time'].replace(':', '')}_{v['id']}.mp4"
         render(work["plan"], work["chunks"], str(mixed), out)

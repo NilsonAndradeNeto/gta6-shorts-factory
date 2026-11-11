@@ -34,7 +34,7 @@ KIT_ZIPS = {
 LICENSE = ("Rockstar Games — kit oficial de mídia de GTA VI (rockstargames.com/VI/media, "
            "'Download and share'). Uso editorial com crédito; sujeito à política de conteúdo da Rockstar.")
 CREDIT = "Imagens: Rockstar Games"
-ALLOWED_LICENSE_PREFIXES = ("Rockstar Games —", "Gerado pelo sistema")
+ALLOWED_LICENSE_PREFIXES = ("Rockstar Games —", "Gerado pelo sistema", "Divulgação oficial —")
 
 
 def _cache() -> Path:

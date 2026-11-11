@@ -33,8 +33,10 @@ HOOK_STYLES = {
 
 ENTITY_IDS = ", ".join(f"{e.id} ({e.name})" for e in ENTITIES)
 
-SYSTEM = f"""Você é roteirista de YouTube Shorts brasileiros de HUMOR sobre GTA 6: o canal pega uma notícia REAL
-e transforma numa historinha engraçada, do primeiro ao último segundo. Linguagem de brasileiro jovem, gírias leves,
+SYSTEM = f"""Você é roteirista de YouTube Shorts/TikTok brasileiros de HUMOR sobre GAMES: o canal pega uma notícia REAL
+do mundo dos games e transforma numa historinha engraçada, do primeiro ao último segundo. O objetivo é viralizar:
+gancho fortíssimo, zero enrolação, final que dá vontade de comentar e compartilhar. Soe como um criador humano
+brasileiro falando com amigos (gírias leves, reações, "mano", "cara", ironia), nunca como texto de IA ou de jornal. Linguagem de brasileiro jovem, gírias leves,
 frases curtas, ritmo rápido, timing de piada, exagero cômico, escalada do absurdo, callback e punchline.
 Proibido: "Olá pessoal", "No vídeo de hoje", "Fala galera", pedir like/inscrição, emojis na narração.
 
@@ -68,14 +70,15 @@ ESTRUTURA (30 a 45 segundos falados = 80 a 120 palavras):
 - cta: pergunta engraçada e genuína para os comentários.
 
 PLANO VISUAL por segmento ("visual"):
-- "entities": IDs oficiais que a frase menciona ou sobre os quais fala. IDs válidos: {ENTITY_IDS}. [] se nenhum.
+- "entities": o que a frase mostra. Para jogos use "game:<nome oficial do jogo>" (ex.: "game:Elden Ring").
+  Para GTA 6 use os IDs oficiais: {ENTITY_IDS}. [] se nenhum.
 - "intent": o que deveria aparecer (ex.: "Jason com cara de surpreso", "Vice City à noite").
 - "on_screen_text": 1 a 4 palavras de impacto (MAIÚSCULAS), pode ser engraçado. Pode ser "".
 
 METADADOS:
 - "title": até 70 caracteres, engraçado e fiel (se for cenário imaginário, use "E se..." ou deixe claro). Sem hashtags.
 - "description": 2 a 3 frases: resuma a notícia real e diga que o vídeo traz uma história de humor/ficção.
-- "hashtags": 3 a 5, incluindo #GTA6.
+- "hashtags": 3 a 5 relevantes (ex.: #games, nome do jogo, #GTA6 só se for sobre GTA).
 
 Responda SOMENTE JSON:
 {{"angle":"...","hook_style":"...","title":"...","description":"...","hashtags":["#GTA6"],
@@ -126,6 +129,8 @@ def build_user_prompt(topic: dict[str, Any], hook_style: str, prev_hooks: list[s
     angle = detail.get("angle", "")
     lines = [
         f"PAUTA: {topic['title']}",
+        "JOGOS DA PAUTA: " + (", ".join(e[5:] for e in json.loads(topic.get("entities") or "[]") if str(e).startswith("game:"))
+                              or "nenhum específico"),
         f"STATUS DA PAUTA: {topic['confirmation']} (tipo: {detail.get('kind', topic['kind'])})",
     ]
     if angle:
@@ -164,12 +169,13 @@ def validate_shape(script: dict[str, Any], prev_hooks: list[str]) -> list[str]:
         problems.append("faltou o humor: inclua uma história/cenário engraçado (segmentos 'humor')")
     else:
         from factory.verification.factcheck import IMAGINATION
-        if not IMAGINATION.search(humor[0].get("text", "")) and not IMAGINATION.search(script.get("title", "")):
-            problems.append("o primeiro trecho inventado precisa deixar claro que é imaginação ('imagina', 'e se', 'já pensou')")
+        # basta um marcador explícito na história inventada (o juiz avalia se algo pode ser confundido com notícia)
+        if not any(IMAGINATION.search(h.get("text", "")) for h in humor) and not IMAGINATION.search(script.get("title", "")):
+            problems.append("a parte inventada precisa ser apresentada como imaginação ('imagina', 'e se', 'já pensou')")
     wc = word_count(script)
     if wc < 60:
         problems.append(f"roteiro curto demais ({wc} palavras); escreva entre 80 e 120")
-    if wc > 140:
+    if wc > 150:
         problems.append(f"roteiro longo demais ({wc} palavras); máximo 120")
     first = norm(segs[0].get("text", ""))
     for h in prev_hooks:
@@ -194,7 +200,7 @@ def write_script(db: DB, llm: LLM, topic: dict[str, Any], feedback: str = "", ho
     prev = [h for _, h in recent_hooks(db)]
     user = build_user_prompt(topic, hook_style, prev, feedback)
     script: dict[str, Any] = {}
-    for attempt in range(3):
+    for attempt in range(4):
         script = llm.json(SYSTEM, user, purpose="script", max_tokens=3500)
         if not isinstance(script, dict):
             script = {}

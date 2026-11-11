@@ -69,7 +69,8 @@ def _parse_date(entry: Any) -> datetime | None:
     return None
 
 
-def is_gta6_related(text: str) -> bool:
+def is_relevant(text: str) -> bool:
+    """O texto é sobre games (palavras-chave do canal em config/sources.yaml)?"""
     t = norm(text)
     return any(norm(k) in t for k in settings().sources["keywords"])
 
@@ -142,7 +143,7 @@ def _resolve_google_news(sess: requests.Session, link: str) -> str:
     return link
 
 
-def collect(db: DB, max_per_feed: int = 30) -> dict[str, int]:
+def collect(db: DB, max_per_feed: int = 20) -> dict[str, int]:
     """Varre todas as fontes configuradas e grava itens novos. Retorna contagem por fonte."""
     cfg = settings()
     sess = _session()
@@ -162,7 +163,7 @@ def collect(db: DB, max_per_feed: int = 30) -> dict[str, int]:
             if not title or not link:
                 continue
             if feed.get("keyword_filter") or feed["tier"] == "aggregator":
-                if not is_gta6_related(f"{title} {summary}"):
+                if not is_relevant(f"{title} {summary}"):
                     continue
             pub = _parse_date(e)
             if pub and datetime.now(timezone.utc) - pub > max_age:

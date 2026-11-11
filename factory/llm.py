@@ -40,6 +40,14 @@ def _extract_json(text: str) -> Any:
                 return json.loads(text[s:e + 1])
             except json.JSONDecodeError:
                 continue
+    # modelos leves às vezes erram o fechamento de chaves/colchetes: tenta reparar sem alterar o conteúdo
+    try:
+        from json_repair import repair_json
+        fixed = repair_json(text, return_objects=True)
+        if isinstance(fixed, (dict, list)) and fixed:
+            return fixed
+    except Exception:
+        pass
     raise LLMError("Resposta do LLM não contém JSON válido")
 
 

@@ -18,7 +18,9 @@ from typing import Any
 
 from factory.assets.catalog import ALLOWED_LICENSE_PREFIXES, abs_path, build_catalog, fetch_news_image, load_tags
 from factory.database.db import DB
+from factory.assets.steam import assets_for as steam_assets, game_key
 from factory.entities import BY_ID, find_entities
+from factory.textutil import norm
 from factory.log import get_logger
 from factory.textutil import keywords
 
@@ -47,6 +49,26 @@ def number_label(text: str) -> str:
     if m.group(4):
         label += " de " + m.group(4)
     return label.upper()
+
+
+def generated_background(i: int) -> dict[str, Any]:
+    """Fundo em degradê gerado pelo sistema para cards tipográficos sem imagem do jogo."""
+    import numpy as np
+    from PIL import Image
+    from factory.config import settings
+    palettes = [((110, 40, 170), (30, 120, 210)), ((200, 50, 90), (70, 50, 170)), ((30, 140, 150), (140, 50, 200))]
+    c1, c2 = palettes[i % len(palettes)]
+    f = settings().path("cache_dir") / f"bg_gradient_{i % len(palettes)}.jpg"
+    if not f.exists():
+        h, w = 1920, 1920
+        y = np.linspace(0, 1, h)[:, None, None]
+        x = np.linspace(0, 1, w)[None, :, None]
+        t = (0.65 * y + 0.35 * x)
+        img = (np.array(c1) * (1 - t) + np.array(c2) * t + np.random.default_rng(i).normal(0, 6, (h, w, 3)))
+        Image.fromarray(img.clip(0, 255).astype("uint8")).save(f, quality=92)
+    return {"id": f"generated/gradient{i % len(palettes)}", "path": str(f), "kind": "screenshot", "entities": [],
+            "w": 1920, "h": 1920, "orientation": "landscape", "source_url": "", "credit": None,
+            "license": "Gerado pelo sistema (fundo em degradê)", "title": "fundo", "logo": False}
 
 
 def _recent_asset_use(db: DB, n_videos: int = 10) -> dict[str, int]:
@@ -87,7 +109,14 @@ class Matcher:
         self.recent = _recent_asset_use(db)
         self.used: dict[str, int] = {}
         self.rnd = random.Random(seed)
-        self.topic_ents = json.loads(topic.get("entities") or "[]")
+        raw_ents = json.loads(topic.get("entities") or "[]")
+        self.games: dict[str, str] = {}          # chave normalizada -> nome original (para buscar na Steam)
+        for e in raw_ents:
+            if str(e).startswith("game:"):
+                self.add_game(str(e)[5:])
+        self.topic_ents = [e if e in BY_ID else game_key(e) for e in raw_ents]
+        # arte geral do GTA VI só serve de contexto para pautas sobre GTA
+        self.gta_topic = any(e in BY_ID for e in raw_ents) or "gta" in norm(topic.get("title", ""))
         self.news_assets: list[dict[str, Any]] = []
         for ev in json.loads(topic["evidence"]):
             if ev.get("tier") == "official" and ev.get("image_url"):
@@ -102,6 +131,22 @@ class Matcher:
             return 0.0
         words = keywords(t.get("description", "") + " " + " ".join(t.get("tags", [])))
         return min(20.0, 5.0 * len(words & intent_kw))
+
+    def add_game(self, name: str) -> str:
+        """Carrega (uma vez) as imagens de divulgação do jogo na Steam e as adiciona ao acervo."""
+        key = game_key(name)
+        if key not in self.games:
+            self.games[key] = name
+            try:
+                found = steam_assets(name)
+            except Exception as e:   # Steam fora do ar não derruba o vídeo
+                log.warning("Steam indisponível para %s: %s", name, e)
+                found = []
+            for a in found:
+                if key not in a["entities"]:
+                    a["entities"] = a["entities"] + [key]
+            self.catalog.extend(found)
+        return key
 
     def best(self, ents: list[str], intent: str, role: str, allow_video: bool = True) -> tuple[dict[str, Any] | None, float, str]:
         intent_kw = keywords(intent)
@@ -130,13 +175,13 @@ class Matcher:
                     # contexto só com assets cujo lugar/personagem específico pertence à pauta
                     # (evita mostrar, p.ex., o cartão-postal de Ambrosia quando a fala é sobre Miami)
                     score, conf, reason = 30.0, 0.6, f"contexto: entidades da pauta ({', '.join(set(self.topic_ents) & aents)})"
-                elif "gta6" in aents or a.get("logo"):
+                elif self.gta_topic and ("gta6" in aents or a.get("logo")):
                     score, conf, reason = 20.0, 0.5, "contexto geral: arte oficial de GTA VI"
                 else:
                     continue
             if a.get("logo") and role not in ("cta", "reveal", "hook"):
                 score -= 15
-            if primary and BY_ID[primary].kind == "character":
+            if primary and primary in BY_ID and BY_ID[primary].kind == "character":
                 # personagem precisa aparecer: prioriza imagens com rosto detectado
                 score += 8 if a.get("faces") else (-6 if a["kind"] != "video" else 0)
             score += self._kw_score(a, intent_kw)
@@ -153,7 +198,13 @@ class Matcher:
         cands.sort(key=lambda c: c[0], reverse=True)
         s, a, conf, reason = cands[0]
         if self.used.get(a["id"], 0) >= 2:
-            return None, 0.0, "assets correspondentes esgotados (evitando repetição)"
+            # acervo pequeno: reaproveita a imagem CERTA menos usada (outro enquadramento/movimento)
+            # em vez de cair num card vazio; o limite máximo evita repetição excessiva
+            least = min(cands, key=lambda c: (self.used.get(c[1]["id"], 0), -c[0]))
+            if self.used.get(least[1]["id"], 0) >= 4:
+                return None, 0.0, "assets correspondentes esgotados (evitando repetição)"
+            s, a, conf, reason = least
+            reason += " (reaproveitada: acervo pequeno)"
         self.used[a["id"]] = self.used.get(a["id"], 0) + 1
         return a, conf, reason
 
@@ -168,7 +219,14 @@ def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], w
         seg = script["segments"][sent["seg"]]
         vis = seg.get("visual") or {}
         sent_ents = find_entities(sent["text"])
-        seg_ents = [e for e in (vis.get("entities") or []) if e in BY_ID]
+        seg_ents = []
+        for e in (vis.get("entities") or []):
+            if e in BY_ID:
+                seg_ents.append(e)
+            elif str(e).startswith("game:") and len(str(e)) > 6:
+                seg_ents.append(m.add_game(str(e)[5:]))
+        # nomes de jogos da pauta citados na frase também valem como entidade
+        sent_ents += [k for k, name in m.games.items() if norm(name) and f" {norm(name)} " in f" {norm(sent['text'])} "]
         # entidades citadas NA FRASE têm prioridade; senão, as declaradas para o segmento
         # "GTA 6" sozinho não é específico: herda as entidades do segmento
         specific = [e for e in sent_ents if e != "gta6"]
@@ -190,6 +248,8 @@ def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], w
                 bg, _, _ = m.best([], "capa oficial", "cta", allow_video=False)
                 if bg:
                     m.used[bg["id"]] = m.used.get(bg["id"], 1) - 1  # fundo desfocado não conta como repetição
+                else:
+                    bg = generated_background(len(scenes))
                 stype, asset, conf = "title_card", bg, 0.7 if has_number else 0.5
                 reason = "dado/afirmação sem imagem específica: card tipográfico sobre arte oficial desfocada"
             elif asset["kind"] == "video":
@@ -199,7 +259,7 @@ def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], w
                 text_on = (vis.get("on_screen_text") or "").strip()[:28]
                 seg_first_scene.add(sent["seg"])
             if stype == "title_card":
-                text_on = num_label or text_on or (vis.get("on_screen_text") or "").strip()[:28]
+                text_on = num_label or text_on   # sem número, só repete o título no 1º card do segmento
             orient = (asset or {}).get("orientation", "landscape")
             effects = EFFECTS_PORT if orient == "portrait" else EFFECTS_LAND
             effect = effects[eff_i % len(effects)]
@@ -232,7 +292,8 @@ def plan(db: DB, video_id: str, script: dict[str, Any], voice: dict[str, Any], w
             scenes.append({
                 "i": len(scenes), "start": round(st, 3), "end": round(en, 3), "narration": ptxt, "seg": sent["seg"],
                 "role": role, "type": stype, "description": vis.get("intent", ""),
-                "main_entity": (BY_ID[ents[0]].name if ents else None), "entities": ents,
+                "main_entity": ((BY_ID[ents[0]].name if ents[0] in BY_ID else m.games.get(ents[0], ents[0])) if ents else None),
+                "entities": ents,
                 "asset_id": asset["id"] if asset else None, "asset_path": str(abs_path(asset)) if asset else None,
                 "source_url": asset["source_url"] if asset else None, "license": asset["license"] if asset else None,
                 "credit": asset["credit"] if asset else None, "effect": effect, "layout": layout,

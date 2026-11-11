@@ -92,6 +92,8 @@ def programmatic_check(script: dict[str, Any], evidence: list[dict[str, Any]]) -
     ev_numbers = numbers_in(all_ev_text)
     ev_norm = norm(all_ev_text)
     names = known_names() | COMMON_NAMES
+    for e in evidence:   # nomes dos veículos/fontes (ex.: "PlayStation Blog") podem ser citados na narração
+        names |= {norm(e["source"])} | {w for w in norm(e["source"]).split() if len(w) > 2}
     attributed: set[str] = set()   # evidências cuja fonte já foi citada na narração (atribuição vale para o resto)
 
     for si, seg in enumerate(script.get("segments", [])):

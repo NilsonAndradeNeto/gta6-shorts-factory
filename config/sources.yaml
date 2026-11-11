@@ -4,6 +4,7 @@
 #   aggregator -> só descobre links; o status vem da fonte original
 #   community  -> apenas ideias/teorias, NUNCA confirma nada
 feeds:
+  # --- oficiais (plataformas/produtoras confirmam os próprios anúncios) ---
   - id: rockstar_newswire_gnews
     name: Rockstar Newswire (via Google News)
     url: "https://news.google.com/rss/search?q=site:rockstargames.com+%22Grand+Theft+Auto+VI%22&hl=en-US&gl=US&ceid=US:en"
@@ -13,27 +14,35 @@ feeds:
     name: Rockstar Games (YouTube oficial)
     url: "https://www.youtube.com/feeds/videos.xml?user=RockstarGames"
     tier: official
-    keyword_filter: true
+  - id: playstation_blog
+    name: PlayStation Blog
+    url: "https://blog.playstation.com/feed/"
+    tier: official
+  - id: steam_news
+    name: Steam (Valve)
+    url: "https://store.steampowered.com/feeds/news.xml"
+    tier: official
+  # --- imprensa especializada ---
   - id: ign
     name: IGN
     url: "https://www.ign.com/rss/articles/feed"
     tier: press
-    keyword_filter: true
+  - id: ign_br
+    name: IGN Brasil
+    url: "https://br.ign.com/feed.xml"
+    tier: press
   - id: gamespot
     name: GameSpot
     url: "https://www.gamespot.com/feeds/news/"
     tier: press
-    keyword_filter: true
   - id: eurogamer
     name: Eurogamer
     url: "https://www.eurogamer.net/feed"
     tier: press
-    keyword_filter: true
   - id: vgc
     name: Video Games Chronicle
     url: "https://www.videogameschronicle.com/feed/"
     tier: press
-    keyword_filter: true
   - id: pcgamer
     name: PC Gamer
     url: "https://www.pcgamer.com/rss/"
@@ -44,15 +53,28 @@ feeds:
     url: "https://www.gamesradar.com/feeds/all/"
     tier: press
     keyword_filter: true
+  - id: nintendolife
+    name: Nintendo Life
+    url: "https://www.nintendolife.com/feeds/latest"
+    tier: press
   - id: theverge
     name: The Verge Games
     url: "https://www.theverge.com/rss/games/index.xml"
     tier: press
-    keyword_filter: true
+  # --- agregadores (descoberta; o status vem do veículo original) ---
+  - id: gnews_ptbr_games
+    name: Google News PT-BR (games)
+    url: "https://news.google.com/rss/search?q=games+OR+videogame+OR+PlayStation+OR+Xbox+OR+Nintendo+OR+Steam&hl=pt-BR&gl=BR&ceid=BR:pt-419"
+    tier: aggregator
   - id: gnews_ptbr
-    name: Google News PT-BR
+    name: Google News PT-BR (GTA 6)
     url: "https://news.google.com/rss/search?q=%22GTA+6%22+OR+%22GTA+VI%22&hl=pt-BR&gl=BR&ceid=BR:pt-419"
     tier: aggregator
+  # --- comunidade (só ideias/teorias) ---
+  - id: reddit_gaming
+    name: r/gaming (comunidade)
+    url: "https://www.reddit.com/r/gaming/top/.rss?t=day"
+    tier: community
   - id: reddit_gta6
     name: r/GTA6 (comunidade)
     url: "https://www.reddit.com/r/GTA6/top/.rss?t=day"
@@ -67,6 +89,14 @@ official_pages:
 
 # Domínios jornalísticos reconhecidos (para itens vindos de agregadores).
 press_domains:
+  - nintendolife.com
+  - pushsquare.com
+  - purexbox.com
+  - jovemnerd.com.br
+  - meiobit.com
+  - terra.com.br
+  - estadao.com.br
+  - omelete.com.br
   - ign.com
   - gamespot.com
   - eurogamer.net
@@ -91,6 +121,16 @@ press_domains:
 official_domains:
   - rockstargames.com
   - take2games.com
+  - playstation.com
+  - steampowered.com
+  - xbox.com
+  - nintendo.com
+  - ea.com
+  - ubisoft.com
   - youtube.com/@RockstarGames
 
-keywords: ["gta 6", "gta vi", "grand theft auto vi", "grand theft auto 6", "gta6", "leonida", "vice city", "lucia caminos", "jason duval"]
+# Relevância para o canal (games em geral). Usado em feeds com keyword_filter e nos agregadores.
+keywords: ["game", "games", "jogo", "jogos", "videogame", "gamer", "playstation", "ps5", "ps4", "xbox", "nintendo", "switch",
+           "steam", "console", "gta", "rockstar", "fortnite", "minecraft", "roblox", "call of duty", "pokemon", "zelda",
+           "mario", "free fire", "esports", "e-sports", "trailer", "dlc", "remake", "lançamento", "lancamento", "rpg",
+           "fps", "nvidia", "gamepass", "game pass", "epic games", "ubisoft", "ea sports", "capcom", "bethesda", "valve"]

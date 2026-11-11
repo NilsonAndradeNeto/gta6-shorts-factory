@@ -20,7 +20,8 @@ def _clean_title(t: str) -> str:
     return t[:95]
 
 
-def build(script: dict[str, Any], topic_evidence: list[dict[str, Any]], confirmation: str, video_id: str) -> dict[str, Any]:
+def build(script: dict[str, Any], topic_evidence: list[dict[str, Any]], confirmation: str, video_id: str,
+          credits: list[str] | None = None) -> dict[str, Any]:
     cfg = settings()
     used_ids = {c.get("evidence") for s in script["segments"] for c in (s.get("claims") or [])}
     sources, seen = [], set()
@@ -41,14 +42,17 @@ def build(script: dict[str, Any], topic_evidence: list[dict[str, Any]], confirma
         desc_parts.append("Contém trechos de humor e ficção: as cenas imaginárias são piada, não informação oficial.")
     if sources:
         desc_parts.append("Fontes:\n" + "\n".join(sources[:6]))
-    desc_parts.append("Imagens e clipes: Rockstar Games (kit oficial de mídia de GTA VI). Canal de fãs, sem vínculo "
-                      "oficial com a Rockstar Games ou a Take-Two. Narração com voz sintética; roteiro e edição originais.")
+    owners = sorted({c.replace("Imagens: ", "") for c in (credits or []) if c})
+    desc_parts.append((f"Imagens oficiais de divulgação: {', '.join(owners)}. " if owners else "")
+                      + "Canal de fãs, sem vínculo oficial com as produtoras citadas. "
+                        "Narração com voz sintética; roteiro e edição originais.")
     desc_parts.append(" ".join(tags_h))
     desc_parts.append(f"ref:{video_id}")
     description = "\n\n".join(p for p in desc_parts if p)
     narration = " ".join(s["text"] for s in script["segments"])
     ents = find_entities(narration + " " + script.get("title", ""))
-    tags = ["GTA 6", "GTA VI", "Grand Theft Auto VI", "Rockstar Games"] + [BY_ID[e].name for e in ents if e in BY_ID]
+    gta = bool(ents) or "gta" in narration.lower()
+    tags = (["GTA 6", "GTA VI", "Grand Theft Auto VI", "Rockstar Games"] if gta else [])         + ["games", "jogos", "notícias de games"] + [h.lstrip("#") for h in tags_h] + [BY_ID[e].name for e in ents if e in BY_ID]
     tags = list(dict.fromkeys(tags))
     while sum(len(t) + 2 for t in tags) > 450:
         tags.pop()

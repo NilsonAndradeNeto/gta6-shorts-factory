@@ -158,8 +158,10 @@ def editorial(db: DB, video_id: str, script: dict[str, Any], fact: dict[str, Any
         fails.append("checagem factual reprovada")
     narration = " ".join(s["text"] for s in script["segments"])
     text_all = f"{topic['title']} {narration} {metadata['title']}"
-    if not (find_entities(text_all) or re.search(r"\bgta\s?(6|vi)\b|grand theft auto vi", norm(text_all))):
-        fails.append("conteúdo não está claramente relacionado a GTA 6")
+    from factory.research.collector import is_relevant
+    topic_games = [e for e in json.loads(topic.get("entities") or "[]") if str(e).startswith("game:")]
+    if not (find_entities(text_all) or topic_games or is_relevant(text_all)):
+        fails.append("conteúdo não está claramente relacionado a games")
     for r in db.q("SELECT id, script, metadata FROM videos WHERE id != ? AND script IS NOT NULL "
                   "ORDER BY created_at DESC LIMIT 80", video_id):
         try:
@@ -186,8 +188,8 @@ def editorial(db: DB, video_id: str, script: dict[str, Any], fact: dict[str, Any
     for s in storyboard["scenes"]:
         if s.get("asset_id") and s["type"] != "title_card":
             uses[s["asset_id"]] = uses.get(s["asset_id"], 0) + 1
-    if uses and max(uses.values()) > 2:
-        fails.append("mesmo asset repetido mais de 2 vezes")
+    if uses and max(uses.values()) > 4:
+        fails.append("mesmo asset repetido mais de 4 vezes")
     if len(metadata["title"]) > 100 or "#" in metadata["title"]:
         fails.append("título inválido para o YouTube")
     if len(metadata["description"]) > 4900:

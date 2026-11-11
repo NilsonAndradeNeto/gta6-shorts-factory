@@ -15,7 +15,7 @@ channel:
   # Narração sintética de um narrador fictício (não imita pessoa real) e imagens oficiais não
   # alteradas: pelas regras do YouTube não exige o rótulo de conteúdo alterado. Ajuste se mudar.
   contains_synthetic_media: false
-  default_hashtags: ["#GTA6", "#GTAVI"]
+  default_hashtags: ["#games", "#shorts"]
 
 video:
   width: 1080
