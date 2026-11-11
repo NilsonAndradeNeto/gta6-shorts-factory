@@ -174,13 +174,13 @@ def mix(narration_wav: str, storyboard: dict[str, Any], duration: float, workdir
     bed_db = float(cfg.get("music.bed_db", -24))
     lufs = float(cfg.get("voice.target_lufs", -14))
     inputs = ["-i", narration_wav]
-    filters = ["[0:a]aresample=48000,aformat=channel_layouts=stereo,loudnorm=I=-16:TP=-2:LRA=9[narr]"]
+    filters = ["[0:a]aresample=48000,aformat=channel_layouts=stereo,apad=pad_dur=4,loudnorm=I=-16:TP=-2:LRA=9[narr]"]
     mix_in = ["[narr]"]
     idx = 1
     if cfg.get("music.enabled", True):
         mpath = _write(workdir / "music.wav", music_bed(duration, seed))
         inputs += ["-i", str(mpath)]
-        filters.append(f"[{idx}:a]aresample=48000,volume={bed_db + 10}dB[mus0]")
+        filters.append(f"[{idx}:a]aresample=48000,volume={bed_db + 10}dB,apad[mus0]")
         filters.append("[narr]asplit=2[narrA][narrK]")
         filters.append("[mus0][narrK]sidechaincompress=threshold=0.03:ratio=6:attack=15:release=350[mus]")
         mix_in = ["[narrA]", "[mus]"]
@@ -189,11 +189,14 @@ def mix(narration_wav: str, storyboard: dict[str, Any], duration: float, workdir
     if np.abs(sfx).max() > 0:
         spath = _write(workdir / "sfx.wav", sfx)
         inputs += ["-i", str(spath)]
-        filters.append(f"[{idx}:a]aresample=48000,volume=-13dB[sfx]")
+        filters.append(f"[{idx}:a]aresample=48000,volume=-13dB,apad[sfx]")
         mix_in.append("[sfx]")
         idx += 1
+    # O loudnorm tem lookahead de 3 s e, no FFmpeg 6 (Ubuntu do GitHub Actions), descartava o final da fala.
+    # Silêncio extra ANTES de cada loudnorm + corte final na duração exata da narração resolvem em qualquer versão.
     filters.append(f"{''.join(mix_in)}amix=inputs={len(mix_in)}:normalize=0:duration=first,"
-                   f"loudnorm=I={lufs}:TP=-1.5:LRA=11,aresample=48000[out]")
+                   f"apad=pad_dur=4,loudnorm=I={lufs}:TP=-1.5:LRA=11,aresample=48000,"
+                   f"atrim=end={duration:.3f},asetpts=N/SR/TB[out]")
     out = workdir / "mix.wav"
     subprocess.run(["ffmpeg", "-y", "-v", "error", *inputs, "-filter_complex", ";".join(filters), "-map", "[out]",
                     "-ac", "2", "-ar", "48000", str(out)], check=True)

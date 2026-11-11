@@ -88,6 +88,8 @@ def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], a
         if not (-18.5 <= lufs <= -10.5):
             fails.append(f"loudness {lufs} LUFS fora de [-18.5, -10.5]")
     # narração não cortada
+    if dur < float(voice.get("duration", dur)) - 0.3:
+        fails.append(f"vídeo ({dur:.1f}s) mais curto que a narração ({voice['duration']:.1f}s): áudio cortado")
     if voice["sentences"]:
         if voice["sentences"][0]["start"] < 0.05:
             fails.append("narração começa cortada")
