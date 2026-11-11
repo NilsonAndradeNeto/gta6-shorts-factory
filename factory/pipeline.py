@@ -340,7 +340,11 @@ class Factory:
                     log.warning("Orçamento de tempo da execução esgotado; restante fica para a próxima")
                     break
                 pa = datetime.fromisoformat(r["publish_at_utc"])
-                if now > pa + timedelta(minutes=90):
+                slot_day = pa.astimezone(BRT).date()
+                late_for_youtube = can_publish and now > pa + timedelta(minutes=90)
+                # sem YouTube, o vídeo ainda serve ao TikTok durante o próprio dia
+                late_for_tiktok = slot_day < datetime.now(BRT).date()
+                if late_for_youtube or late_for_tiktok:
                     self.db.advance(r["id"], State.ABANDONED, "horário do slot passou sem vídeo aprovado")
                     continue
                 if r["attempts"] >= max_att:

@@ -1,11 +1,12 @@
 name: factory
 
-# Execução agendada (sem servidor 24h). BRT: 23:17 (produz os 4 do dia seguinte), 02:17 e 05:17
-# (retentativas), 09:02 (entrega os 4 no Telegram), 11:17 e 17:17 (retentativas/confirmações).
+# Execução agendada (sem servidor 24h). A madrugada tem 6 tentativas de produção dos 4 vídeos do dia;
+# 09:02 e 09:32 entregam no Telegram; 11:17 e 17:17 refazem o que falhou e confirmam publicações.
 on:
   schedule:
-    - cron: "17 2,5,8,14,20 * * *"
-    - cron: "2 12 * * *"
+    - cron: "17 2,5,8,14,20 * * *"   # 23:17 02:17 05:17 11:17 17:17 BRT
+    - cron: "47 3,6,9 * * *"         # 00:47 03:47 06:47 BRT (redundância: o cron gratuito do GitHub atrasa/pula)
+    - cron: "2,32 12 * * *"          # 09:02 e 09:32 BRT (entrega no Telegram)
   workflow_dispatch:
     inputs:
       dry_run:

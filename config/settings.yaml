@@ -88,7 +88,7 @@ automation:
   # Deve espelhar o cron de .github/workflows/factory.yml (UTC). Usado no painel.
   # 23:17, 02:17, 05:17 (produção do dia, com 2 retentativas), 09:02 (entrega no Telegram),
   # 11:17 e 17:17 (retentativas/confirmações). Espelha .github/workflows/factory.yml.
-  cron_hours_utc: [2, 5, 8, 12, 14, 20]
+  cron_hours_utc: [2, 3, 5, 6, 8, 9, 12, 14, 20]
   cron_minute: 17
   produce_window_hours: 23      # a execução das 23h produz todos os slots do dia seguinte
   min_lead_minutes: 40          # não inicia produção para slot a menos de N minutos
