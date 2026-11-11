@@ -37,15 +37,31 @@ NUM_WORDS = {"um": "1", "uma": "1", "dois": "2", "duas": "2", "três": "3", "tre
              "seis": "6", "sete": "7", "oito": "8", "nove": "9", "dez": "10", "trinta": "30", "sessenta": "60",
              "cem": "100", "mil": "1000"}
 
-JUDGE_SYSTEM = """Você é um checador de fatos rigoroso. Para cada AFIRMAÇÃO, diga se ela é integralmente sustentada
-pela CITAÇÃO e pelo TEXTO DA EVIDÊNCIA correspondente (tradução para o português é permitida).
+IMAGINATION = re.compile(r"\b(imagina|imagine|e se|já pensou|ja pensou|na minha cabeça|vamos supor|supondo|"
+                         r"na imaginação|fingindo|de mentirinha|tipo assim)", re.I)
+
+JUDGE_SYSTEM = """Você é um checador de fatos rigoroso de um canal de HUMOR sobre GTA 6.
+O roteiro mistura segmentos "fato" (notícia real) e "humor" (ficção/piada assumida). Humor é permitido.
+Para cada AFIRMAÇÃO (só dos segmentos fato), diga se é integralmente sustentada pela CITAÇÃO e pelo TEXTO DA
+EVIDÊNCIA correspondente (tradução para o português é permitida).
 - "supported": tudo o que a afirmação diz está na evidência.
 - "partial": parte está na evidência, mas há acréscimo, exagero, atribuição errada ou certeza maior que a fonte.
 - "unsupported": não está na evidência ou a contradiz.
-Também avalie o roteiro inteiro: há fatos narrados sem evidência? O título/descrição prometem algo que o roteiro não entrega?
-Algum rumor/teoria é narrado como fato confirmado? Alguma fala é atribuída a personagem sem a evidência indicar o autor?
+Também avalie o roteiro inteiro e liste em script_issues SOMENTE problemas reais:
+- fato narrado sem evidência fora dos trechos de humor; rumor/teoria dito como confirmado;
+- trecho de humor que um espectador poderia confundir com notícia verdadeira (falta de "imagina/e se" ou de absurdo evidente);
+- algo inventado sobre PESSOA REAL dito como verdade, falas inventadas de pessoa real, ou piada ofensiva/difamatória;
+- título/descrição que prometem o que o vídeo não entrega.
+Exagero cômico assumido e cenários absurdos com personagens fictícios do jogo NÃO são problemas.
 Responda JSON: {"claims":[{"i":0,"verdict":"supported","why":"..."}],
 "script_issues":["..."], "title_ok":true, "overall":"pass|fail"}"""
+
+
+# nomes de conhecimento geral que não exigem evidência (empresas, plataformas, lugares)
+COMMON_NAMES = {norm(x) for x in (
+    "GTA", "Rockstar", "Rockstar Games", "Take-Two", "Sony", "Microsoft", "Nintendo", "PlayStation", "Xbox", "Steam",
+    "Epic", "PC", "YouTube", "TikTok", "Instagram", "Twitch", "Discord", "Brasil", "Estados Unidos", "Miami", "Flórida",
+    "Florida", "Vice City", "Leonida", "Liberty City", "Los Santos", "San Andreas", "Grand Theft Auto", "Google")}
 
 
 def _norm_quote(s: str) -> str:
@@ -75,11 +91,14 @@ def programmatic_check(script: dict[str, Any], evidence: list[dict[str, Any]]) -
     all_ev_text = " ".join(e["text"] for e in evidence)
     ev_numbers = numbers_in(all_ev_text)
     ev_norm = norm(all_ev_text)
-    names = known_names()
+    names = known_names() | COMMON_NAMES
+    attributed: set[str] = set()   # evidências cuja fonte já foi citada na narração (atribuição vale para o resto)
 
     for si, seg in enumerate(script.get("segments", [])):
         text = seg.get("text", "")
         claims = seg.get("claims", []) or []
+        if seg.get("tipo") == "humor" and not claims:
+            continue   # ficção assumida: o juiz avalia se está claramente marcada como imaginação
         claim_numbers: set[str] = set()
         for ci, c in enumerate(claims):
             tag = f"seg{si}.claim{ci}"
@@ -96,8 +115,12 @@ def programmatic_check(script: dict[str, Any], evidence: list[dict[str, Any]]) -
                 issues.append(f"{tag}: status inválido '{st}'")
             elif ORDER[st] > ORDER[TIER_MAX[e["tier"]]]:
                 issues.append(f"{tag}: status {st} acima do permitido pela fonte ({e['tier']} -> {TIER_MAX[e['tier']]})")
-            if st == "REPORTADO" and not ATTRIBUTION.search(text):
-                issues.append(f"seg{si}: fato REPORTADO sem atribuição à fonte na narração: '{text[:80]}'")
+            if st == "REPORTADO":
+                cites_source = norm(e["source"]) and norm(e["source"]).split()[0] in norm(text)
+                if ATTRIBUTION.search(text) or cites_source or text.strip().endswith("?"):
+                    attributed.add(e["id"])
+                elif e["id"] not in attributed:
+                    issues.append(f"seg{si}: fato REPORTADO sem atribuição à fonte na narração: '{text[:80]}'")
             if st == "TEORIA" and not THEORY.search(text):
                 issues.append(f"seg{si}: TEORIA narrada sem deixar claro que é teoria: '{text[:80]}'")
             claim_numbers |= numbers_in(q) | numbers_in(e["text"])
@@ -116,8 +139,6 @@ def programmatic_check(script: dict[str, Any], evidence: list[dict[str, Any]]) -
                 continue
             if all(w in ev_norm or w in names for w in cand.split()):
                 continue
-            if cand in {"gta", "rockstar", "brasil", "playstation", "xbox", "youtube"}:
-                continue
             issues.append(f"seg{si}: nome '{m.group(1)}' não consta nas evidências")
     if script.get("confirmation") == "TEORIA":
         hook = script["segments"][0]["text"] if script.get("segments") else ""
@@ -133,7 +154,7 @@ def llm_judge(llm: LLM, script: dict[str, Any], evidence: list[dict[str, Any]]) 
             claims.append({"i": len(claims), "frase_narrada": seg.get("text", ""), "afirmacao": c.get("text", ""),
                            "evidencia": c.get("evidence"), "citacao": c.get("quote", ""), "status": c.get("status")})
     ev_txt = "\n\n".join(f"[{e['id']}] tier={e['tier']} fonte={e['source']}\n{e['text'][:3500]}" for e in evidence)
-    narr = " ".join(s.get("text", "") for s in script.get("segments", []))
+    narr = "\n".join(f"[{s.get('tipo', 'fato')}] {s.get('text', '')}" for s in script.get("segments", []))
     user = (f"TÍTULO: {script.get('title')}\nDESCRIÇÃO: {script.get('description')}\nROTEIRO: {narr}\n\n"
             f"AFIRMAÇÕES:\n{json.dumps(claims, ensure_ascii=False)}\n\nEVIDÊNCIAS:\n{ev_txt}")
     out = llm.json(JUDGE_SYSTEM, user, purpose="factcheck", temperature=0.0, max_tokens=2500)

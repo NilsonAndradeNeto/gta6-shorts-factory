@@ -33,10 +33,13 @@ video:
   show_credit: false
 
 voice:
-  # Motor principal e reserva. "piper" é local/offline (licença MIT, sem cobrança).
-  # "edge" usa o serviço de leitura do Microsoft Edge: gratuito, porém NÃO oficial e sem garantia.
-  primary: piper
-  fallback: edge
+  # Tentados em ordem. Fenrir (Google Gemini TTS, camada gratuita) foi a voz escolhida pelo dono do canal.
+  # O texto de estilo vai em inglês curto: o modelo 2.5 o interpreta como direção, sem ler em voz alta.
+  engines:
+    - {engine: gemini, model: gemini-2.5-flash-preview-tts, voice: Fenrir, style: "Say excitedly, like a funny Brazilian YouTuber:"}
+    - {engine: gemini, model: gemini-3.8-flash-tts, voice: Fenrir, style: ""}
+    - {engine: edge, voice: pt-BR-AntonioNeural}
+    - {engine: piper, voice: pt_BR-faber-medium}
   piper_voice: pt_BR-faber-medium
   edge_voice: pt-BR-AntonioNeural
   speed: 1.08                # >1 = mais rápido

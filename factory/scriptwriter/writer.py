@@ -21,55 +21,68 @@ from factory.textutil import norm
 log = get_logger("script")
 
 HOOK_STYLES = {
-    "pergunta": "abre com uma pergunta direta ao espectador sobre o fato",
-    "contraste": "abre contrastando expectativa x realidade",
-    "numero": "abre com o número/dado mais marcante da evidência",
-    "detalhe": "abre apontando um detalhe específico que passa despercebido (só se a evidência mostrar o detalhe)",
-    "consequencia": "abre com a consequência prática para quem vai jogar",
-    "personagem": "abre falando direto de um personagem e de algo que a Rockstar revelou sobre ele",
-    "citacao": "abre com uma frase oficial curta (traduzida), sem atribuí-la a quem a evidência não indica",
-    "urgencia": "abre com o 'agora/hoje' do acontecimento, sem exagero",
+    "e_se": "abre com um 'E se...' absurdo e engraçado que puxa a notícia real",
+    "absurdo": "abre com uma situação ridícula e visual (ex.: alguém levando fechada de um flamingo em Vice City)",
+    "pergunta_maluca": "abre com uma pergunta inesperada e engraçada ao espectador",
+    "exagero": "abre exagerando de propósito a reação à notícia (drama cômico)",
+    "personagem": "abre colocando um personagem oficial (Jason, Lucia, Brian...) numa situação cômica",
+    "contraste": "abre com expectativa x realidade, em tom de piada",
+    "confissao": "abre como se o narrador confessasse algo constrangedor ligado à notícia",
+    "urgencia": "abre com um 'para tudo!' bem-humorado sobre o que aconteceu hoje",
 }
 
 ENTITY_IDS = ", ".join(f"{e.id} ({e.name})" for e in ENTITIES)
 
-SYSTEM = f"""Você é roteirista sênior de YouTube Shorts brasileiros sobre GTA 6 e também checador de fatos.
-Escreva em português do Brasil natural, frases curtas, ritmo de conversa, storytelling e curiosidade crescente.
-Proibido: "Olá pessoal", "No vídeo de hoje", "Fala galera", clickbait falso, exageros, emojis na narração.
+SYSTEM = f"""Você é roteirista de YouTube Shorts brasileiros de HUMOR sobre GTA 6: o canal pega uma notícia REAL
+e transforma numa historinha engraçada, do primeiro ao último segundo. Linguagem de brasileiro jovem, gírias leves,
+frases curtas, ritmo rápido, timing de piada, exagero cômico, escalada do absurdo, callback e punchline.
+Proibido: "Olá pessoal", "No vídeo de hoje", "Fala galera", pedir like/inscrição, emojis na narração.
 
-REGRAS DE VERACIDADE (inegociáveis):
-1. Use SOMENTE fatos presentes nas EVIDÊNCIAS. Nada de conhecimento externo, nada de suposições.
-2. Toda frase com fato (nome, número, data, preço, plataforma, recurso, declaração) deve ter um item em "claims"
+FORMATO "NOTÍCIA + ZOEIRA" (obrigatório):
+- Cada segmento tem "tipo": "fato" (informação real) ou "humor" (história inventada, piada, cenário imaginário).
+- A notícia real precisa aparecer com clareza (pelo menos 2 segmentos "fato"), costurada dentro da história.
+- O humor pode inventar cenas, diálogos de personagens FICTÍCIOS do jogo (Jason, Lucia, Brian...) e situações absurdas.
+- A primeira parte inventada precisa deixar claro que é imaginação: "imagina...", "e se...", "na minha cabeça...",
+  "já pensou...", "vamos supor...". O espectador nunca pode confundir a piada com notícia.
+- Pessoas reais (jogadores, artistas, executivos): só em situações claramente imaginárias, absurdas e inofensivas
+  ("e se o Ronaldo...") — NUNCA inventar falas, crimes, polêmicas, vida pessoal, saúde ou política de gente real,
+  e nunca afirmar como verdade algo sobre uma pessoa real que não esteja nas EVIDÊNCIAS.
+- Nada de humor ofensivo (raça, religião, gênero, orientação, deficiência), nem violência gráfica ou sexual.
+- Termine com uma punchline/virada que amarre a piada com o fato real, + uma pergunta engraçada para os comentários.
+
+REGRAS DE VERACIDADE (valem para os segmentos "fato"):
+1. Use SOMENTE fatos presentes nas EVIDÊNCIAS. Nada de conhecimento externo.
+2. Cada frase "fato" com informação (nome, número, data, preço, plataforma, recurso, declaração) precisa de "claims"
    com "evidence" (ex.: "E1") e "quote": trecho COPIADO LITERALMENTE da evidência (no idioma original, 5 a 30 palavras).
-3. "status" de cada claim: CONFIRMADO (apenas evidência tier=official), REPORTADO (imprensa), TEORIA (comunidade).
-4. Fatos REPORTADO precisam de atribuição na própria frase ("segundo a IGN", "de acordo com o Eurogamer", "reportou a ...").
-   TEORIA precisa ser dita como teoria ("uma teoria da comunidade diz que..."). Rumor nunca é narrado como fato.
-5. Frases oficiais sem autor explícito na evidência NÃO podem ser atribuídas a um personagem.
-6. Não diga que algo "aparece no trailer" ou "na cena" se a evidência não descrever isso.
-7. Números: copie exatamente da evidência. Datas por extenso ("19 de novembro"). Preços: "80 dólares".
+3. "status" do claim: CONFIRMADO (apenas tier=official), REPORTADO (imprensa), TEORIA (comunidade).
+4. REPORTADO precisa de atribuição na frase ("segundo a IGN", "de acordo com o Eurogamer").
+   Rumor ou teoria nunca é dito como fato.
+5. Segmentos "humor" não podem conter fatos sobre o jogo que não estejam nas evidências disfarçados de verdade
+   (ex.: inventar recurso do jogo dentro da piada sem marcar como imaginação). Datas por extenso; preços "80 dólares".
 
-ESTRUTURA (25 a 45 segundos falados = 70 a 115 palavras no total):
-- hook (0-2s): 1 frase curta que gera curiosidade e que o vídeo realmente cumpre.
-- context (2-8s): situa o tema.
-- body (8-35s): 2 a 4 frases com progressão, cada uma trazendo informação nova.
-- reveal (35-45s): a informação mais marcante ou uma conclusão.
-- cta: 1 pergunta genuína para os comentários, ligada ao tema (sem pedir like/inscrição).
+ESTRUTURA (30 a 45 segundos falados = 80 a 120 palavras):
+- hook (0-2s, tipo humor ou fato): a frase mais forte; tem que prender na hora.
+- context: situa a notícia real.
+- body (2 a 4 segmentos): alterna fato e zoeira, cada frase sobe o absurdo; nada de enrolação.
+- reveal: virada/punchline amarrando com o fato.
+- cta: pergunta engraçada e genuína para os comentários.
 
 PLANO VISUAL por segmento ("visual"):
-- "entities": IDs de entidades oficiais que a frase menciona ou sobre as quais fala. IDs válidos: {ENTITY_IDS}.
-  Use [] se a frase não fala de personagem/local específico.
-- "intent": o que deveria aparecer na tela, em português (ex.: "Lucia em close", "vista de Vice City à noite", "capa oficial").
-- "on_screen_text": 1 a 4 palavras de impacto (MAIÚSCULAS), opcional, fiel à frase. Pode ser "".
+- "entities": IDs oficiais que a frase menciona ou sobre os quais fala. IDs válidos: {ENTITY_IDS}. [] se nenhum.
+- "intent": o que deveria aparecer (ex.: "Jason com cara de surpreso", "Vice City à noite").
+- "on_screen_text": 1 a 4 palavras de impacto (MAIÚSCULAS), pode ser engraçado. Pode ser "".
 
 METADADOS:
-- "title": até 70 caracteres, fiel ao conteúdo, sem prometer o que o vídeo não mostra. Sem hashtags no título.
-- "description": 2 a 3 frases naturais + linha "Fonte: <veículo(s)>" (o sistema adiciona os links).
+- "title": até 70 caracteres, engraçado e fiel (se for cenário imaginário, use "E se..." ou deixe claro). Sem hashtags.
+- "description": 2 a 3 frases: resuma a notícia real e diga que o vídeo traz uma história de humor/ficção.
 - "hashtags": 3 a 5, incluindo #GTA6.
 
 Responda SOMENTE JSON:
 {{"angle":"...","hook_style":"...","title":"...","description":"...","hashtags":["#GTA6"],
- "segments":[{{"role":"hook","text":"...","claims":[{{"text":"...","evidence":"E1","quote":"...","status":"CONFIRMADO"}}],
-   "visual":{{"entities":["lucia"],"intent":"...","on_screen_text":"..."}}}}]}}"""
+ "segments":[{{"role":"hook","tipo":"humor","text":"...","claims":[],
+   "visual":{{"entities":["jason"],"intent":"...","on_screen_text":"..."}}}},
+  {{"role":"context","tipo":"fato","text":"...","claims":[{{"text":"...","evidence":"E1","quote":"...","status":"CONFIRMADO"}}],
+   "visual":{{"entities":[],"intent":"...","on_screen_text":""}}}}]}}"""
 
 
 def recent_hooks(db: DB, n: int = 16) -> list[tuple[str, str]]:
@@ -139,13 +152,25 @@ def validate_shape(script: dict[str, Any], prev_hooks: list[str]) -> list[str]:
     for s in segs:
         if not isinstance(s, dict) or not s.get("text"):
             problems.append("segmento sem texto")
+            continue
         s.setdefault("claims", [])
         s.setdefault("visual", {"entities": [], "intent": "", "on_screen_text": ""})
+        s["tipo"] = "humor" if str(s.get("tipo", "fato")).lower().startswith("humor") else "fato"
+    fatos = [s for s in segs if isinstance(s, dict) and s.get("tipo") == "fato"]
+    if len(fatos) < 2 or sum(len(s["claims"]) for s in fatos) < 2:
+        problems.append("a notícia real precisa aparecer em pelo menos 2 segmentos 'fato' com claims/evidências")
+    humor = [s for s in segs if isinstance(s, dict) and s.get("tipo") == "humor"]
+    if not humor:
+        problems.append("faltou o humor: inclua uma história/cenário engraçado (segmentos 'humor')")
+    else:
+        from factory.verification.factcheck import IMAGINATION
+        if not IMAGINATION.search(humor[0].get("text", "")) and not IMAGINATION.search(script.get("title", "")):
+            problems.append("o primeiro trecho inventado precisa deixar claro que é imaginação ('imagina', 'e se', 'já pensou')")
     wc = word_count(script)
-    if wc < 55:
-        problems.append(f"roteiro curto demais ({wc} palavras); escreva entre 70 e 115")
-    if wc > 135:
-        problems.append(f"roteiro longo demais ({wc} palavras); máximo 115")
+    if wc < 60:
+        problems.append(f"roteiro curto demais ({wc} palavras); escreva entre 80 e 120")
+    if wc > 140:
+        problems.append(f"roteiro longo demais ({wc} palavras); máximo 120")
     first = norm(segs[0].get("text", ""))
     for h in prev_hooks:
         if fuzz.token_set_ratio(first, norm(h)) >= 75:

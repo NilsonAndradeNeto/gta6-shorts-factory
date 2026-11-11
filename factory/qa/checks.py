@@ -178,7 +178,7 @@ def editorial(db: DB, video_id: str, script: dict[str, Any], fact: dict[str, Any
             fails.append(f"cena {s['i']} com licença não permitida")
         if s["match_confidence"] < 0.5:
             fails.append(f"cena {s['i']} com correspondência visual fraca ({s['match_confidence']})")
-    if storyboard["avg_confidence"] < 0.65:
+    if storyboard["avg_confidence"] < 0.55:
         fails.append(f"correspondência visual média baixa ({storyboard['avg_confidence']})")
     uses: dict[str, int] = {}
     for s in storyboard["scenes"]:

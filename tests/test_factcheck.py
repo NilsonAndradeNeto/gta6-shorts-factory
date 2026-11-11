@@ -57,3 +57,27 @@ def test_confirmation_rules():
     assert confirmation_for([press], "rumor") == "REPORTADO"
     assert confirmation_for([agg], "news") == "NAO_VERIFICADO"
     assert confirmation_for([reddit], "theory") == "TEORIA"
+
+
+def test_attribution_carries_over_and_questions(evidence):
+    q = "GTA 6 will run at 30 frames per second on all consoles"
+    s = {"segments": [
+        {"role": "hook", "tipo": "fato", "text": "Segundo a IGN, GTA 6 vai rodar a 30 FPS.",
+         "claims": [{"text": "30", "evidence": "E2", "quote": q, "status": "REPORTADO"}]},
+        {"role": "body", "tipo": "fato", "text": "E isso vale para todos os consoles da Sony e da Microsoft.",
+         "claims": [{"text": "todos", "evidence": "E2", "quote": q, "status": "REPORTADO"}]},
+        {"role": "body", "tipo": "humor", "text": "Imagina o Jason reclamando com o Cristiano Ronaldo do FPS.", "claims": []},
+    ], "title": "t", "confirmation": "REPORTADO"}
+    assert programmatic_check(s, evidence) == []
+
+
+def test_humor_shape_rules():
+    from factory.scriptwriter.writer import validate_shape
+    base = {"title": "E se o Jason virasse influencer?", "description": "d",
+            "segments": [{"tipo": "humor", "text": "Imagina o Jason " + "muito " * 20},
+                         {"tipo": "fato", "text": "fato " * 15, "claims": [{"evidence": "E1"}]},
+                         {"tipo": "fato", "text": "fato " * 15, "claims": [{"evidence": "E1"}]},
+                         {"tipo": "humor", "text": "piada " * 20}]}
+    assert validate_shape(base, []) == []
+    no_fact = {**base, "segments": [dict(s, tipo="humor") for s in base["segments"]]}
+    assert any("pelo menos 2 segmentos" in p for p in validate_shape(no_fact, []))

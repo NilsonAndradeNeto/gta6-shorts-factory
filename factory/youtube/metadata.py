@@ -37,6 +37,8 @@ def build(script: dict[str, Any], topic_evidence: list[dict[str, Any]], confirma
     desc_parts = [script.get("description", "").strip()]
     if confirmation in STATUS_LINE:
         desc_parts.append(STATUS_LINE[confirmation])
+    if any(seg.get("tipo") == "humor" for seg in script["segments"]):
+        desc_parts.append("Contém trechos de humor e ficção: as cenas imaginárias são piada, não informação oficial.")
     if sources:
         desc_parts.append("Fontes:\n" + "\n".join(sources[:6]))
     desc_parts.append("Imagens e clipes: Rockstar Games (kit oficial de mídia de GTA VI). Canal de fãs, sem vínculo "

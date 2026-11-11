@@ -139,7 +139,7 @@ class LLM:
 
     def json(self, system: str, user: str, *, purpose: str, **kw: Any) -> Any:
         last: Exception | None = None
-        for _ in range(2):
+        for _ in range(3):
             raw = self.chat(system, user, purpose=purpose, **kw)
             try:
                 return _extract_json(raw)

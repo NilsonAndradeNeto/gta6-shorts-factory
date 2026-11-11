@@ -132,41 +132,85 @@ class EdgeEngine:
         return out
 
 
-def _engine(kind: str) -> Any:
+def _engine(spec: dict[str, Any]) -> Any:
     cfg = settings()
     speed = float(cfg.get("voice.speed", 1.08))
+    kind = spec["engine"]
+    if kind == "gemini":
+        return GeminiEngine(spec["model"], spec.get("voice", "Fenrir"), spec.get("style", ""))
     if kind == "piper":
-        return PiperEngine(os.environ.get("PIPER_VOICE", cfg.get("voice.piper_voice")), speed)
+        return PiperEngine(os.environ.get("PIPER_VOICE", spec.get("voice", cfg.get("voice.piper_voice"))), speed)
     if kind == "edge":
-        return EdgeEngine(os.environ.get("EDGE_VOICE", cfg.get("voice.edge_voice")), speed)
+        return EdgeEngine(os.environ.get("EDGE_VOICE", spec.get("voice", cfg.get("voice.edge_voice"))), speed)
     raise TTSError(f"motor desconhecido {kind}")
 
 
 def synthesize_script(script: dict[str, Any], workdir: Path) -> dict[str, Any]:
-    """Gera narração completa. Retorna wav + timeline de frases (início/fim em segundos)."""
+    """Gera narração completa tentando os motores na ordem de `voice.engines`."""
     cfg = settings()
-    order = [os.environ.get("TTS_PRIMARY", cfg.get("voice.primary")), cfg.get("voice.fallback")]
+    specs = cfg.get("voice.engines") or [{"engine": cfg.get("voice.primary")}, {"engine": cfg.get("voice.fallback")}]
     last_err: Exception | None = None
-    for kind in [k for k in order if k]:
+    for spec in specs:
         try:
-            eng = _engine(kind)
+            eng = _engine(spec)
             return _render_with(eng, script, workdir)
         except Exception as e:  # tenta o próximo motor
             last_err = e
-            log.warning("Motor TTS %s falhou: %s", kind, e)
+            log.warning("Motor TTS %s falhou: %s", spec.get("engine"), e)
     raise TTSError(f"Nenhum motor TTS funcionou: {last_err}")
+
+
+def _render_whole(eng: Any, script: dict[str, Any], workdir: Path) -> tuple[list[np.ndarray], list[dict[str, Any]], float]:
+    """Motores "naturais" (Gemini): o roteiro inteiro numa chamada só, para a entonação fluir.
+    Os tempos de cada frase vêm do alinhamento palavra a palavra (faster-whisper)."""
+    from factory.subtitles.align import align, tokenize
+    sents = [{"seg": si, "role": seg.get("role", ""), "text": s}
+             for si, seg in enumerate(script["segments"]) for s in split_sentences(seg["text"])]
+    full = " ".join(s["text"] for s in sents)
+    f = workdir / "whole.wav"
+    eng.synth(full, f)
+    a = _trim(_read_wav(f))
+    expected = len(full.split()) / 3.6          # ~3,6 palavras/s é rápido; menos que isso = áudio truncado
+    if len(a) / SR < expected * 0.6 or float(np.abs(a).max()) < 0.02:
+        raise TTSError(f"áudio do {eng.name} curto/inaudível ({len(a) / SR:.1f}s para {len(full.split())} palavras)")
+    lead = 0.12
+    tmp = workdir / "whole_trim.wav"
+    with wave.open(str(tmp), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes((np.concatenate([np.zeros(int(lead * SR), np.float32), a]) * 32767).clip(-32768, 32767)
+                      .astype(np.int16).tobytes())
+    end = lead + len(a) / SR
+    al = align([{"seg": 0, "text": full, "start": lead, "end": end}], str(tmp))
+    words = al["words"]
+    if al["match_ratio"] is not None and al["match_ratio"] < 0.75:
+        raise TTSError(f"{eng.name} não leu o roteiro fielmente (só {al['match_ratio']:.0%} das palavras reconhecidas)")
+    i = 0
+    for s in sents:
+        n = len(tokenize(s["text"]))
+        ws = words[i:i + n] or words[-1:]
+        s["start"], s["end"], s["spoken"] = round(ws[0]["start"], 3), round(ws[-1]["end"], 3), s["text"]
+        i += n
+    sents[0]["start"] = max(lead, sents[0]["start"])
+    return [np.zeros(int(lead * SR), np.float32), a], sents, end
 
 
 def _render_with(eng: Any, script: dict[str, Any], workdir: Path) -> dict[str, Any]:
     workdir.mkdir(parents=True, exist_ok=True)
     pause = int(settings().get("voice.sentence_pause_ms", 140)) / 1000
     lead, tail = 0.12, 0.45
+    if getattr(eng, "whole", False):
+        pieces, sentences, t = _render_whole(eng, script, workdir)
+        pieces.append(np.zeros(int(tail * SR), np.float32))
+        return _finish(eng, pieces, sentences, t, workdir)
     pieces: list[np.ndarray] = [np.zeros(int(lead * SR), np.float32)]
     t = lead
     sentences = []
     for si, seg in enumerate(script["segments"]):
         for k, sent in enumerate(split_sentences(seg["text"])):
-            spoken = normalize_for_tts(sent)
+            # o léxico fonético só ajuda o Piper; vozes neurais leem melhor o texto original
+            spoken = normalize_for_tts(sent) if eng.name == "piper" else sent
             f = workdir / f"s{si:02d}_{k:02d}.wav"
             eng.synth(spoken, f)
             a = _trim(_read_wav(f))
@@ -180,6 +224,10 @@ def _render_with(eng: Any, script: dict[str, Any], workdir: Path) -> dict[str, A
             pieces.append(np.zeros(int(gap * SR), np.float32))
             t += dur + gap
     pieces.append(np.zeros(int(tail * SR), np.float32))
+    return _finish(eng, pieces, sentences, t, workdir)
+
+
+def _finish(eng: Any, pieces: list[np.ndarray], sentences: list[dict[str, Any]], t: float, workdir: Path) -> dict[str, Any]:
     audio = np.concatenate(pieces)
     peak = float(np.abs(audio).max()) or 1.0
     audio = audio / peak * 0.89
@@ -201,5 +249,42 @@ def _render_with(eng: Any, script: dict[str, Any], workdir: Path) -> dict[str, A
             "speech_end": round(t, 3)}
 
 
-def project_root() -> Path:
-    return ROOT
+class GeminiEngine:
+    """Voz natural do Google (Gemini TTS, camada gratuita do AI Studio). Roteiro inteiro numa chamada."""
+    name = "gemini"
+    whole = True
+
+    def __init__(self, model: str, voice: str, style: str):
+        self.key = os.environ.get("GEMINI_API_KEY", "").strip()
+        if not self.key:
+            raise TTSError("GEMINI_API_KEY ausente")
+        self.model, self.voice_name, self.style = model, voice, style
+
+    def synth(self, text: str, out: Path) -> Path:
+        import base64
+        body = {"contents": [{"parts": [{"text": (self.style + " " if self.style else "") + text}]}],
+                "generationConfig": {"responseModalities": ["AUDIO"],
+                                     "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": self.voice_name}}}}}
+        for attempt in range(3):
+            r = requests.post(f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent",
+                              headers={"x-goog-api-key": self.key}, json=body, timeout=240)
+            if r.status_code == 429 or r.status_code >= 500:
+                if r.status_code == 429 and "per day" in r.text.lower():
+                    raise TTSError(f"cota diária do {self.model} esgotada")
+                import time
+                time.sleep(10 * (attempt + 1))
+                continue
+            if r.status_code != 200:
+                raise TTSError(f"{self.model} HTTP {r.status_code}: {r.text[:200]}")
+            part = r.json()["candidates"][0]["content"]["parts"][0]["inlineData"]
+            data = base64.b64decode(part["data"])
+            if part.get("mimeType", "").startswith("audio/wav"):
+                out.write_bytes(data)
+            else:   # PCM 16-bit mono 24 kHz
+                with wave.open(str(out), "wb") as w:
+                    w.setnchannels(1)
+                    w.setsampwidth(2)
+                    w.setframerate(24000)
+                    w.writeframes(data)
+            return out
+        raise TTSError(f"{self.model}: falhou após retentativas")
