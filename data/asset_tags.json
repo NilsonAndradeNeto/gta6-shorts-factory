@@ -1,0 +1,4188 @@
+{
+ "screenshots/People/Boobie Ike/Boobie_Ike_01": {
+  "description": "Homem barbudo com óculos escuros e jaqueta estampada sentado em poltrona segura maço de dinheiro em escritório.",
+  "tags": [
+   "homem",
+   "escritório",
+   "dinheiro",
+   "óculos",
+   "interior",
+   "poltrona",
+   "arma",
+   "noite"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/People/Boobie Ike/Boobie_Ike_02": {
+  "description": "Dois homens com óculos escuros e correntes de ouro estão em frente a um estabelecimento iluminado à noite.",
+  "tags": [
+   "homens",
+   "noite",
+   "clube",
+   "carro",
+   "óculos",
+   "correntes",
+   "celular"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.32,
+   0.45
+  ]
+ },
+ "screenshots/People/Boobie Ike/Boobie_Ike_03": {
+  "description": "Homem com barba e correntes douradas segura um copo em um clube com iluminação rosa.",
+  "tags": [
+   "homem",
+   "clube",
+   "noite",
+   "copo",
+   "corrente",
+   "barba",
+   "interior"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.42,
+   0.45
+  ]
+ },
+ "screenshots/People/Boobie Ike/Boobie_Ike_04": {
+  "description": "Um homem e duas mulheres posam em um clube noturno com iluminação rosa e notas de dinheiro voando.",
+  "tags": [
+   "clube noturno",
+   "festa",
+   "dinheiro",
+   "mulheres",
+   "homem",
+   "neon",
+   "noite",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 5,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/People/Brian Heder/Brian_Heder_01": {
+  "description": "Homem idoso barbudo com óculos escuros sentado no banco do motorista de uma picape.",
+  "tags": [
+   "homem",
+   "idoso",
+   "carro",
+   "motorista",
+   "óculos",
+   "barba",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.52,
+   0.32
+  ]
+ },
+ "screenshots/People/Brian Heder/Brian_Heder_02": {
+  "description": "Um homem idoso com bandana e regata está apoiado em um balcão de bar ao ar livre à noite.",
+  "tags": [
+   "homem idoso",
+   "bar ao ar livre",
+   "noite",
+   "bandana",
+   "latas de cerveja",
+   "palmeiras"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.65,
+   0.45
+  ]
+ },
+ "screenshots/People/Brian Heder/Brian_Heder_03": {
+  "description": "Um homem mais velho de camisa florida conversa e aponta o dedo para outra pessoa enquanto segura um pacote embalado.",
+  "tags": [
+   "homem",
+   "pacote",
+   "carro",
+   "conversa",
+   "dia",
+   "camisa florida",
+   "óculos"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.54,
+   0.36
+  ]
+ },
+ "screenshots/People/Brian Heder/Brian_Heder_04": {
+  "description": "Um homem mais velho segurando uma arma e conversando com outro homem, enquanto uma mulher observa ao lado perto de uma caminhonete.",
+  "tags": [
+   "homem",
+   "mulher",
+   "arma",
+   "discussão",
+   "rua",
+   "carro",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 3,
+  "focus": [
+   0.47,
+   0.47
+  ]
+ },
+ "screenshots/People/Cal Hampton/Cal_Hampton_01": {
+  "description": "Homem sorridente com chapéu e camisa florida posa em um campo de minigolfe com tema de pântano.",
+  "tags": [
+   "homem",
+   "minigolfe",
+   "chapéu",
+   "óculos",
+   "camisa",
+   "pântano",
+   "claro"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.7,
+   0.4
+  ]
+ },
+ "screenshots/People/Cal Hampton/Cal_Hampton_02": {
+  "description": "Um homem joga bilhar em um bar, observado por amigos ao redor da mesa.",
+  "tags": [
+   "bar",
+   "bilhar",
+   "homens",
+   "mulher",
+   "jogando",
+   "noite",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 4,
+  "focus": [
+   0.24,
+   0.59
+  ]
+ },
+ "screenshots/People/Cal Hampton/Cal_Hampton_03": {
+  "description": "Homem tatuado relaxa em uma boia rosa de flamingo em uma piscina com latas boiando ao redor.",
+  "tags": [
+   "piscina",
+   "homem",
+   "boia",
+   "flamingo",
+   "tatuagem",
+   "lata",
+   "água",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.42,
+   0.52
+  ]
+ },
+ "screenshots/People/Cal Hampton/Cal_Hampton_04": {
+  "description": "Dois homens caminham à noite carregando bolsas em uma rua iluminada perto de uma construção.",
+  "tags": [
+   "homens",
+   "noite",
+   "rua",
+   "bolsas",
+   "caminhada",
+   "iluminação",
+   "construção"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/People/DreQuan Priest/DreQuan_Priest_01": {
+  "description": "Três pessoas dançam em uma festa iluminada por luzes coloridas e balões.",
+  "tags": [
+   "festa",
+   "dança",
+   "balada",
+   "noite",
+   "luzes",
+   "pessoas",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 3,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "screenshots/People/DreQuan Priest/DreQuan_Priest_02": {
+  "description": "Um homem com terno azul e óculos escuros segura uma bebida em um bar à beira da piscina durante a noite.",
+  "tags": [
+   "homem",
+   "terno azul",
+   "bar",
+   "piscina",
+   "festa",
+   "noite",
+   "óculos escuros"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 15,
+  "focus": [
+   0.75,
+   0.45
+  ]
+ },
+ "screenshots/People/DreQuan Priest/DreQuan_Priest_03": {
+  "description": "Um homem de braços cruzados observa o ambiente em uma festa com iluminação rosa e roxa.",
+  "tags": [
+   "homem",
+   "festa",
+   "boate",
+   "iluminação roxa",
+   "bebida",
+   "multidão",
+   "noite"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 5,
+  "focus": [
+   0.47,
+   0.35
+  ]
+ },
+ "screenshots/People/DreQuan Priest/DreQuan_Priest_04": {
+  "description": "Dois homens produzem música em um estúdio de gravação iluminado por luzes difusas.",
+  "tags": [
+   "estúdio",
+   "música",
+   "produtor",
+   "mesa de som",
+   "computador",
+   "homens",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 4,
+  "focus": [
+   0.6,
+   0.5
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_01": {
+  "description": "Um homem musculoso e uma mulher estão juntos ao ar livre, com a mulher segurando uma arma e um helicóptero ao fundo.",
+  "tags": [
+   "homem",
+   "mulher",
+   "arma",
+   "helicóptero",
+   "cidade",
+   "dia",
+   "tensão",
+   "mar"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_02": {
+  "description": "Um homem e uma mulher mascarados com fuzis em um cofre de banco com notas de dinheiro voando.",
+  "tags": [
+   "banco",
+   "cofre",
+   "assalto",
+   "armas",
+   "dinheiro",
+   "máscara",
+   "homem",
+   "mulher",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.48
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_03": {
+  "description": "Um homem e uma mulher tatuados andam de carro conversível com vista para a cidade ao fundo.",
+  "tags": [
+   "carro",
+   "conversível",
+   "mulher",
+   "homem",
+   "tatuagem",
+   "cidade",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.4,
+   0.4
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_04": {
+  "description": "Homem e mulher armados realizam um assalto em uma joalheria com vitrines quebradas.",
+  "tags": [
+   "assalto",
+   "joalheria",
+   "armas",
+   "vitrine",
+   "interior",
+   "criminosos"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 5,
+  "focus": [
+   0.3,
+   0.3
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_05": {
+  "description": "Um grupo diversificado de pessoas se reúne em um ambiente interno iluminado à noite, visto através de portas de vidro.",
+  "tags": [
+   "grupo",
+   "pessoas",
+   "interior",
+   "noite",
+   "luz",
+   "porta",
+   "homem",
+   "mulher"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 7,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_06": {
+  "description": "Um homem e uma mulher armada estão sentados dentro de um carro.",
+  "tags": [
+   "carro",
+   "homem",
+   "mulher",
+   "arma",
+   "interior",
+   "tensão",
+   "crime"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.66,
+   0.36
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_07": {
+  "description": "Um homem e uma mulher armados com pistolas estão em pé em um ambiente interno iluminado por luzes fluorescentes.",
+  "tags": [
+   "interior",
+   "armas",
+   "pistolas",
+   "homem",
+   "mulher",
+   "tensão",
+   "ação",
+   "noite"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.48,
+   0.35
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_08": {
+  "description": "Um homem e uma mulher de costas observam um carro em chamas à noite.",
+  "tags": [
+   "homem",
+   "mulher",
+   "fogo",
+   "carro",
+   "noite",
+   "armas",
+   "bolsa",
+   "rua"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_09": {
+  "description": "Um homem e uma mulher fogem de moto enquanto ela aponta uma arma e uma viatura policial e um helicóptero os perseguem.",
+  "tags": [
+   "moto",
+   "perseguição",
+   "polícia",
+   "armas",
+   "fuga",
+   "cidade",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_10": {
+  "description": "Mulher sentada segurando uma taça em um terraço à noite com outras pessoas ao fundo.",
+  "tags": [
+   "mulher",
+   "taça",
+   "coquetel",
+   "noite",
+   "terraço",
+   "festa",
+   "cidade"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 8,
+  "focus": [
+   0.41,
+   0.35
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_11": {
+  "description": "Um homem dirige um carro conversível vermelho enquanto uma mulher ao lado segura uma arma de fogo.",
+  "tags": [
+   "carro",
+   "conversível",
+   "homem",
+   "mulher",
+   "arma",
+   "direção",
+   "paisagem",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.65,
+   0.45
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_12": {
+  "description": "Um homem e uma mulher armados observam cautelosamente através de uma janela em um ambiente interno escuro.",
+  "tags": [
+   "homem",
+   "mulher",
+   "armas",
+   "fuzil",
+   "pistola",
+   "interior",
+   "tensão",
+   "noite"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.6,
+   0.4
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_13": {
+  "description": "Um homem e uma mulher abraçados de frente em um pântano ao pôr do sol, cercados por barcos e um helicóptero.",
+  "tags": [
+   "pântano",
+   "casal",
+   "pôr do sol",
+   "helicóptero",
+   "barcos",
+   "romance",
+   "polícia",
+   "ação"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.49,
+   0.45
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_14": {
+  "description": "Um homem e uma mulher dançam juntos em uma festa lotada sob luzes neon azuladas.",
+  "tags": [
+   "festa",
+   "dança",
+   "casal",
+   "boate",
+   "neon",
+   "noite",
+   "luzes"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_15": {
+  "description": "Dois criminosos mascarados com armas e dinheiro assaltam o interior de um banco.",
+  "tags": [
+   "banco",
+   "assalto",
+   "criminosos",
+   "armas",
+   "dinheiro",
+   "interior",
+   "reféns",
+   "ação"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 5,
+  "focus": [
+   0.35,
+   0.45
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_16": {
+  "description": "Silhuetas de um homem e uma mulher sentados em cima de um carro sob uma grande árvore ao pôr do sol, com cervos no campo e a cidade ao fundo.",
+  "tags": [
+   "campo",
+   "árvore",
+   "carro",
+   "pôr-do-sol",
+   "cervos",
+   "cidade",
+   "silhueta"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.42,
+   0.63
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_17": {
+  "description": "Um homem armado com uma pistola se apoia na janela de um carro, enquanto uma mulher com bolsa se aproxima ao fundo.",
+  "tags": [
+   "homem",
+   "mulher",
+   "arma",
+   "carro",
+   "assalto",
+   "dia",
+   "rua",
+   "tensão"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.58,
+   0.41
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_18": {
+  "description": "Pessoas socializam e bebem em um bar movimentado com música ao vivo e iluminação neon.",
+  "tags": [
+   "bar",
+   "festa",
+   "pessoas",
+   "bebida",
+   "noite",
+   "neon",
+   "música"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 15,
+  "focus": [
+   0.45,
+   0.65
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_19": {
+  "description": "Uma mulher com blusa vermelha atira de fuzil pela janela de um carro conversível durante um tiroteio urbano.",
+  "tags": [
+   "tiroteio",
+   "carro",
+   "fuzil",
+   "polícia",
+   "rua",
+   "confronto",
+   "ação",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 7,
+  "focus": [
+   0.55,
+   0.35
+  ]
+ },
+ "screenshots/People/Jason and Lucia/Jason_and_Lucia_20": {
+  "description": "Um homem e uma mulher armada estão sentados nos bancos dianteiros de um carro conversível à noite.",
+  "tags": [
+   "carro",
+   "conversível",
+   "homem",
+   "mulher",
+   "armas",
+   "noite",
+   "rua",
+   "neon"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.45,
+   0.42
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_01": {
+  "description": "Homem musculoso de regata preta segura uma arma de fogo e está sentado em cima de uma moto esportiva verde sob palmeiras.",
+  "tags": [
+   "homem",
+   "moto",
+   "arma",
+   "palmeiras",
+   "dia",
+   "sol",
+   "cidade",
+   "esportiva"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.65,
+   0.35
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_02": {
+  "description": "Um homem de regata branca e boné dirige um carro sob a luz ensolarada de palmeiras.",
+  "tags": [
+   "homem",
+   "carro",
+   "direção",
+   "regata",
+   "boné",
+   "palmeiras",
+   "sol",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.37,
+   0.3
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_03": {
+  "description": "Dois homens pescam em um barco navegando em águas tropicais durante o dia.",
+  "tags": [
+   "barco",
+   "pesca",
+   "homens",
+   "mar",
+   "óculos",
+   "verão",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_04": {
+  "description": "Um homem de cabelo curto e camisa estampada mexe no celular enquanto está encostado em uma árvore à noite na rua.",
+  "tags": [
+   "homem",
+   "rua",
+   "noite",
+   "celular",
+   "árvore",
+   "palmeiras",
+   "carro",
+   "iluminação urbana"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.35,
+   0.3
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_05": {
+  "description": "Homem mira com um fuzil em um terraço com a cidade iluminada ao fundo durante a noite.",
+  "tags": [
+   "homem",
+   "fuzil",
+   "arma",
+   "cidade",
+   "noite",
+   "iluminação",
+   "terraço",
+   "mira"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.45,
+   0.55
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_06": {
+  "description": "Um homem de boné e regata está sentado no balcão de um bar com garrafas de cerveja, acompanhado por outras pessoas ao fundo.",
+  "tags": [
+   "bar",
+   "homem",
+   "cerveja",
+   "balcão",
+   "boné",
+   "amigos",
+   "interior",
+   "noite"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 4,
+  "focus": [
+   0.45,
+   0.4
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_07": {
+  "description": "Um homem machucado e suado segura uma arma atrás de uma cerca de tela metálica com luzes policiais ao fundo.",
+  "tags": [
+   "homem",
+   "arma",
+   "cerca",
+   "noite",
+   "polícia",
+   "violência",
+   "tensão"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.53,
+   0.38
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_08": {
+  "description": "Um homem segurando uma arma está em pé ao lado de um hidroavião em um píer à beira da água ao pôr do sol.",
+  "tags": [
+   "homem",
+   "arma",
+   "hidroavião",
+   "píer",
+   "água",
+   "pôr do sol",
+   "ação",
+   "barco"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 1,
+  "focus": [
+   0.51,
+   0.35
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_09": {
+  "description": "Um homem de regata segura munição em um ambiente interno enquanto balas e uma pistola flutuam em primeiro plano.",
+  "tags": [
+   "homem",
+   "arma",
+   "munição",
+   "interior",
+   "dia",
+   "ação",
+   "tiro"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.68,
+   0.35
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_10": {
+  "description": "Homem com capuz e boné segura um fuzil em ambiente industrial interno.",
+  "tags": [
+   "homem",
+   "fuzil",
+   "capuz",
+   "boné",
+   "armazém",
+   "arma",
+   "interior"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_11": {
+  "description": "Um homem pilota uma motocicleta preta enquanto foge de uma viatura policial à noite.",
+  "tags": [
+   "homem",
+   "motocicleta",
+   "policia",
+   "perseguicao",
+   "noite",
+   "rua",
+   "fuga"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.6,
+   0.3
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_12": {
+  "description": "Um homem de camiseta branca aponta uma arma em um ambiente fechado com outros indivíduos armados.",
+  "tags": [
+   "homem",
+   "arma",
+   "tiroteio",
+   "interior",
+   "tensão",
+   "pistola",
+   "confronto"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 3,
+  "focus": [
+   0.75,
+   0.2
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_13": {
+  "description": "Três pessoas de capacete pilotam motocicletas em um corredor iluminado, apontando armas de fogo.",
+  "tags": [
+   "motocicletas",
+   "corredor",
+   "armas",
+   "capacete",
+   "ação",
+   "interior",
+   "iluminação"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 3,
+  "focus": [
+   0.57,
+   0.21
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_14": {
+  "description": "Homem armado de costas confronta três homens armados ao redor de uma caminhonete ao entardecer.",
+  "tags": [
+   "homens",
+   "confronto",
+   "caminhonete",
+   "armas",
+   "rua",
+   "por-do-sol",
+   "tensão"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 4,
+  "focus": [
+   0.6,
+   0.5
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_15": {
+  "description": "Um homem musculoso e suado levanta uma barra com pesos em um banco de supino dentro de uma academia.",
+  "tags": [
+   "homem",
+   "academia",
+   "musculação",
+   "supino",
+   "pesos",
+   "suor",
+   "treino",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.49,
+   0.38
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_16": {
+  "description": "Um homem usa boné e luvas enquanto dispara um fuzil em ambiente interno, cercado por faíscas e tiros.",
+  "tags": [
+   "homem",
+   "fuzil",
+   "tiro",
+   "faíscas",
+   "interior",
+   "ação",
+   "armas"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.42,
+   0.4
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_17": {
+  "description": "Um homem barbudo de cabelos longos aponta um fuzil para fora da janela de um carro baleado, com helicópteros sobrevoando ao fundo.",
+  "tags": [
+   "homem",
+   "fuzil",
+   "carro",
+   "tiroteio",
+   "helicóptero",
+   "ação",
+   "rua",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.42,
+   0.45
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_18": {
+  "description": "Um homem barbudo de regata branca segura uma mangueira de combustível em um posto de gasolina à noite.",
+  "tags": [
+   "homem",
+   "posto de gasolina",
+   "noite",
+   "carro vermelho",
+   "policial",
+   "helicóptero",
+   "armas"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 3,
+  "focus": [
+   0.58,
+   0.48
+  ]
+ },
+ "screenshots/People/Jason Duval/Jason_Duval_19": {
+  "description": "Dois homens dirigem concentrados dentro de um carro durante a noite.",
+  "tags": [
+   "carro",
+   "noite",
+   "homens",
+   "dirigindo",
+   "interior",
+   "tatuagem",
+   "volante"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.7,
+   0.3
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_01": {
+  "description": "Mulher musculosa desfere um soco em um saco de pancadas dentro de uma academia.",
+  "tags": [
+   "mulher",
+   "academia",
+   "soco",
+   "treino",
+   "luta",
+   "suor",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.65,
+   0.35
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_02": {
+  "description": "Mulher de óculos de sol apoiada na borda de uma piscina com um drink ao lado.",
+  "tags": [
+   "mulher",
+   "piscina",
+   "drink",
+   "óculos de sol",
+   "hotel",
+   "dia",
+   "verão"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 3,
+  "focus": [
+   0.49,
+   0.35
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_03": {
+  "description": "Uma mulher com jaqueta de couro está sentada em uma motocicleta amarela à noite, em frente a um bar com letreiro luminoso.",
+  "tags": [
+   "mulher",
+   "motocicleta",
+   "bar",
+   "noite",
+   "jaqueta",
+   "neon",
+   "rua"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.35,
+   0.38
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_04": {
+  "description": "Mulher em primeiro plano segura uma arma de fogo enquanto um homem armado se aproxima ao fundo.",
+  "tags": [
+   "mulher",
+   "homem",
+   "arma",
+   "tensão",
+   "combate",
+   "interior",
+   "carro"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.32,
+   0.34
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_05": {
+  "description": "Mulher com tranças usa uniforme laranja de presidiária e algemas em um corredor de prisão.",
+  "tags": [
+   "prisão",
+   "presidiária",
+   "uniforme laranja",
+   "algemas",
+   "mulher",
+   "corredor",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 4,
+  "focus": [
+   0.6,
+   0.5
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_06": {
+  "description": "Mulher de cabelos castanhos usa blusa brilhante e olha para a câmera em uma festa com iluminação colorida.",
+  "tags": [
+   "mulher",
+   "festa",
+   "boate",
+   "dança",
+   "luzes",
+   "interior",
+   "noite"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 4,
+  "focus": [
+   0.55,
+   0.35
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_07": {
+  "description": "Mulher armada com pistola aponta para trás enquanto se inclina pela janela de um carro em um túnel iluminado, perseguida por uma viatura policial.",
+  "tags": [
+   "mulher",
+   "arma",
+   "carro",
+   "perseguição",
+   "túnel",
+   "polícia",
+   "fuga",
+   "ação"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.43,
+   0.34
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_08": {
+  "description": "Mulher em pé na rua segurando uma arma e uma bolsa rosa e azul, com um estabelecimento comercial ao fundo.",
+  "tags": [
+   "mulher",
+   "arma",
+   "bolsa",
+   "rua",
+   "loja",
+   "carro",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   1.0,
+   1.0
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_09": {
+  "description": "Uma mulher sentada em um banco de academia, usando fones de ouvido e luvas de treino, com luz solar forte ao fundo.",
+  "tags": [
+   "academia",
+   "mulher",
+   "fones de ouvido",
+   "pesos",
+   "treino",
+   "dia",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.5,
+   0.3
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_10": {
+  "description": "Mulher sentada no banco do passageiro de um carro olhando pela janela durante a noite.",
+  "tags": [
+   "mulher",
+   "carro",
+   "passageira",
+   "noite",
+   "luzes",
+   "neon"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.55,
+   0.38
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_11": {
+  "description": "Uma mulher segura uma arma de fogo em um ambiente iluminado por luzes neon roxas e azuis.",
+  "tags": [
+   "mulher",
+   "arma",
+   "pistola",
+   "neon",
+   "noite",
+   "interior",
+   "chuva",
+   "olhar"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 3,
+  "focus": [
+   1.0,
+   1.0
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_12": {
+  "description": "Uma mulher com cabelo escuro preso aponta uma pistola para a frente enquanto está sentada no banco do motorista de um carro azul.",
+  "tags": [
+   "mulher",
+   "carro",
+   "arma",
+   "pistola",
+   "motorista",
+   "interior",
+   "tarde",
+   "tensão"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 3,
+  "focus": [
+   0.72,
+   0.37
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_13": {
+  "description": "Mulher de cabelos castanhos aponta uma pistola preta para a frente com expressão séria.",
+  "tags": [
+   "mulher",
+   "arma",
+   "pistola",
+   "mira",
+   "tiro",
+   "tensão",
+   "céu",
+   "rua"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.73,
+   0.48
+  ]
+ },
+ "screenshots/People/Lucia Caminos/Lucia_Caminos_14": {
+  "description": "Mulher de regata branca segura uma arma apontada para si mesma enquanto um policial armado se aproxima ao fundo com viatura policial iluminada.",
+  "tags": [
+   "mulher",
+   "arma",
+   "policial",
+   "viatura",
+   "noite",
+   "tensão",
+   "cidade",
+   "revólver"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.3,
+   0.4
+  ]
+ },
+ "screenshots/People/Raul Bautista/Raul_Bautista_01": {
+  "description": "Homem de meia-idade com óculos e cavanhaque atende uma ligação em um escritório escuro.",
+  "tags": [
+   "homem",
+   "telefone",
+   "escritório",
+   "computador",
+   "interior",
+   "óculos",
+   "noite"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.6,
+   0.35
+  ]
+ },
+ "screenshots/People/Raul Bautista/Raul_Bautista_02": {
+  "description": "Homem de óculos dirigindo um carro enquanto segura uma arma e há maços de dinheiro no banco do passageiro.",
+  "tags": [
+   "carro",
+   "homem",
+   "arma",
+   "dinheiro",
+   "óculos",
+   "interior",
+   "dirigindo"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.48,
+   0.35
+  ]
+ },
+ "screenshots/People/Raul Bautista/Raul_Bautista_03": {
+  "description": "Um homem de cabelos longos e óculos de sol está em pé no comando de um iate ao pôr do sol.",
+  "tags": [
+   "homem",
+   "iate",
+   "barco",
+   "pôr do sol",
+   "cidade",
+   "óculos",
+   "mar"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 1,
+  "focus": [
+   0.6,
+   0.3
+  ]
+ },
+ "screenshots/People/Raul Bautista/Raul_Bautista_04": {
+  "description": "Homem de cabelo longo e terno claro caminha à noite em um ambiente festivo iluminado por néon.",
+  "tags": [
+   "homem",
+   "terno",
+   "noite",
+   "luz de néon",
+   "festa",
+   "rua",
+   "palmeiras"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 4,
+  "focus": [
+   0.49,
+   0.31
+  ]
+ },
+ "screenshots/People/Real Dimez/Real_Dimez_01": {
+  "description": "Uma mulher com tranças segura fones de ouvido em um estúdio de gravação iluminado com luz de lava.",
+  "tags": [
+   "estúdio",
+   "mulher",
+   "tranças",
+   "fones de ouvido",
+   "interior",
+   "gravação",
+   "lâmpada de lava"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.49,
+   0.35
+  ]
+ },
+ "screenshots/People/Real Dimez/Real_Dimez_02": {
+  "description": "Duas mulheres dançam em cima do capô de um carro cercadas por uma multidão filmando com celulares à noite.",
+  "tags": [
+   "mulheres",
+   "dança",
+   "carro",
+   "multidão",
+   "celulares",
+   "noite",
+   "rua",
+   "cidade"
+  ],
+  "shot": "aberto",
+  "time": "noite",
+  "people": 7,
+  "focus": [
+   0.5,
+   0.3
+  ]
+ },
+ "screenshots/People/Real Dimez/Real_Dimez_03": {
+  "description": "Mulher com casaco de pele e homem de óculos escuros estão sentados dentro de um carro à noite.",
+  "tags": [
+   "carro",
+   "noite",
+   "mulher",
+   "homem",
+   "casaco",
+   "óculos",
+   "interior",
+   "direção"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.65,
+   0.45
+  ]
+ },
+ "screenshots/People/Real Dimez/Real_Dimez_04": {
+  "description": "Duas mulheres cantam em microfones de estúdio sob iluminação rosa e azul em um ambiente interno.",
+  "tags": [
+   "estúdio",
+   "música",
+   "microfone",
+   "mulheres",
+   "cantoras",
+   "iluminação",
+   "neon"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.4,
+   0.4
+  ]
+ },
+ "screenshots/Places/Ambrosia/Ambrosia_01": {
+  "description": "Um grupo de motoqueiros pilotando motocicletas por uma rua de pequena cidade em dia ensolarado.",
+  "tags": [
+   "motoqueiros",
+   "motocicletas",
+   "rua",
+   "cidade",
+   "grupo",
+   "estrada",
+   "dia",
+   "sol"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 7,
+  "focus": [
+   0.48,
+   0.61
+  ]
+ },
+ "screenshots/Places/Ambrosia/Ambrosia_02": {
+  "description": "Vista aérea noturna de uma cidade industrial à beira de um rio com tráfego e fumaça saindo de chaminés.",
+  "tags": [
+   "cidade",
+   "industrial",
+   "noite",
+   "rio",
+   "fumaça",
+   "luzes",
+   "aéreo",
+   "tráfego",
+   "chaminés"
+  ],
+  "shot": "aereo",
+  "time": "noite",
+  "people": 0,
+  "focus": [
+   0.45,
+   0.4
+  ]
+ },
+ "screenshots/Places/Ambrosia/Ambrosia_03": {
+  "description": "Um homem barbudo com chapéu e colete de motoqueiro posa ao lado de uma mulher usando óculos escuros e bandana vermelha, segurando um revólver.",
+  "tags": [
+   "motoqueiros",
+   "homem",
+   "mulher",
+   "revólver",
+   "barba",
+   "colete",
+   "tattoo",
+   "dia",
+   "exterior"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.52,
+   0.45
+  ]
+ },
+ "screenshots/Places/Ambrosia/Ambrosia_04": {
+  "description": "Paisagem rural ao pôr do sol com torres de alta tensão e focos de incêndio na vegetação.",
+  "tags": [
+   "campo",
+   "torre de energia",
+   "incêndio",
+   "pôr do sol",
+   "fumaça",
+   "natureza",
+   "céu"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/Places/Ambrosia/Ambrosia_05": {
+  "description": "Motorista dentro de um carro conversando com uma mulher na janela e duas mulheres lavando o para-brisa com espuma.",
+  "tags": [
+   "carro",
+   "interior",
+   "mulheres",
+   "motorista",
+   "lavagem",
+   "espuma",
+   "dia",
+   "rua"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 4,
+  "focus": [
+   0.5,
+   0.3
+  ]
+ },
+ "screenshots/Places/Ambrosia/Ambrosia_06": {
+  "description": "Pessoas cobertas de lama fazem gestos de rock em uma festa ao ar livre com veículos off-road.",
+  "tags": [
+   "lama",
+   "festa",
+   "chapéu",
+   "óculos",
+   "veículos",
+   "cerveja",
+   "multidão",
+   "dia"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 10,
+  "focus": [
+   0.54,
+   0.32
+  ]
+ },
+ "screenshots/Places/Grassrivers/Grassrivers_01": {
+  "description": "Três pessoas armadas posam ao lado de um jacaré morto em uma área pantanosa.",
+  "tags": [
+   "pântano",
+   "pessoas",
+   "armas",
+   "jacaré",
+   "barco",
+   "dia",
+   "natureza"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 3,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/Places/Grassrivers/Grassrivers_02": {
+  "description": "Vista panorâmica de construções sobre palafitas à beira de um lago com barcos e vegetação ao fundo sob céu nublado.",
+  "tags": [
+   "paisagem",
+   "lago",
+   "casas",
+   "palafitas",
+   "barco",
+   "natureza",
+   "nuvens",
+   "dia"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.65,
+   0.58
+  ]
+ },
+ "screenshots/Places/Grassrivers/Grassrivers_03": {
+  "description": "Vista aérea de duas pessoas em um barco a hélice navegando por pântano com vegetação aquática.",
+  "tags": [
+   "pântano",
+   "barco",
+   "água",
+   "vegetação",
+   "pessoas",
+   "aéreo",
+   "dia"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.41,
+   0.47
+  ]
+ },
+ "screenshots/Places/Grassrivers/Grassrivers_04": {
+  "description": "Perseguição policial com carros e helicóptero em uma área pantanosa alagada.",
+  "tags": [
+   "pântano",
+   "perseguição",
+   "polícia",
+   "helicóptero",
+   "carros",
+   "água",
+   "ação",
+   "dia"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.2
+  ]
+ },
+ "screenshots/Places/Grassrivers/Grassrivers_05": {
+  "description": "Vista panorâmica de uma área pantanosa com vegetação densa, um acampamento com doca e hidroavião, e a linha do horizonte de uma cidade ao fundo.",
+  "tags": [
+   "pântano",
+   "hidroavião",
+   "doca",
+   "natureza",
+   "cidade",
+   "vegetação",
+   "dia",
+   "paisagem"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 5,
+  "focus": [
+   0.74,
+   0.73
+  ]
+ },
+ "screenshots/Places/Grassrivers/Grassrivers_06": {
+  "description": "Um homem barbudo com boné segura uma espingarda, enquanto um jacaré pendurado decora o ambiente rústico ao fundo.",
+  "tags": [
+   "homem",
+   "barba",
+   "espingarda",
+   "jacaré",
+   "interior",
+   "dia",
+   "boné",
+   "arma"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 4,
+  "focus": [
+   0.68,
+   0.28
+  ]
+ },
+ "screenshots/Places/Grassrivers/Grassrivers_07": {
+  "description": "Um homem com uma cobra no ombro segura uma faca em um acampamento noturno ao ar livre.",
+  "tags": [
+   "homem",
+   "cobra",
+   "faca",
+   "acampamento",
+   "noite",
+   "fogo",
+   "pessoas"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 4,
+  "focus": [
+   0.35,
+   0.45
+  ]
+ },
+ "screenshots/Places/Grassrivers/Grassrivers_08": {
+  "description": "Três pessoas em um barco iluminado enfrentam um grande crocodilo à noite em uma área alagada.",
+  "tags": [
+   "pântano",
+   "barco",
+   "crocodilo",
+   "noite",
+   "armas",
+   "luz",
+   "pessoas",
+   "lua"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 3,
+  "focus": [
+   0.5,
+   0.73
+  ]
+ },
+ "screenshots/Places/Leonida Keys/Leonida_Keys_01": {
+  "description": "Vista aérea de hidroavião voando sobre arquipélago tropical com ponte longa e mar azul.",
+  "tags": [
+   "hidroavião",
+   "arquipélago",
+   "mar",
+   "ponte",
+   "ilha",
+   "céu",
+   "dia"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.78,
+   0.78
+  ]
+ },
+ "screenshots/Places/Leonida Keys/Leonida_Keys_02": {
+  "description": "Uma pessoa adulta pilota uma scooter de mobilidade azul em uma rua movimentada com pedestres, vans e uma iguana verde no asfalto.",
+  "tags": [
+   "rua",
+   "scooter",
+   "iguana",
+   "pedestres",
+   "van",
+   "dia",
+   "sol",
+   "trânsito",
+   "cidade"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 12,
+  "focus": [
+   0.45,
+   0.5
+  ]
+ },
+ "screenshots/Places/Leonida Keys/Leonida_Keys_03": {
+  "description": "Vista externa de um bar rústico chamado The Rusty Anchor com várias pessoas reunidas e um homem bêbado debruçado sobre a mesa em primeiro plano.",
+  "tags": [
+   "bar",
+   "the rusty anchor",
+   "pessoas",
+   "exterior",
+   "dia",
+   "mesas",
+   "praia",
+   "clima tropical"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 12,
+  "focus": [
+   0.55,
+   0.18
+  ]
+ },
+ "screenshots/Places/Leonida Keys/Leonida_Keys_04": {
+  "description": "Mergulhadores nadam próximos a recifes de corais, peixes e uma tartaruga marinha em águas cristalinas durante o dia.",
+  "tags": [
+   "mergulho",
+   "recife",
+   "tartaruga",
+   "peixes",
+   "oceano",
+   "corais",
+   "água",
+   "mar",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.58,
+   0.65
+  ]
+ },
+ "screenshots/Places/Leonida Keys/Leonida_Keys_05": {
+  "description": "Pessoas aproveitam uma festa animada em barcos e iates em águas tropicais ensolaradas.",
+  "tags": [
+   "barcos",
+   "festa",
+   "mar",
+   "iates",
+   "pessoas",
+   "sol",
+   "verão"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 12,
+  "focus": [
+   0.7,
+   0.5
+  ]
+ },
+ "screenshots/Places/Leonida Keys/Leonida_Keys_06": {
+  "description": "Um close em uma iguana verde escalando o tronco de uma árvore à beira de uma praia tropical.",
+  "tags": [
+   "iguana",
+   "animal",
+   "réptil",
+   "natureza",
+   "praia",
+   "tropical",
+   "mar",
+   "dia"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.65,
+   0.3
+  ]
+ },
+ "screenshots/Places/Leonida Keys/Leonida_Keys_07": {
+  "description": "Mergulhador explora o fundo do mar com um peixe-leão em primeiro plano e um barco na superfície.",
+  "tags": [
+   "mergulho",
+   "oceano",
+   "recife",
+   "peixe-leão",
+   "barco",
+   "subaquático",
+   "vida marina"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.45,
+   0.3
+  ]
+ },
+ "screenshots/Places/Mount Kalaga National Park/Mount_Kalaga_National_Park_01": {
+  "description": "Vários motociclistas pilotam motos de trilha enlameadas em frente a silos industriais enferrujados durante o dia.",
+  "tags": [
+   "motocross",
+   "motos",
+   "lama",
+   "silos",
+   "corrida",
+   "parque",
+   "industria",
+   "dia"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 5,
+  "focus": [
+   0.4,
+   0.45
+  ]
+ },
+ "screenshots/Places/Mount Kalaga National Park/Mount_Kalaga_National_Park_02": {
+  "description": "Um helicóptero de notícias voa sobre uma área montanhosa arborizada durante o pôr do sol.",
+  "tags": [
+   "helicóptero",
+   "montanha",
+   "céu",
+   "nuvens",
+   "voo",
+   "pôr do sol",
+   "natureza"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.48,
+   0.45
+  ]
+ },
+ "screenshots/Places/Mount Kalaga National Park/Mount_Kalaga_National_Park_03": {
+  "description": "Dois homens armados caminham por uma floresta densa entre árvores altas e vegetação rasteira.",
+  "tags": [
+   "floresta",
+   "parque",
+   "homens",
+   "armas",
+   "árvores",
+   "mato",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.24,
+   0.6
+  ]
+ },
+ "screenshots/Places/Mount Kalaga National Park/Mount_Kalaga_National_Park_04": {
+  "description": "Vista aérea de uma rodovia sinuosa serpenteando por um cânion rochoso arborizado durante o dia.",
+  "tags": [
+   "cânion",
+   "estrada",
+   "montanha",
+   "veículos",
+   "natureza",
+   "dia",
+   "floresta"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.55,
+   0.65
+  ]
+ },
+ "screenshots/Places/Mount Kalaga National Park/Mount_Kalaga_National_Park_05": {
+  "description": "Um puma caminha na água de um riacho enquanto cervos se alimentam na margem arborizada.",
+  "tags": [
+   "parque nacional",
+   "puma",
+   "cervos",
+   "rio",
+   "natureza",
+   "floresta",
+   "animais selvagens"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.24,
+   0.67
+  ]
+ },
+ "screenshots/Places/Mount Kalaga National Park/Mount_Kalaga_National_Park_06": {
+  "description": "Uma pessoa de costas navega em um caiaque laranja por um rio próximo a uma ponte metálica.",
+  "tags": [
+   "caiaque",
+   "rio",
+   "ponte",
+   "parque",
+   "natureza",
+   "água",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.54,
+   0.61
+  ]
+ },
+ "screenshots/Places/Port Gellhorn/Port_Gellhorn_01": {
+  "description": "Vista externa de um motel à noite com letreiro luminoso iluminado e vegetação ao redor.",
+  "tags": [
+   "motel",
+   "noite",
+   "placa luminosa",
+   "palmeiras",
+   "carro",
+   "construção",
+   "iluminação"
+  ],
+  "shot": "aberto",
+  "time": "noite",
+  "people": 3,
+  "focus": [
+   0.24,
+   0.22
+  ]
+ },
+ "screenshots/Places/Port Gellhorn/Port_Gellhorn_02": {
+  "description": "Dois homens tatuados estão em um ambiente interno iluminado, um segurando uma pá e outro um taco de beisebol.",
+  "tags": [
+   "homens",
+   "tatuagem",
+   "interior",
+   "pá",
+   "taco de beisebol",
+   "luz",
+   "plantas"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.42,
+   0.52
+  ]
+ },
+ "screenshots/Places/Port Gellhorn/Port_Gellhorn_03": {
+  "description": "Uma mulher entrega um pacote de comprimidos azuis por uma janela de carro a um homem barbudo.",
+  "tags": [
+   "carro",
+   "transação",
+   "drogas",
+   "mulher",
+   "homem",
+   "interior",
+   "noite"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.49,
+   0.52
+  ]
+ },
+ "screenshots/Places/Port Gellhorn/Port_Gellhorn_04": {
+  "description": "Vista aérea noturna do estacionamento de um cabaré iluminado por letreiros neon, com carros estacionados e pessoas ao redor.",
+  "tags": [
+   "noite",
+   "cabaré",
+   "neon",
+   "estacionamento",
+   "carros",
+   "placa luminosa",
+   "pessoas"
+  ],
+  "shot": "aereo",
+  "time": "noite",
+  "people": 4,
+  "focus": [
+   0.73,
+   0.3
+  ]
+ },
+ "screenshots/Places/Port Gellhorn/Port_Gellhorn_05": {
+  "description": "Um homem sem camisa com chapéu e óculos segura uma garrafa de cerveja enquanto uma mulher de biquíni e boné toca seu rosto durante uma festa noturna.",
+  "tags": [
+   "festa",
+   "noite",
+   "homem",
+   "mulher",
+   "cerveja",
+   "fogueira",
+   "carro",
+   "exterior"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 10,
+  "focus": [
+   0.48,
+   0.35
+  ]
+ },
+ "screenshots/Places/Port Gellhorn/Port_Gellhorn_06": {
+  "description": "Vista panorâmica de um parque de trailers ao entardecer com árvores, postes de energia e carros estacionados.",
+  "tags": [
+   "parque de trailers",
+   "entardecer",
+   "casas móveis",
+   "paisagem urbana",
+   "céu alaranjado",
+   "árvores"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.45,
+   0.7
+  ]
+ },
+ "screenshots/Places/Port Gellhorn/Port_Gellhorn_07": {
+  "description": "Mulher dançando em um poste em um clube com letreiro de neon brilhante ao fundo.",
+  "tags": [
+   "mulher",
+   "dança",
+   "poste",
+   "neon",
+   "clube",
+   "boate",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_01": {
+  "description": "Um avião voa baixo sobre um grande letreiro iluminado com o nome da cidade ao entardecer.",
+  "tags": [
+   "avião",
+   "letreiro",
+   "cidade",
+   "por-do-sol",
+   "céu",
+   "palmeiras",
+   "voo",
+   "iluminação"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.56,
+   0.18
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_02": {
+  "description": "Um homem e uma mulher abraçados em uma varanda com vista para a praia e piscina ao amanhecer.",
+  "tags": [
+   "varanda",
+   "casal",
+   "praia",
+   "piscina",
+   "sol",
+   "amanhecer",
+   "palmeiras"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.75,
+   0.55
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_03": {
+  "description": "Vista aérea de uma área urbana costeira com edifícios, piscina, quadra de esportes e tráfego na rua.",
+  "tags": [
+   "cidade",
+   "edifícios",
+   "piscina",
+   "quadra",
+   "rua",
+   "veículos",
+   "palmeiras",
+   "dia"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 5,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_04": {
+  "description": "Dois homens tatuados posam juntos ao ar livre durante o dia, exibindo relógio dourado, cordões e gestos com as mãos.",
+  "tags": [
+   "homens",
+   "tatuagem",
+   "cordão de ouro",
+   "rua",
+   "dia"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.45,
+   0.45
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_05": {
+  "description": "Casal de idosos caminha pela faixa de areia de uma praia movimentada em um dia ensolarado.",
+  "tags": [
+   "praia",
+   "mar",
+   "casal",
+   "idosos",
+   "verão",
+   "areia",
+   "sol"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 10,
+  "focus": [
+   0.6,
+   0.45
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_06": {
+  "description": "Pessoas em trajes de banho e policiais ao redor de uma viatura policial iluminada à noite na rua.",
+  "tags": [
+   "noite",
+   "rua",
+   "viatura",
+   "policiais",
+   "mulheres",
+   "biquíni",
+   "neon",
+   "abordagem"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 6,
+  "focus": [
+   0.52,
+   0.48
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_07": {
+  "description": "Mulheres dançando em um clube noturno iluminado por luzes coloridas enquanto notas de dinheiro voam.",
+  "tags": [
+   "clube",
+   "dança",
+   "mulheres",
+   "dinheiro",
+   "noite",
+   "luzes",
+   "festa"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 4,
+  "focus": [
+   0.45,
+   0.48
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_08": {
+  "description": "Vista aérea noturna de uma cidade iluminada com arranha-céus, uma roda-gigante e ruas movimentadas.",
+  "tags": [
+   "cidade",
+   "noite",
+   "arranha-céus",
+   "roda-gigante",
+   "luzes",
+   "ruas",
+   "arquitetura"
+  ],
+  "shot": "aereo",
+  "time": "noite",
+  "people": 0,
+  "focus": [
+   0.43,
+   0.21
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_09": {
+  "description": "Pessoas andam de moto e conversam na rua sob um viaduto com pilares pintados com murais artísticos.",
+  "tags": [
+   "rua",
+   "motocicletas",
+   "carro",
+   "murais",
+   "pilares",
+   "viaduto",
+   "dia",
+   "cidade"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 12,
+  "focus": [
+   0.6,
+   0.75
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_10": {
+  "description": "Vista aérea diurna de arranha-céus modernos e ondulados à beira d'água com barcos navegando.",
+  "tags": [
+   "cidade",
+   "prédios",
+   "água",
+   "barcos",
+   "arquitetura",
+   "moderno",
+   "dia",
+   "helicóptero"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.51,
+   0.41
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_11": {
+  "description": "Vista panorâmica de uma cidade à beira-mar com arranha-céus iluminados e um helicóptero voando ao entardecer.",
+  "tags": [
+   "cidade",
+   "prédios",
+   "helicóptero",
+   "mar",
+   "entardecer",
+   "paisagem urbana",
+   "luzes"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.63,
+   0.23
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_12": {
+  "description": "Homem com dreadlocks, tatuagens e corrente de ouro segura um fuzil dourado e olha para o celular.",
+  "tags": [
+   "homem",
+   "fuzil",
+   "celular",
+   "tatuagem",
+   "dreadlocks",
+   "corrente",
+   "interior"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.65,
+   0.45
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_13": {
+  "description": "Pessoas dançando animadamente em uma boleta decorada com plantas suspensas e iluminação verde intensa.",
+  "tags": [
+   "boate",
+   "festa",
+   "dança",
+   "luzes",
+   "plantas",
+   "multidão",
+   "interior",
+   "noite"
+  ],
+  "shot": "aberto",
+  "time": "interior",
+  "people": 50,
+  "focus": [
+   0.5,
+   0.6
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_14": {
+  "description": "Dois homens conversam tensos no interior de um carro à noite, enquanto um deles aponta uma arma.",
+  "tags": [
+   "carro",
+   "homens",
+   "arma",
+   "interior",
+   "noite",
+   "tensão",
+   "diálogo"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.35,
+   0.5
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_15": {
+  "description": "Vista aérea de uma marina movimentada com vários iates ancorados e um barco navegando na água, tendo o horizonte da cidade ao fundo.",
+  "tags": [
+   "marina",
+   "iates",
+   "barco",
+   "cidade",
+   "horizonte",
+   "agua",
+   "dia",
+   "sol"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_16": {
+  "description": "Close no rosto de um homem usando chapéu camuflado e cobrindo parte da face com a mão, com um carro ao fundo.",
+  "tags": [
+   "homem",
+   "rosto",
+   "chapéu",
+   "anel",
+   "rua",
+   "carro",
+   "dia"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.58,
+   0.35
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_17": {
+  "description": "Vista aérea de uma operação policial noturna com helicóptero, barcos e viaturas cercando uma mansão à beira d'água.",
+  "tags": [
+   "polícia",
+   "helicóptero",
+   "barco",
+   "mansão",
+   "ponte",
+   "noite",
+   "cidade",
+   "viatura"
+  ],
+  "shot": "aereo",
+  "time": "noite",
+  "people": 10,
+  "focus": [
+   0.18,
+   0.05
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_18": {
+  "description": "Mulher de biquíni roxo e blusa de tela deitada entre notas de dinheiro caindo sob luz neon.",
+  "tags": [
+   "mulher",
+   "biquíni",
+   "dinheiro",
+   "neon",
+   "festa",
+   "interior",
+   "sensual"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.45,
+   0.48
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_19": {
+  "description": "Homem com óculos escuros e corrente de ouro agachado ao lado de um cachorro pitbull com coleira de espinhos.",
+  "tags": [
+   "homem",
+   "cachorro",
+   "pitbull",
+   "corrente de ouro",
+   "óculos escuros",
+   "rua",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.45,
+   0.45
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_20": {
+  "description": "Uma mulher trança o cabelo de um homem tatuado sentado enquanto outros dois personagens aparecem ao fundo em um ambiente interno.",
+  "tags": [
+   "interior",
+   "homem",
+   "mulher",
+   "cabelo",
+   "tatuagem",
+   "armas",
+   "smartphone",
+   "sala"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 4,
+  "focus": [
+   0.62,
+   0.42
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_21": {
+  "description": "Quatro pessoas tatuadas posam juntas em um ambiente interno com iluminação fraca.",
+  "tags": [
+   "pessoas",
+   "tatuagem",
+   "grupo",
+   "homens",
+   "mulher",
+   "interior",
+   "gangue"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 4,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_22": {
+  "description": "Vista aérea de um posto de gasolina iluminado ao entardecer com carros e pessoas na rua urbana.",
+  "tags": [
+   "posto de gasolina",
+   "cidade",
+   "entardecer",
+   "carros",
+   "neon",
+   "rua",
+   "pessoas",
+   "noite"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 5,
+  "focus": [
+   0.77,
+   0.22
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_23": {
+  "description": "Várias mulheres se arrumam e conversam em um camarim iluminado por lâmpadas de espelho.",
+  "tags": [
+   "camarim",
+   "mulheres",
+   "maquiagem",
+   "espelho",
+   "luzes",
+   "interior",
+   "grupo"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 6,
+  "focus": [
+   0.65,
+   0.4
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_24": {
+  "description": "Mulher sentada no capô de um carro esportivo rosa tirando uma selfie com o celular em um encontro de carros ao ar livre.",
+  "tags": [
+   "mulher",
+   "carro esportivo",
+   "selfie",
+   "encontro de carros",
+   "palmeiras",
+   "dia",
+   "cidade"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 9,
+  "focus": [
+   0.34,
+   0.36
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_25": {
+  "description": "Um homem usando um colar grande de ouro está sentado em um clube noturno iluminado por luzes neon vermelhas, acompanhado por duas mulheres.",
+  "tags": [
+   "clube",
+   "noite",
+   "homem",
+   "mulheres",
+   "neon",
+   "festa",
+   "bebida",
+   "dinheiro"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 3,
+  "focus": [
+   0.48,
+   0.38
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_26": {
+  "description": "Vista aérea de uma grande piscina de resort cercada por palmeiras, espreguiçadeiras e pessoas nadando.",
+  "tags": [
+   "piscina",
+   "resort",
+   "palmeiras",
+   "hotel",
+   "verão",
+   "pessoas",
+   "água",
+   "dia"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 25,
+  "focus": [
+   0.5,
+   0.48
+  ]
+ },
+ "screenshots/Places/Vice City/Vice_City_27": {
+  "description": "Vista aérea noturna do horizonte iluminado de uma grande cidade costeira com rio e pontes.",
+  "tags": [
+   "cidade",
+   "horizonte",
+   "noite",
+   "luzes",
+   "arranha-céus",
+   "rio",
+   "pontes",
+   "helicóptero",
+   "arquitetura"
+  ],
+  "shot": "aereo",
+  "time": "noite",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "artwork/Boobie_Ike/Boobie_Ike_portrait": {
+  "description": "Homem com óculos escuros e jaqueta estampada segura uma taça de champagne em ambiente interno iluminado.",
+  "tags": [
+   "homem",
+   "óculos",
+   "jaqueta",
+   "champagne",
+   "joias",
+   "festa",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "artwork/Brian_Heder/Brian_Heder_portrait": {
+  "description": "Um homem de meia-idade com óculos na cabeça e camisa florida debruça-se sobre um mapa náutico em um galpão.",
+  "tags": [
+   "homem",
+   "retrato",
+   "mapa",
+   "óculos",
+   "camisa florida",
+   "galpão",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.49,
+   0.35
+  ]
+ },
+ "artwork/Cal_Hampton/Cal_Hampton_portrait": {
+  "description": "Homem tatuado usando óculos escuros e camisa florida segura uma garrafa sentado perto da água.",
+  "tags": [
+   "homem",
+   "tatuagem",
+   "camisa florida",
+   "garrafa",
+   "água",
+   "ponte",
+   "barco",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.65,
+   0.45
+  ]
+ },
+ "artwork/DreQuan_Priest/DreQuan_Priest_portrait": {
+  "description": "Um homem com tranças está sentado no capô de um veículo segurando um celular ao ar livre ao entardecer.",
+  "tags": [
+   "homem",
+   "carro",
+   "celular",
+   "rua",
+   "entardecer",
+   "estampado",
+   "tatuagens"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 1,
+  "focus": [
+   0.49,
+   0.35
+  ]
+ },
+ "artwork/Jason_and_Lucia_01/Jason_and_Lucia_01_portrait": {
+  "description": "Um homem e uma mulher posam juntos apoiados na frente de um carro ao ar livre durante o pôr do sol.",
+  "tags": [
+   "homem",
+   "mulher",
+   "carro",
+   "arma",
+   "pôr-do-sol",
+   "palmeiras",
+   "cidade"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "artwork/Jason_and_Lucia_01_With_Logos/Jason_and_Lucia_01_With_Logos_portrait": {
+  "description": "Um homem e uma mulher sentados sobre o capô de um carro em um cenário tropical ao entardecer.",
+  "tags": [
+   "homem",
+   "mulher",
+   "carro",
+   "palmeiras",
+   "pôr-do-sol",
+   "arma",
+   "jogo",
+   "arte"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.6
+  ]
+ },
+ "artwork/Jason_and_Lucia_02/Jason_and_Lucia_02_portrait": {
+  "description": "Um homem e uma mulher armados em um píer com fundo de cidade e helicóptero.",
+  "tags": [
+   "homem",
+   "mulher",
+   "armas",
+   "píer",
+   "cidade",
+   "helicóptero",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.65,
+   0.45
+  ]
+ },
+ "artwork/Jason_and_Lucia_02_With_Logos/Jason_and_Lucia_02_With_Logos_portrait": {
+  "description": "Um homem e uma mulher armada em um píer à beira-mar com cidade ao fundo.",
+  "tags": [
+   "homem",
+   "mulher",
+   "armas",
+   "píer",
+   "cidade",
+   "helicóptero",
+   "dia",
+   "praia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.6,
+   0.55
+  ]
+ },
+ "artwork/Jason_and_Lucia_Beach/Jason_and_Lucia_Beach_portrait": {
+  "description": "Retrato de um homem e uma mulher abraçados em um cenário tropical ao entardecer, com o homem segurando uma pistola.",
+  "tags": [
+   "casal",
+   "retrato",
+   "arma",
+   "palmeiras",
+   "por-do-sol",
+   "tropical",
+   "ilustração"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "artwork/Jason_and_Lucia_Beach_With_Logos/Jason_and_Lucia_Beach_With_Logos_portrait": {
+  "description": "Um homem e uma mulher abraçados em um cenário de praia ao pôr do sol, com o homem segurando uma arma.",
+  "tags": [
+   "homem",
+   "mulher",
+   "praia",
+   "pôr do sol",
+   "arma",
+   "palmeiras",
+   "cartaz"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.6
+  ]
+ },
+ "artwork/Jason_and_Lucia_Lock_and_Load/Jason_Lucia_Lock_And_Load_portrait": {
+  "description": "Um homem armado em pé e uma mulher sentada no capô de um carro vermelho manuseando armas ao entardecer.",
+  "tags": [
+   "homem",
+   "mulher",
+   "armas",
+   "carro",
+   "por-do-sol",
+   "palmeiras",
+   "rua"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.49,
+   0.48
+  ]
+ },
+ "artwork/Jason_and_Lucia_Lock_and_Load_With_Logos/Jason_Lucia_Lock_And_Load_With_Logos_portrait": {
+  "description": "Um homem armado em pé e uma mulher sentada no capô de um carro vermelho segurando uma arma e carregador ao pôr do sol.",
+  "tags": [
+   "homem",
+   "mulher",
+   "armas",
+   "carro vermelho",
+   "pôr do sol",
+   "palmeiras"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.51,
+   0.52
+  ]
+ },
+ "artwork/Jason_and_Lucia_Robbery/Jason_and_Lucia_Robbery_portrait": {
+  "description": "Um homem e uma mulher mascarados caminham juntos enquanto seguram armas de fogo ao entardecer.",
+  "tags": [
+   "homem",
+   "mulher",
+   "armas",
+   "máscaras",
+   "entardecer",
+   "carro",
+   "palmeiras",
+   "assalto"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.48,
+   0.52
+  ]
+ },
+ "artwork/Jason_and_Lucia_Robbery_With_Logo/Jason_and_Lucia_Robbery_With_Logo_portrait": {
+  "description": "Um homem e uma mulher mascarados caminham juntos segurando armas em um posto de gasolina ao pôr do sol.",
+  "tags": [
+   "homem",
+   "mulher",
+   "armas",
+   "mascarados",
+   "posto de gasolina",
+   "carro",
+   "pôr do sol",
+   "crime"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.48,
+   0.58
+  ]
+ },
+ "artwork/Jason_and_Lucia_Rooftop/Jason_Lucia_Rooftop_portrait": {
+  "description": "Um homem e uma mulher armados em pé em um telhado ao entardecer com um helicóptero ao fundo.",
+  "tags": [
+   "telhado",
+   "personagens",
+   "armas",
+   "helicóptero",
+   "entardecer",
+   "cidade",
+   "ação"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "artwork/Jason_and_Lucia_Rooftop_With_Logos/Jason_Lucia_Rooftop_With_Logos_portrait": {
+  "description": "Um homem e uma mulher armados posam em um terraço durante o por do sol com um helicóptero ao fundo.",
+  "tags": [
+   "homem",
+   "mulher",
+   "armas",
+   "terraço",
+   "por-do-sol",
+   "helicóptero",
+   "cidade",
+   "cartaz"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.6
+  ]
+ },
+ "artwork/Jason_Lucia_Motel/Jason_and_Lucia_Motel_portrait": {
+  "description": "Um homem e uma mulher sentados juntos em um quarto de motel, com a mulher segurando uma pistola.",
+  "tags": [
+   "homem",
+   "mulher",
+   "quarto",
+   "motel",
+   "arma",
+   "pistola",
+   "abraço",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.55,
+   0.48
+  ]
+ },
+ "artwork/Official_Cover_Art/Official_Cover_Art_portrait": {
+  "description": "Mosaico ilustrado estilo arte conceitual apresentando múltiplos personagens e cenas de ação urbana e praiana.",
+  "tags": [
+   "mosaico",
+   "ilustração",
+   "personagens",
+   "carros",
+   "helicóptero",
+   "barco",
+   "praia",
+   "cidade"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 8,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "artwork/Postcards/Ambrosia/Ambrosia_Postcard_portrait": {
+  "description": "Cartão-postal mostrando uma paisagem industrial com chaminés e fumaça ao pôr do sol.",
+  "tags": [
+   "cartão-postal",
+   "indústria",
+   "fumaça",
+   "pôr-do-sol",
+   "cidade",
+   "chaminés",
+   "paisagem"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.49,
+   0.5
+  ]
+ },
+ "artwork/Postcards/Grassrivers/Grassrivers_Postcard_portrait": {
+  "description": "Cartão postal vertical com a palavra Grassrivers sobre uma foto aérea de um pântano ao pôr do sol.",
+  "tags": [
+   "cartao postal",
+   "pantano",
+   "por-do-sol",
+   "agua",
+   "natureza"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.45
+  ]
+ },
+ "artwork/Postcards/Leonida_Keys/Leonida_Keys_Postcard_portrait": {
+  "description": "Vista aérea de um arquipélago tropical com mar azul cristalino, estrada costeira e um hidroavião voando sobre a água.",
+  "tags": [
+   "arquipélago",
+   "mar",
+   "hidroavião",
+   "ilha",
+   "estrada",
+   "tropical",
+   "dia",
+   "céu",
+   "cartão-postal"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.49,
+   0.5
+  ]
+ },
+ "artwork/Postcards/Mount_Kalaga_National_Park/Mount_Kalaga_National_Park_Postcard_portrait": {
+  "description": "Cartão postal mostrando a paisagem de um parque nacional com rio, floresta e luz do sol.",
+  "tags": [
+   "parque",
+   "rio",
+   "floresta",
+   "natureza",
+   "cartão postal",
+   "sol",
+   "montanha"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.65,
+   0.45
+  ]
+ },
+ "artwork/Postcards/Port_Gellhorn/Port_Gellhorn_Postcard_portrait": {
+  "description": "Cartão postal com vista aérea noturna de Port Gellhorn e letreiro de motel ao fundo.",
+  "tags": [
+   "cartão postal",
+   "port gellhorn",
+   "noite",
+   "cidade",
+   "estrada",
+   "motel",
+   "trem"
+  ],
+  "shot": "aberto",
+  "time": "noite",
+  "people": 0,
+  "focus": [
+   0.49,
+   0.4
+  ]
+ },
+ "artwork/Postcards/Vice_City/Vice_City_Postcard_portrait": {
+  "description": "Cartão postal ilustrando a paisagem urbana costeira de Vice City com mar azul, barcos e arranha-céus ao fundo.",
+  "tags": [
+   "vice city",
+   "cartão postal",
+   "paisagem urbana",
+   "mar",
+   "barcos",
+   "arranha-céus",
+   "dia"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.48
+  ]
+ },
+ "artwork/Raul_Bautista/Raul_Bautista_portrait": {
+  "description": "Homem de terno claro e óculos escuros ajustando as luvas, carregando uma bolsa de couro.",
+  "tags": [
+   "homem",
+   "terno",
+   "óculos",
+   "luvas",
+   "bolsa",
+   "rua",
+   "por-do-sol"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 1,
+  "focus": [
+   0.49,
+   0.36
+  ]
+ },
+ "artwork/Real_Dimez/Real_Dimez_portrait": {
+  "description": "Duas jovens mulheres posam juntas em uma área urbana ao ar livre com roupas estilizadas e coloridas.",
+  "tags": [
+   "mulheres",
+   "cidade",
+   "estilo",
+   "jovens",
+   "moda",
+   "ao ar livre",
+   "retrato"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "artwork/The_Album_Cover_Art/The_Album_Cover_Art_portrait": {
+  "description": "Um homem e uma mulher posam apoiados em um carro ao entardecer, com palmeiras e a silhueta de uma cidade ao fundo.",
+  "tags": [
+   "casal",
+   "carro",
+   "palmeiras",
+   "por-do-sol",
+   "cidade",
+   "praia",
+   "ilustração"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.62,
+   0.61
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_WYMAN_CAR_COLLECTION_06": {
+  "description": "Detalhe da lateral de um carro clássico personalizado com pintura inspirada na bandeira dos Estados Unidos.",
+  "tags": [
+   "carro",
+   "clássico",
+   "pintura",
+   "bandeira",
+   "americano",
+   "veículo",
+   "automóvel",
+   "personalizado"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_01": {
+  "description": "Um homem e uma mulher posam juntos ao ar livre sob a luz do por do sol com palmeiras ao fundo.",
+  "tags": [
+   "homem",
+   "mulher",
+   "por do sol",
+   "palmeiras",
+   "oculos de sol",
+   "praia",
+   "tropical",
+   "retrato"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.48,
+   0.35
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_02": {
+  "description": "Um homem e uma mulher armada estão encostados em um carro verde clássico diante de palmeiras e prédios urbanos.",
+  "tags": [
+   "homem",
+   "mulher",
+   "carro verde",
+   "palmeiras",
+   "armas",
+   "cidade",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.45,
+   0.4
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_ELECTRIC_FANG_01": {
+  "description": "Um homem de branco está em pé ao lado de uma motocicleta em frente a um estúdio de tatuagem iluminado por néon vermelho.",
+  "tags": [
+   "homem",
+   "motocicleta",
+   "estúdio de tatuagem",
+   "néon",
+   "noite",
+   "rua",
+   "iluminação vermelha"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 1,
+  "focus": [
+   0.49,
+   0.55
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_ELECTRIC_FANG_02": {
+  "description": "Uma tatuadora com balaclava branca faz uma tatuagem na perna de uma mulher sentada em uma cadeira de estúdio.",
+  "tags": [
+   "estúdio",
+   "tatuagem",
+   "mulheres",
+   "neon",
+   "cadeira",
+   "smartphone",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.51,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_ELECTRIC_FANG_03": {
+  "description": "Um homem tatuado de óculos escuros e uma mulher de cabelo curto posam em um estúdio iluminado por neons.",
+  "tags": [
+   "homem",
+   "mulher",
+   "tatuagem",
+   "neon",
+   "estúdio",
+   "interior",
+   "luz vermelha"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.53,
+   0.52
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_ELECTRIC_FANG_04": {
+  "description": "Homem sem camisa com tatuagens nas costas está em pé em um estúdio de tatuagem com paredes cobertas de cartazes.",
+  "tags": [
+   "homem",
+   "tatuagem",
+   "estúdio",
+   "cartazes",
+   "luz roxa",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 3,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_GOODTIME_GEAR_01": {
+  "description": "Homem e mulher em pé em frente a um grande mural pintado com tema de Vice City.",
+  "tags": [
+   "homem",
+   "mulher",
+   "mural",
+   "vice city",
+   "boné",
+   "camisa estampada",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.65,
+   0.45
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_GROTTI_CHEETAH_01": {
+  "description": "Um carro esportivo branco com listras vermelhas está estacionado em frente a um edifício circular moderno ao entardecer.",
+  "tags": [
+   "carro esportivo",
+   "veículo",
+   "edifício circular",
+   "arquitetura moderna",
+   "palmeiras",
+   "por-do-sol",
+   "rua"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.38,
+   0.72
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_GROTTI_CHEETAH_02": {
+  "description": "Primeiro plano de um carro esportivo branco e vermelho estacionado em uma rua pavimentada ao entardecer.",
+  "tags": [
+   "carro",
+   "esportivo",
+   "branco",
+   "vermelho",
+   "rua",
+   "pavimento",
+   "entardecer",
+   "faróis"
+  ],
+  "shot": "close",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.65,
+   0.55
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_GROTTI_CHEETAH_03": {
+  "description": "Detalhe da traseira e roda de um carro esportivo branco estacionado em piso pavimentado.",
+  "tags": [
+   "carro",
+   "esportivo",
+   "traseira",
+   "branco",
+   "roda",
+   "rua",
+   "dia"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_GROTTI_CHEETAH_04": {
+  "description": "Detalhe lateral de um carro esportivo branco com interior vermelho aberto ao entardecer.",
+  "tags": [
+   "carro",
+   "esportivo",
+   "interior",
+   "vermelho",
+   "porta",
+   "aberta",
+   "entardecer",
+   "veículo"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.35
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_HAWK_AND_LITTLE_MORGAN_REVOLVERS_01": {
+  "description": "Um homem aponta um revólver prateado com mira telescópica em um ambiente interno.",
+  "tags": [
+   "arma",
+   "revólver",
+   "mira",
+   "homem",
+   "tiroteio",
+   "interior",
+   "prateado",
+   "ação"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.34,
+   0.48
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_HAWK_AND_LITTLE_MORGAN_REVOLVERS_02": {
+  "description": "Dois revólveres cromados, uma faca, maços de dinheiro e uma caixa de munição estão dispostos sobre uma mesa escura.",
+  "tags": [
+   "revólveres",
+   "armas",
+   "faca",
+   "dinheiro",
+   "munição",
+   "mesa",
+   "interior"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_ONE_EYED_WILLIE_01": {
+  "description": "Um veículo utilitário esportivo verde customizado com estampa de monstro está estacionado em um estúdio com fundo texturizado em tons de verde.",
+  "tags": [
+   "carro",
+   "veículo",
+   "verde",
+   "estúdio",
+   "monster truck",
+   "automóvel",
+   "personalizado"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 0,
+  "focus": [
+   0.49,
+   0.52
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_ONE_EYED_WILLIE_02": {
+  "description": "Close na dianteira de um veículo utilitário verde da marca Canis em estúdio escuro.",
+  "tags": [
+   "carro",
+   "verde",
+   "canis",
+   "veículo",
+   "farol",
+   "grelha",
+   "estúdio"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_ONE_EYED_WILLIE_03": {
+  "description": "Três pessoas trabalham na manutenção de um jipe verde com o capô aberto dentro de uma oficina mecânica.",
+  "tags": [
+   "oficina",
+   "jipe",
+   "verde",
+   "mecânico",
+   "manutenção",
+   "carro",
+   "interior"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 3,
+  "focus": [
+   0.51,
+   0.42
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_PTT_STORE_01": {
+  "description": "Um grupo de pessoas reunido à noite em um pátio externo, com uma motocicleta colorida e um homem fumando em primeiro plano.",
+  "tags": [
+   "noite",
+   "pátio",
+   "motocicleta",
+   "pessoas",
+   "fumaça",
+   "lazer",
+   "rua"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 10,
+  "focus": [
+   0.4,
+   0.55
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_RIDEOUT_CUSTOMS_01": {
+  "description": "Um carro clássico dourado e brilhante estacionado em um estúdio com iluminação laranja circular ao fundo.",
+  "tags": [
+   "carro",
+   "clássico",
+   "dourado",
+   "rodas",
+   "personalizado",
+   "estúdio",
+   "iluminação",
+   "automóvel"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.6
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_RIDEOUT_CUSTOMS_02": {
+  "description": "Vista superior do interior de um carro clássico com bancos e acabamentos vermelhos iluminados pelo sol da tarde.",
+  "tags": [
+   "carro",
+   "interior",
+   "veículo",
+   "bancos vermelhos",
+   "volante",
+   "painel",
+   "automóvel",
+   "por-do-sol"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_RIDEOUT_CUSTOMS_03": {
+  "description": "Dois mecânicos trabalham na manutenção de um carro clássico amarelo dentro de uma oficina mecânica.",
+  "tags": [
+   "oficina",
+   "mecânica",
+   "carros",
+   "trabalho",
+   "interior",
+   "veículos",
+   "ferramentas"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 2,
+  "focus": [
+   0.45,
+   0.55
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SAFEHOUSE_VEHICLES_01": {
+  "description": "Uma casa de madeira sobre palafitas à beira da água, com um carro amarelo estacionado embaixo e uma pessoa na varanda.",
+  "tags": [
+   "casa",
+   "palafitas",
+   "carro",
+   "moto",
+   "varanda",
+   "rio",
+   "dia",
+   "arquitetura"
+  ],
+  "shot": "aberto",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.42,
+   0.26
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SAFEHOUSE_VEHICLES_02": {
+  "description": "Uma motocicleta off-road verde estacionada em frente a uma porta de garagem verde.",
+  "tags": [
+   "motocicleta",
+   "moto",
+   "veículo",
+   "garagem",
+   "verde",
+   "off-road",
+   "estacionado"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SAFEHOUSE_VEHICLES_03": {
+  "description": "Homem sem camisa navega de caiaque em águas calmas ao pôr do sol.",
+  "tags": [
+   "caiaque",
+   "homem",
+   "água",
+   "pôr-do-sol",
+   "esporte",
+   "rio",
+   "barco"
+  ],
+  "shot": "medio",
+  "time": "por-do-sol",
+  "people": 1,
+  "focus": [
+   0.49,
+   0.35
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SARAS_SALON_01": {
+  "description": "Um homem e uma mulher posam juntos em frente a uma vitrine iluminada à noite.",
+  "tags": [
+   "homem",
+   "mulher",
+   "jaqueta",
+   "vitrine",
+   "noite",
+   "rua",
+   "postura"
+  ],
+  "shot": "medio",
+  "time": "noite",
+  "people": 2,
+  "focus": [
+   0.47,
+   0.65
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SARAS_SALON_02": {
+  "description": "Homem com cabelo estilo mullet e barba por fazer olha de lado dentro de um salão de beleza.",
+  "tags": [
+   "homem",
+   "mullet",
+   "salão",
+   "interior",
+   "cabelo",
+   "barba",
+   "pessoas"
+  ],
+  "shot": "close",
+  "time": "interior",
+  "people": 3,
+  "focus": [
+   0.55,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SARAS_SALON_03": {
+  "description": "Mulher de óculos escuros faz as unhas em um salão de beleza enquanto outra pessoa atende.",
+  "tags": [
+   "salão de beleza",
+   "mulher",
+   "óculos escuros",
+   "unhas",
+   "interior",
+   "esmalte",
+   "atendimento"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 3,
+  "focus": [
+   0.35,
+   0.35
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SQUALO_01": {
+  "description": "Um barco navega pelas águas calmas da baía com a linha do horizonte da cidade iluminada ao fundo durante o entardecer.",
+  "tags": [
+   "barco",
+   "lancha",
+   "água",
+   "cidade",
+   "horizonte",
+   "entardecer",
+   "pôr do sol",
+   "prédios"
+  ],
+  "shot": "aberto",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.3,
+   0.6
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SQUALO_02": {
+  "description": "Close na lateral de uma lancha branca com o nome Squalo estampado, navegando na água durante o dia.",
+  "tags": [
+   "lancha",
+   "barco",
+   "squalo",
+   "agua",
+   "transporte",
+   "dia",
+   "mar"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.4,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SQUALO_03": {
+  "description": "Um homem e uma mulher relaxam na popa de um barco enquanto golfinhos nadam nas proximidades e uma gaivota pousa na cobertura.",
+  "tags": [
+   "barco",
+   "golfinhos",
+   "mar",
+   "casal",
+   "verão",
+   "gaivota",
+   "lazer",
+   "água"
+  ],
+  "shot": "aereo",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.7,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_SQUALO_04": {
+  "description": "Vista aérea de duas lanchas e um helicóptero da polícia navegando sobre o mar durante o entardecer.",
+  "tags": [
+   "barco",
+   "polícia",
+   "helicóptero",
+   "mar",
+   "água",
+   "perseguição",
+   "entardecer",
+   "aéreo"
+  ],
+  "shot": "aereo",
+  "time": "por-do-sol",
+  "people": 2,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_STOCK_305_01": {
+  "description": "Um homem está sentado no teto de uma van customizada enquanto uma mulher em primeiro plano posa ao lado dela.",
+  "tags": [
+   "van",
+   "mulher",
+   "homem",
+   "grafite",
+   "rua",
+   "dia",
+   "veículo",
+   "roupa de pele"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.41,
+   0.29
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_STOCK_305_02": {
+  "description": "Um homem com jaqueta cinza e camiseta preta segura uma arma de fogo em pé, encostado em uma parede preta decorada com cápsulas coloridas.",
+  "tags": [
+   "homem",
+   "arma",
+   "jaqueta",
+   "parede",
+   "cápsulas",
+   "interior",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.75,
+   0.45
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_STOCK_305_03": {
+  "description": "Detalhe de uma fachada colorida com a placa STOCK 305 e arte urbana nas paredes.",
+  "tags": [
+   "fachada",
+   "placa",
+   "arte urbana",
+   "pintura",
+   "construção",
+   "dia",
+   "arquitetura"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.7,
+   0.35
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_STOCK_305_04": {
+  "description": "Mulher jovem com óculos escuros e top preto posa apoiada em um balcão de madeira em uma loja colorida.",
+  "tags": [
+   "mulher",
+   "loja",
+   "balcão",
+   "óculos escuros",
+   "interior",
+   "arte urbana",
+   "moda"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.5,
+   0.35
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VAPID_BUGGY_01": {
+  "description": "Um carro modificado para off-road trafega em alta velocidade por uma estrada de terra lamacenta, espalhando lama.",
+  "tags": [
+   "carro",
+   "off-road",
+   "lama",
+   "estrada",
+   "floresta",
+   "corrida",
+   "dia",
+   "veículo"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.35,
+   0.45
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VAPID_BUGGY_02": {
+  "description": "Close na dianteira de um veículo off-road azul e sujo, com para-choque de metal e faróis auxiliares.",
+  "tags": [
+   "carro",
+   "off-road",
+   "veículo",
+   "dianteira",
+   "farol",
+   "para-choque",
+   "lama",
+   "dia"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VAPID_BUGGY_03": {
+  "description": "Vista interna do painel e volante clássico de um veículo com para-brisa sujo de lama.",
+  "tags": [
+   "carro",
+   "interior",
+   "volante",
+   "painel",
+   "direção",
+   "veículo",
+   "lama"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.46,
+   0.48
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VAPID_BUGGY_04": {
+  "description": "Um carro modificado para off-road com grandes pneus de lama e faróis auxiliares está estacionado em frente a uma oficina.",
+  "tags": [
+   "carro",
+   "off-road",
+   "pneus grandes",
+   "oficina",
+   "veículo",
+   "dia",
+   "automóvel"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.55,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VAPID_GANADO_RETRO_BUILD_01": {
+  "description": "Uma picape clássica amarela com detalhes vermelhos dirige em uma estrada costeira com o mar ao fundo.",
+  "tags": [
+   "picape",
+   "carro clássico",
+   "amarelo",
+   "estrada costeira",
+   "mar",
+   "praia",
+   "dirigindo"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.48,
+   0.51
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VICE_CITY_STYLE_01": {
+  "description": "Um homem e uma mulher relaxam juntos em um sofá de vime perto de uma fonte ao ar livre.",
+  "tags": [
+   "homem",
+   "mulher",
+   "sofá",
+   "fonte",
+   "ao ar livre",
+   "tatuagem",
+   "óculos de sol",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.48,
+   0.45
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VICE_CITY_STYLE_02": {
+  "description": "Homem de costas vestindo camisa estampada com flamingos e paisagem tropical, posando em ambiente interno.",
+  "tags": [
+   "homem",
+   "costas",
+   "camisa",
+   "estampa",
+   "tropical",
+   "interior",
+   "óculos"
+  ],
+  "shot": "medio",
+  "time": "interior",
+  "people": 1,
+  "focus": [
+   0.5,
+   0.4
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VICE_CITY_STYLE_03": {
+  "description": "Mulher com tranças e botas de salto alto com estampa de tigre está sentada em uma estrutura arquitetônica azul e cinza.",
+  "tags": [
+   "mulher",
+   "botas",
+   "tranças",
+   "arquitetura",
+   "óculos",
+   "dia"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   1.0,
+   1.0
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VICE_CITY_STYLE_04": {
+  "description": "Homem com camisa florida e óculos escuros apoiado em um parapeito de vidro ao ar livre.",
+  "tags": [
+   "homem",
+   "camisa florida",
+   "óculos",
+   "parapeito",
+   "dia",
+   "ao ar livre",
+   "arquitetura moderna"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.41,
+   0.44
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_VICE_CITY_STYLE_05": {
+  "description": "Mulher com tranças e óculos, vestindo conjunto marrom e botas, em pé diante de estrutura geométrica.",
+  "tags": [
+   "mulher",
+   "conjunto marrom",
+   "botas",
+   "estrutura geométrica",
+   "dia",
+   "arquitetura moderna",
+   "pose"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 1,
+  "focus": [
+   0.5,
+   0.35
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_WEAPON_VARIANTS_01": {
+  "description": "Duas armas de fogo customizadas, dinheiro e uma vela estão dispostos na borda de uma piscina à noite.",
+  "tags": [
+   "armas",
+   "pistolas",
+   "dinheiro",
+   "piscina",
+   "noite",
+   "vela",
+   "customização"
+  ],
+  "shot": "close",
+  "time": "noite",
+  "people": 0,
+  "focus": [
+   0.35,
+   0.45
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_WYMAN_CAR_COLLECTION_01": {
+  "description": "Um homem segura uma chave inglesa em uma oficina mecânica ao ar livre com carros clássicos estacionados ao fundo.",
+  "tags": [
+   "oficina",
+   "mecânico",
+   "carros",
+   "ferramenta",
+   "dia",
+   "homem",
+   "garagem"
+  ],
+  "shot": "medio",
+  "time": "dia",
+  "people": 2,
+  "focus": [
+   0.41,
+   0.39
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_WYMAN_CAR_COLLECTION_02": {
+  "description": "Detalhe da traseira e lateral de um carro clássico azul claro com aerofólio e faixa preta estacionado ao ar livre.",
+  "tags": [
+   "carro",
+   "clássico",
+   "azul",
+   "traseira",
+   "aerofólio",
+   "rodas",
+   "estacionamento",
+   "dia"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_WYMAN_CAR_COLLECTION_03": {
+  "description": "Detalhe lateral de um utilitário esportivo antigo e empoeirado, com faixa decorativa colorida.",
+  "tags": [
+   "carro",
+   "veículo",
+   "off-road",
+   "lama",
+   "poeira",
+   "lateral",
+   "automóvel"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.5,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_WYMAN_CAR_COLLECTION_04": {
+  "description": "Detalhe da lateral e capô de um carro esportivo vermelho com faixa branca e o número trinta e seis pintado.",
+  "tags": [
+   "carro",
+   "esportivo",
+   "vermelho",
+   "número 36",
+   "capô",
+   "lateral",
+   "automóvel",
+   "dia"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.7,
+   0.5
+  ]
+ },
+ "ultimate/ULTIMATE_EDITION_WYMAN_CAR_COLLECTION_05": {
+  "description": "Close-up da dianteira e roda de um carro esportivo clássico verde claro.",
+  "tags": [
+   "carro",
+   "esportivo",
+   "clássico",
+   "verde",
+   "farol",
+   "roda",
+   "veículo",
+   "automóvel"
+  ],
+  "shot": "close",
+  "time": "dia",
+  "people": 0,
+  "focus": [
+   0.6,
+   0.4
+  ]
+ }
+}
