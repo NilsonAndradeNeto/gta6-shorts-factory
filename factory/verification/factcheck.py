@@ -99,14 +99,14 @@ def programmatic_check(script: dict[str, Any], evidence: list[dict[str, Any]]) -
     attributed: set[str] = set()
     for seg in script.get("segments", []):
         t = seg.get("text", "")
-        for c in seg.get("claims", []) or []:
+        for c in [c for c in (seg.get("claims") or []) if isinstance(c, dict)]:
             e = ev_by_id.get(str(c.get("evidence", "")).strip())
             if e and (ATTRIBUTION.search(t) or (norm(e["source"]) and norm(e["source"]).split()[0] in norm(t))):
                 attributed.add(e["id"])
 
     for si, seg in enumerate(script.get("segments", [])):
         text = seg.get("text", "")
-        claims = seg.get("claims", []) or []
+        claims = [c for c in (seg.get("claims") or []) if isinstance(c, dict)]
         if seg.get("tipo") == "humor" and not claims:
             continue   # ficção assumida: o juiz avalia se está claramente marcada como imaginação
         claim_numbers: set[str] = set()
@@ -160,7 +160,7 @@ def programmatic_check(script: dict[str, Any], evidence: list[dict[str, Any]]) -
 def llm_judge(llm: LLM, script: dict[str, Any], evidence: list[dict[str, Any]]) -> tuple[list[str], dict[str, Any]]:
     claims = []
     for seg in script.get("segments", []):
-        for c in seg.get("claims", []) or []:
+        for c in [c for c in (seg.get("claims") or []) if isinstance(c, dict)]:
             claims.append({"i": len(claims), "frase_narrada": seg.get("text", ""), "afirmacao": c.get("text", ""),
                            "evidencia": c.get("evidence"), "citacao": c.get("quote", ""), "status": c.get("status")})
     ev_txt = "\n\n".join(f"[{e['id']}] tier={e['tier']} fonte={e['source']}\n{e['text'][:3500]}" for e in evidence)
@@ -193,7 +193,7 @@ def check(llm: LLM, script: dict[str, Any], evidence: list[dict[str, Any]]) -> d
             judge_issues, judge_raw = llm_judge(llm, script, evidence)
         except LLMError as e:
             judge_issues = [f"juiz indisponível: {e}"]
-    n_claims = sum(len(s.get("claims", []) or []) for s in script.get("segments", []))
+    n_claims = sum(len([c for c in (s.get("claims") or []) if isinstance(c, dict)]) for s in script.get("segments", []))
     if n_claims == 0:
         prog.append("roteiro sem nenhuma afirmação vinculada a evidência")
     passed = not prog and not judge_issues

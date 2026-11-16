@@ -36,8 +36,8 @@ voice:
   # Tentados em ordem. Fenrir (Google Gemini TTS, camada gratuita) foi a voz escolhida pelo dono do canal.
   # O texto de estilo vai em inglês curto: o modelo 2.5 o interpreta como direção, sem ler em voz alta.
   engines:
-    - {engine: gemini, model: gemini-2.5-flash-preview-tts, voice: Fenrir, style: "Say excitedly, like a funny Brazilian YouTuber:"}
-    - {engine: gemini, model: gemini-3.8-flash-tts, voice: Fenrir, style: ""}
+    - {engine: gemini, model: gemini-2.5-flash-preview-tts, voice: Fenrir, style: "Read in Brazilian Portuguese with a natural, confident, engaging professional male voice. Use dynamic pacing, clear diction, expressive humor and brief pauses. Do not shout:"}
+    - {engine: gemini, model: gemini-3.8-flash-tts, voice: Fenrir, style: "Read in Brazilian Portuguese with a natural, confident professional male voice, expressive humor and dynamic pacing:"}
     - {engine: edge, voice: pt-BR-AntonioNeural}
     - {engine: piper, voice: pt_BR-faber-medium}
   piper_voice: pt_BR-faber-medium
@@ -86,7 +86,7 @@ longform:
   enabled: true
   publish_time: "09:08"
   chapters: 9                   # ~9-10 min com abertura, vinhetas e encerramento
-  min_chapters: 6
+  min_chapters: 5
   min_minutes: 6
   max_minutes: 14
 
@@ -112,3 +112,11 @@ paths:
   data_dir: data
   cache_dir: .cache
   output_dir: output
+
+intelligence:
+  interval_hours: 4
+  youtube_url: https://www.youtube.com/@NetoVerso201
+  # /shorts é o mesmo canal; não duplicar contagens.
+  tiktok_url: https://www.tiktok.com/@dudah.ssantos
+  competitors: []  # até 3 URLs de canais; descoberta também aparece nas oportunidades
+  trend_queries: ["notícias games humor", "jogos novidades"]

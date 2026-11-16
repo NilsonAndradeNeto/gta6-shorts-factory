@@ -125,6 +125,23 @@ def cmd_report(a: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_intelligence(a: argparse.Namespace) -> int:
+    from factory.analytics.strategy import context, monitor
+    from factory.pipeline import RunLock
+    import time
+    db = connect()
+    while True:
+        with RunLock(settings().path('data_dir')):
+            result = monitor(db, force=a.force)
+            report = json.dumps(result, ensure_ascii=False, indent=2) + '\n' + context(db)
+            (settings().path('data_dir') / 'strategy-report.txt').write_text(report, encoding='utf-8')
+            print(report, flush=True)
+        if not a.watch:
+            return 0
+        # Checagem leve; coleta remota respeita o intervalo persistido.
+        time.sleep(60)
+
+
 def cmd_tag(a: argparse.Namespace) -> int:
     from factory.assets.tagger import tag_pending
     from factory.llm import LLM
@@ -182,6 +199,10 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("-n", type=int, default=20)
     s.set_defaults(fn=cmd_status)
     sub.add_parser("dashboard").set_defaults(fn=cmd_dashboard)
+    intelligence = sub.add_parser('intelligence')
+    intelligence.add_argument('--force', action='store_true')
+    intelligence.add_argument('--watch', action='store_true', help='mantém observador local ativo; computador precisa ficar ligado')
+    intelligence.set_defaults(fn=cmd_intelligence)
     rp = sub.add_parser("report")
     rp.add_argument("--fetch", action="store_true")
     rp.set_defaults(fn=cmd_report)

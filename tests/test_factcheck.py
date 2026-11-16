@@ -98,3 +98,11 @@ def test_attribution_anywhere_in_script(evidence):
         {"tipo": "fato", "text": "Segundo a IGN, isso vale em todos os consoles.", "claims": [{"evidence": "E2", "quote": q, "status": "REPORTADO"}]},
     ], "title": "t", "confirmation": "REPORTADO"}
     assert programmatic_check(s, evidence) == []
+
+
+def test_malformed_claims_do_not_crash(evidence):
+    s = {"segments": [{"tipo": "humor", "text": "Imagina só.", "claims": ["texto solto"]},
+                      {"tipo": "fato", "text": "Segundo a IGN, 30 FPS.", "claims": ["x", {"evidence": "E2",
+                       "quote": "GTA 6 will run at 30 frames per second on all consoles", "status": "REPORTADO"}]}],
+         "title": "t", "confirmation": "REPORTADO"}
+    assert programmatic_check(s, evidence) == []

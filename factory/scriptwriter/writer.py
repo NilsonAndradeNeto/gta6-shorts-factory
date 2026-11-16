@@ -196,12 +196,14 @@ def validate_shape(script: dict[str, Any], prev_hooks: list[str]) -> list[str]:
 
 
 def write_script(db: DB, llm: LLM, topic: dict[str, Any], feedback: str = "", hook_style: str | None = None) -> dict[str, Any]:
+    from factory.analytics.strategy import context
+    strategy = context(db)
     hook_style = hook_style or choose_hook_style(db, topic)
     prev = [h for _, h in recent_hooks(db)]
     user = build_user_prompt(topic, hook_style, prev, feedback)
     script: dict[str, Any] = {}
     for attempt in range(4):
-        script = llm.json(SYSTEM, user, purpose="script", max_tokens=3500)
+        script = llm.json(SYSTEM, user + strategy, purpose="script", max_tokens=3500)
         if not isinstance(script, dict):
             script = {}
         problems = validate_shape(script, prev)
@@ -214,4 +216,5 @@ def write_script(db: DB, llm: LLM, topic: dict[str, Any], feedback: str = "", ho
     script["hook_style"] = script.get("hook_style") or hook_style
     script["topic_id"] = topic["id"]
     script["confirmation"] = topic["confirmation"]
+    script["strategy_context"] = strategy
     return script

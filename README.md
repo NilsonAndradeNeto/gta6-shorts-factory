@@ -127,3 +127,54 @@ Para produzir sem enviar, crie a *variable* `FACTORY_DRY_RUN=1`.
 ```
 .venv\Scripts\python -m pytest -q tests
 ```
+
+## Inteligência de estratégia
+
+O ciclo `run` agora observa o canal configurado em `intelligence.youtube_url`, incluindo
+até 100 uploads recentes, sem duplicar o endereço `/shorts`. Guarda snapshots públicos
+de views, likes e comentários em SQLite e calcula crescimento entre observações.
+As tabelas novas são criadas automaticamente, preservando os dados de produção.
+
+Compara vídeos por plataforma, canal, formato aproximado e faixa de idade; exige pelo
+menos três exemplos, exclui vídeos com menos de 24 horas e com mais de 90 dias. Guarda
+melhor/pior resultado e mediana como hipóteses, sem alegar causa ou sucesso garantido.
+Shorts não são identificados pela Data API: `short_candidate` significa até 180 segundos,
+incluindo possíveis vídeos horizontais. A classificação é explicitamente aproximada.
+
+Shorts e capítulos de vídeos longos recebem esse contexto nos prompts para adaptar
+títulos, abordagem e ritmo sugerido. O foco editorial e as verificações factuais continuam
+vigentes. A edição visual continua usando o compositor existente: não há análise automática
+de cenas, narrativa falada ou retenção pública. Isso exigiria fontes adicionais de dados.
+
+Há até duas buscas diárias de oportunidades recentes no YouTube (máximo 200 unidades
+de quota de busca/dia), configuráveis em `intelligence.trend_queries`, sem mudar a pauta
+por conta própria. Títulos encontrados são inspiração, nunca evidência factual. Até três
+canais em `intelligence.competitors` podem ser monitorados; as buscas também descobrem
+vídeos de outros canais. Não há descoberta automática de uma lista estável de concorrentes.
+
+Usa o OAuth já existente ou o secret opcional `YOUTUBE_API_KEY`. No TikTok, configure
+`TIKTOK_ACCESS_TOKEN` autorizado para `video.list` e `user.info.profile`; a identidade da
+conta deve corresponder a `@dudah.ssantos`. A coleta cobre os 20 vídeos mais recentes.
+Token expirado exige renovação externa. Sem acesso, registra indisponibilidade e mantém
+métricas ausentes. Não contorna bloqueios nem inventa retenção.
+Referências: [TikTok user info](https://developers.tiktok.com/docs/en/tiktok-api-v2-get-user-info)
+e [listagem de vídeos](https://developers.tiktok.com/docs/en/tiktok-api-v2-video-list).
+
+```powershell
+python -m factory.cli intelligence          # coleta devida + relatório
+python -m factory.cli intelligence --force  # coleta imediata
+python -m factory.cli intelligence --watch  # observador local contínuo
+```
+
+O relatório local fica em `data/strategy-report.txt`. O histórico persistente está nas
+tabelas `observations`, `strategy_memory` e `strategy_runs` do banco. O modo `--watch`
+precisa de computador ligado e não deve executar em paralelo ao ciclo de produção.
+No GitHub Actions, o monitoramento usa as execuções já agendadas e respeita intervalo
+mínimo de quatro horas: não é um servidor ativo 24h, e o cron pode atrasar. Não foram
+adicionados serviços pagos nem novos jobs pesados; a gratuidade continua dependendo
+das cotas das contas existentes. Esta alteração local precisa ser enviada ao repositório
+para passar a valer no Actions.
+
+A narração usa vozes masculinas Fenrir, AntonioNeural e faber, com direção mais firme,
+natural e expressiva nos motores Gemini. A qualidade depende do motor disponível;
+não foi realizada nova audição nesta alteração.

@@ -394,6 +394,11 @@ class Factory:
         self.db.x("INSERT INTO runs(id,kind,started_at,status) VALUES (?,?,?,?)", run_id, "cycle", now_iso(), "running")
         status = "ok"
         try:
+            try:
+                from factory.analytics.strategy import monitor
+                self.summary['intelligence'] = monitor(self.db)
+            except Exception as e:
+                self.db.record_error(None, 'intelligence', e)
             if research:
                 self.summary["research"] = self.research()
             if self.llm.available:

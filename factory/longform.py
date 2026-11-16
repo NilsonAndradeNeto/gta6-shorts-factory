@@ -133,8 +133,9 @@ def _validate_chapter(ch: dict[str, Any]) -> list[str]:
     for s in segs:
         if not isinstance(s, dict) or not s.get("text"):
             return ["segmento sem texto"]
-        s.setdefault("claims", [])
-        s.setdefault("visual", {"entities": [], "intent": "", "on_screen_text": ""})
+        s["claims"] = [c for c in (s.get("claims") or []) if isinstance(c, dict)]
+        if not isinstance(s.get("visual"), dict):
+            s["visual"] = {"entities": [], "intent": "", "on_screen_text": ""}
         s["tipo"] = "humor" if str(s.get("tipo", "fato")).lower().startswith("humor") else "fato"
     fatos = [s for s in segs if s["tipo"] == "fato"]
     if len(fatos) < 2 or sum(len(s["claims"]) for s in fatos) < 2:
@@ -150,6 +151,7 @@ def _validate_chapter(ch: dict[str, Any]) -> list[str]:
 
 
 def write_chapter(db: DB, llm: LLM, topic: dict[str, Any]) -> dict[str, Any] | None:
+    from factory.analytics.strategy import context
     from factory.scriptwriter.writer import build_user_prompt
     from factory.verification.factcheck import check
     evidence = json.loads(topic["evidence"])
@@ -157,7 +159,7 @@ def write_chapter(db: DB, llm: LLM, topic: dict[str, Any]) -> dict[str, Any] | N
     for attempt in range(3):
         user = build_user_prompt(topic, "exagero", [], feedback).replace("ESTILO DE GANCHO OBRIGATÓRIO", "ESTILO DE GANCHO SUGERIDO")
         try:
-            ch = llm.json(CHAPTER_SYSTEM, user, purpose="long_chapter", max_tokens=4000)
+            ch = llm.json(CHAPTER_SYSTEM, user + context(db, 'long'), purpose="long_chapter", max_tokens=4000)
         except LLMError as e:
             log.warning("Capítulo falhou no LLM: %s", e)
             continue
@@ -181,7 +183,7 @@ def write_episode(db: DB, llm: LLM) -> dict[str, Any]:
     cfg = settings()
     want = int(cfg.get("longform.chapters", 7))
     chapters: list[dict[str, Any]] = []
-    for t in pick_stories(db, want + 5):
+    for t in pick_stories(db, want + 10):
         if len(chapters) >= want:
             break
         ch = write_chapter(db, llm, t)
@@ -208,7 +210,7 @@ def write_episode(db: DB, llm: LLM) -> dict[str, Any]:
             frame[part] = [x if isinstance(x, dict) else {"role": "hook" if part == "intro" else "cta", "text": str(x)}
                            for x in frame[part] if (x.get("text") if isinstance(x, dict) else str(x).strip())]
             for s in frame[part]:
-                s.setdefault("claims", [])
+                s["claims"] = []   # só reaproveitam o que os capítulos já verificaram
                 s.setdefault("visual", {"entities": [], "intent": "", "on_screen_text": ""})
                 s["tipo"] = "humor"
         # o juiz confere se abertura/encerramento só usam o que está nos capítulos verificados
