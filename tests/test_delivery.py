@@ -22,6 +22,7 @@ def _video(db, tmp_path, slot, state=State.VALIDATED):
 def test_deliver_all_four_at_nine(db, tmp_path, monkeypatch):
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "x")
     monkeypatch.setenv("TELEGRAM_CHAT_ID", "1")
+    monkeypatch.setattr(tg, "configured", lambda: True)
     sent = []
     monkeypatch.setattr(tg, "send_video", lambda p, m, label, yt: sent.append(label))
     monkeypatch.setattr(tg, "_call", lambda *a, **k: {})

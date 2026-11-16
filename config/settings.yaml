@@ -105,6 +105,10 @@ clips:
   # exemplo:
   # - {url: "https://www.youtube.com/@canal", authorized: true, basis: "programa oficial de clipes do criador"}
 
+telegram:
+  # Desligado: o bot foi perdido e o TikTok é publicado automaticamente pelo Metricool.
+  enabled: false
+
 tiktok:
   # O TikTok não permite postagem automática pública por ferramenta própria (ver docs/LEGAL.md).
   # O vídeo + legenda chegam no Telegram logo após a aprovação, com o horário sugerido de postagem.

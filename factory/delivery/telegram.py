@@ -30,6 +30,8 @@ MAX_BYTES = 49 * 1024 * 1024   # limite do Bot API para envio de arquivos
 
 
 def configured() -> bool:
+    if not settings().get("telegram.enabled", True):
+        return False   # desligado na configuração (TikTok agora é publicado pelo Metricool)
     return bool(os.environ.get("TELEGRAM_BOT_TOKEN") and os.environ.get("TELEGRAM_CHAT_ID"))
 
 
