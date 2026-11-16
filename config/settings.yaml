@@ -37,7 +37,8 @@ voice:
   # O texto de estilo vai em inglês curto: o modelo 2.5 o interpreta como direção, sem ler em voz alta.
   engines:
     - {engine: gemini, model: gemini-2.5-flash-preview-tts, voice: Fenrir, style: "Read in Brazilian Portuguese with a natural, confident, engaging professional male voice. Use dynamic pacing, clear diction, expressive humor and brief pauses. Do not shout:"}
-    - {engine: gemini, model: gemini-3.8-flash-tts, voice: Fenrir, style: "Read in Brazilian Portuguese with a natural, confident professional male voice, expressive humor and dynamic pacing:"}
+    # o 3.8 lê qualquer instrução de estilo em voz alta (testado): vai sem estilo
+    - {engine: gemini, model: gemini-3.8-flash-tts, voice: Fenrir, style: ""}
     - {engine: edge, voice: pt-BR-AntonioNeural}
     - {engine: piper, voice: pt_BR-faber-medium}
   piper_voice: pt_BR-faber-medium

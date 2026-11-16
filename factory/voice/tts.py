@@ -21,6 +21,7 @@ import requests
 
 from factory.config import ROOT, settings
 from factory.log import get_logger
+from factory.textutil import norm
 from factory.voice.normalize import normalize_for_tts, split_sentences
 
 log = get_logger("voice")
@@ -184,6 +185,12 @@ def _render_whole(eng: Any, script: dict[str, Any], workdir: Path) -> tuple[list
     end = lead + len(a) / SR
     al = align([{"seg": 0, "text": full, "start": lead, "end": end}], str(tmp))
     words = al["words"]
+    # trava: a instrução de estilo NUNCA pode aparecer falada na narração
+    heard = norm(al.get("recognized", ""))
+    style_words = [w for w in norm(getattr(eng, "style", "") or "").split() if len(w) > 4]
+    leaked = [w for w in style_words if f" {w} " in f" {heard} " and w not in norm(full)]
+    if len(leaked) >= 2:
+        raise TTSError(f"{eng.name} leu a instrução de estilo em voz alta ({', '.join(leaked[:4])})")
     if al["match_ratio"] is not None and al["match_ratio"] < 0.75:
         raise TTSError(f"{eng.name} não leu o roteiro fielmente (só {al['match_ratio']:.0%} das palavras reconhecidas)")
     i = 0
