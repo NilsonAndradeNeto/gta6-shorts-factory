@@ -506,6 +506,8 @@ class Factory:
                 from factory.delivery.telegram import deliver_due, release_manifest
                 self.summary["telegram_sent"] = deliver_due(self.db)
                 release_manifest(self.db, self.out_root)
+                from factory.delivery.telegram import tiktok_manifest
+                tiktok_manifest(self.db, self.cfg.path("data_dir") / "tiktok.json")
             except Exception as e:
                 self.db.record_error(None, "telegram", e)
             self._maybe_metrics()

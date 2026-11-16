@@ -129,6 +129,7 @@ jobs:
           set -e
           [ -f state/data/dashboard.html ] || exit 0
           mkdir -p site && cp state/data/dashboard.html site/index.html && touch site/.nojekyll
+          [ -f state/data/tiktok.json ] && cp state/data/tiktok.json site/tiktok.json
           cd site
           git init -q -b gh-pages
           git config user.name "gta6-factory-bot"

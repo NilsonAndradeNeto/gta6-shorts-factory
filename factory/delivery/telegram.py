@@ -127,12 +127,14 @@ def deliver_due(db: DB, now: datetime | None = None) -> int:
 
 def release_manifest(db: DB, out_dir: Path) -> tuple[list[str], list[str]]:
     """Lista para o workflow: MP4 aprovados a guardar no release e nomes a remover (entregues/expirados)."""
-    today = datetime.now(BRT).date().isoformat()
+    today = datetime.now(BRT).date()
+    keep_from = (today - timedelta(days=2)).isoformat()   # 3 dias no release: o agente do TikTok busca daqui
+    today = today.isoformat()
     upload, cleanup = [], []
     for r in db.q(f"SELECT video_path, tiktok_sent_at, slot_date, state FROM videos WHERE video_path IS NOT NULL "
                   f"AND slot_time NOT LIKE 'test-%' AND COALESCE(format,'short') IN ('short','clip')"):
         name = Path(r["video_path"]).name
-        if r["tiktok_sent_at"] or r["slot_date"] < today or r["state"] not in APPROVED:
+        if r["slot_date"] < keep_from or r["state"] not in APPROVED:
             cleanup.append(name)
         elif Path(r["video_path"]).exists():
             upload.append(r["video_path"])
@@ -141,6 +143,36 @@ def release_manifest(db: DB, out_dir: Path) -> tuple[list[str], list[str]]:
     (out_dir / "release_cleanup.txt").write_text("\n".join(sorted(set(cleanup))) + ("\n" if cleanup else ""),
                                                  encoding="utf-8")
     return upload, cleanup
+
+
+RELEASE_URL = "https://github.com/{repo}/releases/download/videos-pendentes/{name}"
+
+
+def tiktok_manifest(db: DB, out_file: Path) -> list[dict[str, Any]]:
+    """Lista pública (publicada no painel) com os vídeos de hoje e amanhã para o agente que agenda no TikTok.
+
+    O agente agendado do Claude lê este arquivo e agenda cada vídeo no Metricool (integração aprovada pelo TikTok).
+    """
+    import json
+    repo = os.environ.get("GITHUB_REPOSITORY", "NilsonAndradeNeto/gta6-shorts-factory")
+    today = datetime.now(BRT).date()
+    days = [today.isoformat(), (today + timedelta(days=1)).isoformat()]
+    items = []
+    for r in db.q(f"SELECT id, slot_date, slot_time, publish_at_utc, video_path, metadata, state FROM videos "
+                  f"WHERE slot_date IN (?,?) AND state IN ({','.join('?' * len(APPROVED))}) AND video_path IS NOT NULL "
+                  f"AND slot_time NOT LIKE 'test-%' AND COALESCE(format,'short') IN ('short','clip') "
+                  f"ORDER BY slot_date, slot_time", *days, *APPROVED):
+        meta = json.loads(r["metadata"] or "{}")
+        pa = datetime.fromisoformat(r["publish_at_utc"]).astimezone(BRT)
+        items.append({"id": r["id"], "date": r["slot_date"], "time": pa.strftime("%H:%M"),
+                      "publish_at_brt": pa.strftime("%Y-%m-%dT%H:%M:00"),
+                      "video_url": RELEASE_URL.format(repo=repo, name=Path(r["video_path"]).name),
+                      "title": meta.get("title", "")[:150], "caption": tiktok_caption(meta)})
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    out_file.write_text(json.dumps({"generated_at": datetime.now(BRT).isoformat(timespec="seconds"),
+                                    "timezone": "America/Sao_Paulo", "videos": items}, ensure_ascii=False, indent=1),
+                        encoding="utf-8")
+    return items
 
 
 def discover_chat_id() -> list[dict[str, Any]]:
