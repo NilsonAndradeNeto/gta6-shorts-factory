@@ -225,12 +225,29 @@ class Factory:
             raise RuntimeError("bloqueado no QA editorial")
         raise RuntimeError("QA técnico/visual reprovado: " + "; ".join(fails[:4]))
 
+    def release_production_slots(self) -> list[str]:
+        """Modo clipagem: vídeos de produção própria ainda não enviados liberam o horário para os clipes.
+
+        Os já enviados ao YouTube (UPLOADED/SCHEDULED/PUBLISHED) não são tocados.
+        """
+        freed = []
+        for r in self.db.q(f"SELECT id, idem_key FROM videos WHERE COALESCE(format,'short') != 'clip' "
+                           f"AND state IN ({','.join('?' * len(ACTIVE))}) AND slot_time NOT LIKE 'test-%'",
+                           *[s.value for s in ACTIVE]):
+            self.db.advance(r["id"], State.ABANDONED, "modo clipagem: horário liberado para clipe")
+            self.db.x("UPDATE videos SET idem_key=? WHERE id=?", f"{r['idem_key']}#prod-{r['id']}", r["id"])
+            freed.append(r["id"])
+        if freed:
+            log.info("Clipagem: %d vídeo(s) de produção própria liberaram o horário", len(freed))
+        return freed
+
     def plan_clip_slots(self) -> list[str]:
         from factory.clips.engine import discover, produce_clips
         try:
             discover(self.db)
         except Exception as e:
             self.db.record_error(None, "clips_discover", e)
+        self.release_production_slots()
         now = datetime.now(timezone.utc)
         lead = timedelta(minutes=int(self.cfg.get("automation.min_lead_minutes", 40)))
         window = timedelta(hours=float(self.cfg.get("automation.produce_window_hours", 23)))
