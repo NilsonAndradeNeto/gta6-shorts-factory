@@ -483,6 +483,6 @@ def _one_clip(db: DB, llm: LLM, src: dict[str, Any], tr: dict[str, Any], m: dict
 def mode(data_dir: Path) -> str:
     f = data_dir / "mode.json"
     try:
-        return json.loads(f.read_text(encoding="utf-8")).get("mode", "producao")
+        return json.loads(f.read_text(encoding="utf-8")).get("mode", "clipagem")
     except (OSError, ValueError):
-        return "producao"
+        return "clipagem"   # padrão fixo escolhido pelo dono do canal: clipes de streamers
