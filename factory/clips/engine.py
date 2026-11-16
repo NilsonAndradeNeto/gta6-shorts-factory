@@ -8,6 +8,7 @@ Nunca baixa conteúdo fora dessas fontes. O crédito do criador fica sempre vis�
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import uuid
@@ -132,10 +133,37 @@ def discover(db: DB) -> int:
     return n
 
 
+SOURCE_COLS = ("video_id", "title", "channel", "channel_id", "views", "duration_s", "license", "basis", "url",
+               "published_at")
+
+
+def import_sources(db: DB) -> int:
+    """Registra as fontes que o PC baixou e descreveu em fontes/<id>.json (se a nuvem ainda não as conhecia)."""
+    n = 0
+    for f in sorted(sources_dir().glob("*.json")):
+        try:
+            d = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not d.get("video_id") or not str(d.get("basis", "")).strip():
+            continue   # sem base de permissão registrada não entra
+        n += db.x(f"INSERT OR IGNORE INTO clip_sources({','.join(SOURCE_COLS)},status,discovered_at) "
+                  f"VALUES ({','.join('?' * len(SOURCE_COLS))},'NEW',?)", *[d.get(c) for c in SOURCE_COLS], now_iso()) and 1
+    return n
+
+
 def fresh_sources(db: DB, limit: int = 6) -> list[dict[str, Any]]:
     """Fontes ainda não usadas, dentro da janela de novidade, ordenadas por velocidade (views/hora)."""
     max_h = float(settings().get("clips.max_age_days", 7)) * 24
-    rows = [dict(r) for r in db.q("SELECT * FROM clip_sources WHERE status='NEW'")]
+    import_sources(db)
+    rows = [dict(r) for r in db.q("SELECT * FROM clip_sources WHERE status='NEW' OR "
+                                  "(status='FAILED' AND (note LIKE '%bot%' OR note LIKE '%yt_dlp%'))")]
+    # o que o PC já baixou não expira nem cai no piso de qualidade: já foi escolhido
+    have = [r for r in rows if local_source(r["url"]) is not None]
+    rows = [r for r in rows if r["status"] == "NEW"]
+    if os.environ.get("GITHUB_ACTIONS"):
+        # na nuvem o YouTube bloqueia download: só usa fontes que o PC já enviou
+        return sorted(have, key=velocity, reverse=True)[:limit]
     for r in rows:
         if _hours_since(r.get("published_at")) > max_h:
             db.x("UPDATE clip_sources SET status='EXPIRED', processed_at=? WHERE video_id=?", now_iso(), r["video_id"])
@@ -157,13 +185,40 @@ def _yt_dlp(args: list[str], timeout: int = 1800) -> None:
     subprocess.run([sys.executable, "-m", "yt_dlp", "--no-playlist", "--no-progress", *args], check=True, timeout=timeout)
 
 
+def sources_dir() -> Path:
+    """Fontes baixadas no PC do dono (o YouTube bloqueia download nos servidores do GitHub)."""
+    return Path(os.environ.get("FACTORY_SOURCES_DIR", "fontes"))
+
+
+def _video_id(url: str) -> str:
+    m = re.search(r"(?:v=|youtu\.be/|shorts/)([\w-]{11})", url)
+    return m.group(1) if m else url.rstrip("/").split("/")[-1]
+
+
+def local_source(url: str) -> Path | None:
+    f = sources_dir() / f"{_video_id(url)}.mp4"
+    return f if f.exists() and f.stat().st_size > 0 else None
+
+
 def download_audio(url: str, work: Path) -> Path:
     work.mkdir(parents=True, exist_ok=True)
+    src = local_source(url)
+    if src is not None:
+        out = work / "audio.m4a"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-vn", "-c:a", "aac", "-b:a", "128k", str(out)],
+                       check=True)
+        return out
     _yt_dlp(["-f", "bestaudio[ext=m4a]/bestaudio", "-o", str(work / "audio.%(ext)s"), url])
     return next(work.glob("audio.*"))
 
 
 def download_section(url: str, start: float, end: float, out: Path) -> Path:
+    src = local_source(url)
+    if src is not None:
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{start:.2f}", "-to", f"{end:.2f}", "-i", str(src),
+                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-c:a", "aac", "-b:a", "192k",
+                        str(out)], check=True)
+        return out
     _yt_dlp(["-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080]",
              "--download-sections", f"*{start:.2f}-{end:.2f}", "--force-keyframes-at-cuts",
              "--merge-output-format", "mp4", "-o", str(out), url])

@@ -254,6 +254,19 @@ class Factory:
         need = [(day, slot, dt.astimezone(timezone.utc).isoformat()) for day, slot, dt in slot_datetimes()
                 if now + lead <= dt.astimezone(timezone.utc) <= now + window
                 and not self.db.one("SELECT 1 FROM videos WHERE idem_key=?", f"{day}T{slot}")]
+        agora = int(os.environ.get("FACTORY_CLIPS_NOW", "0") or 0)
+        if agora > 0:
+            # pedido do dono: N clipes extras publicados assim que ficarem prontos (antes dos horários fixos)
+            base = datetime.now(BRT)
+            extra = []
+            for i in range(60):
+                t = base + timedelta(minutes=i)
+                day, slot = t.date().isoformat(), t.strftime("%H:%M")
+                if not self.db.one("SELECT 1 FROM videos WHERE idem_key=?", f"{day}T{slot}"):
+                    extra.append((day, slot, t.astimezone(timezone.utc).isoformat()))
+                if len(extra) == agora:
+                    break
+            need = extra + need
         if not need:
             return []
         return produce_clips(self.db, self.llm, need, self.out_root)
