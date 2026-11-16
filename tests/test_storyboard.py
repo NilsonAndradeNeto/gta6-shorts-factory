@@ -11,3 +11,9 @@ def test_number_label_ignores_names():
     assert number_label("No PlayStation 5, o pré-download") == ""
     assert number_label("A trilha de GTA 6 é do Justice") == ""
     assert number_label("No Xbox Series X|S a liberação") == ""
+
+
+def test_clip_profanity_softened():
+    from factory.clips.engine import soften
+    assert soften("Caralho, um zumbi do caralho") == "caramba, um zumbi do caramba"
+    assert "porra" not in soften("Porra, mano").lower()

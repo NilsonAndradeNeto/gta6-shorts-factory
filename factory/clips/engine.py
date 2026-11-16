@@ -192,16 +192,47 @@ def pick_moments(llm: LLM, tr: dict[str, Any], peaks: list[float], max_clips: in
     return chosen
 
 
+PROFANITY = [
+    (r"\bputa\s+que\s+pariu\b", "meu Deus"), (r"\bputa\s+merda\b", "caramba"), (r"\bfilh[oa]\s+da\s+puta\b", "safado"),
+    (r"\bcaralh(o|ada)\b", "caramba"), (r"\bporra\b", "poxa"), (r"\bmerda\b", "droga"), (r"\bfod[ae]r?\b", "doido"),
+    (r"\bfodido\b", "lascado"), (r"\bcacete\b", "caramba"), (r"\bbosta\b", "droga"), (r"\bcu\b", "bumbum"),
+    (r"\bputa\b", "baita"), (r"\bvai\s+se\s+foder\b", "vai passear"),
+]
+
+
+def soften(text: str) -> str:
+    """Palavrões trocados por versões leves (monetização/público jovem), independente da IA."""
+    for pat, rep in PROFANITY:
+        text = re.sub(pat, rep, text, flags=re.I)
+    return text
+
+
 def captions_for(llm: LLM, tr: dict[str, Any], start: float, end: float) -> list[dict[str, Any]]:
     """Legendas em português (curtas, 3-5 palavras) com tempos relativos ao início do clipe."""
     segs = [s for s in tr["segments"] if s["end"] > start and s["start"] < end]
     pt: dict[int, str] = {}
     if tr["language"] != "pt":
-        items = [{"id": i, "text": s["text"]} for i, s in enumerate(segs)]
-        out = llm.json(TRANSLATE_SYSTEM, json.dumps(items, ensure_ascii=False), purpose="clip_translate", temperature=0.2)
-        pt = {int(x["id"]): x["pt"] for x in (out.get("items") or []) if isinstance(x, dict) and "id" in x and "pt" in x}
-        if len(pt) < len(segs) * 0.8:
-            raise RuntimeError("tradução incompleta das legendas")
+        # lotes pequenos + nova tentativa só do que faltou (modelos leves às vezes pulam itens)
+        todo = list(range(len(segs)))
+        for _attempt in range(3):
+            for b in range(0, len(todo), 12):
+                batch = [{"id": i, "text": segs[i]["text"]} for i in todo[b:b + 12]]
+                try:
+                    out = llm.json(TRANSLATE_SYSTEM, json.dumps(batch, ensure_ascii=False), purpose="clip_translate",
+                                   temperature=0.2)
+                except LLMError:
+                    continue
+                for x in (out.get("items") or []) if isinstance(out, dict) else []:
+                    try:
+                        if isinstance(x, dict) and str(x.get("pt", "")).strip():
+                            pt[int(x["id"])] = str(x["pt"]).strip()
+                    except (KeyError, TypeError, ValueError):
+                        pass
+            todo = [i for i in range(len(segs)) if i not in pt]
+            if not todo:
+                break
+        if todo:
+            raise RuntimeError(f"tradução incompleta das legendas ({len(todo)} de {len(segs)} falas sem tradução)")
     caps = []
     for i, s in enumerate(segs):
         s0, s1 = max(start, s["start"]), min(end, s["end"])
@@ -221,6 +252,8 @@ def captions_for(llm: LLM, tr: dict[str, Any], start: float, end: float) -> list
             part = words[k * len(words) // n:(k + 1) * len(words) // n]
             if part:
                 caps.append({"start": s0 - start + k * per, "end": s0 - start + (k + 1) * per, "text": " ".join(part)})
+    for c in caps:
+        c["text"] = soften(c["text"])
     return caps
 
 
@@ -319,7 +352,7 @@ def render_clip(src: Path, layout: dict[str, Any], ass: Path, out: Path) -> Path
 
 # ----------------------------------------------------------------------------- orquestração
 def clip_metadata(src: dict[str, Any], clip: dict[str, Any], vid: str) -> dict[str, Any]:
-    title = re.sub(r"#\w+", "", clip.get("title_pt", "")).strip()[:85]
+    title = soften(re.sub(r"#\w+", "", clip.get("title_pt", "")).strip())[:85]
     lic = ("Licença: Creative Commons Atribuição (CC BY) — reutilização permitida pelo autor."
            if src["license"] == "creativeCommon" else f"Uso autorizado: {src['basis']}.")
     desc = "\n\n".join([
@@ -353,32 +386,15 @@ def produce_clips(db: DB, llm: LLM, slots: list[tuple[str, str, str]], workroot:
                     break
                 day, slot, pa = pending[0]
                 vid = uuid.uuid4().hex[:12]
-                raw = download_section(src["url"], m["start"], m["end"], work / f"{vid}_raw.mp4")
-                caps = captions_for(llm, tr, m["start"], m["end"])
-                layout = choose_layout(raw)
-                credit = f"{src['channel']} • YouTube"
-                ass = work / f"{vid}.ass"
-                write_ass(caps, credit, ass, cap_y=1080 if layout["kind"] == "split" else 1250)
-                out = workroot / f"{day}_{slot.replace(':', '')}_CLIP_{vid}.mp4"
-                render_clip(raw, layout, ass, out)
-                dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
-                                            str(out)], capture_output=True, text=True).stdout or 0)
-                voice = {"sentences": [{"start": 0.3, "end": max(0.4, dur - 0.5)}], "duration": dur}
-                chunks = [{"start": c["start"], "end": c["end"], "words": c["text"].split()[:3]} for c in caps]
-                tech = technical(out, voice, chunks, None, fmt="short", max_silence=3.0)
-                fails = [f for f in tech["fails"] if "narração" not in f and "legendas cobrem" not in f]
-                if fails or not caps:
-                    log.warning("Clipe reprovado no QA: %s", fails or "sem legendas")
+                try:
+                    made_vid = _one_clip(db, llm, src, tr, m, work, workroot, day, slot, pa, vid)
+                except Exception as e:   # um momento ruim não derruba a live inteira
+                    db.record_error(None, "clip_moment", e)
+                    log.warning("Momento %.0f-%.0fs descartado: %s", m["start"], m["end"], e)
                     continue
-                meta = clip_metadata(src, m, vid)
-                db.x("INSERT INTO videos(id,idem_key,topic_id,slot_date,slot_time,publish_at_utc,state,format,video_path,"
-                     "metadata,qa,script,duration,hook_style,created_at,updated_at) VALUES (?,?,NULL,?,?,?,?,'clip',?,?,?,?,?,?,?,?)",
-                     vid, f"{day}T{slot}", day, slot, pa, State.VALIDATED.value, str(out), json.dumps(meta, ensure_ascii=False),
-                     json.dumps({"technical": tech, "layout": layout["kind"]}, ensure_ascii=False),
-                     json.dumps({"source": src, "moment": m, "captions": caps}, ensure_ascii=False), dur, "clip", now_iso(), now_iso())
-                db.event(f"clipe pronto de {src['channel']} ({m['start']:.0f}-{m['end']:.0f}s, layout {layout['kind']})", vid)
-                made.append(vid)
-                pending.pop(0)
+                if made_vid:
+                    made.append(made_vid)
+                    pending.pop(0)
             db.x("UPDATE clip_sources SET status='DONE', clips_made=clips_made+?, processed_at=? WHERE video_id=?",
                  len(moments), now_iso(), src["video_id"])
         except Exception as e:
@@ -387,6 +403,36 @@ def produce_clips(db: DB, llm: LLM, slots: list[tuple[str, str, str]], workroot:
                  src["video_id"])
             log.warning("Fonte %s falhou: %s", src["video_id"], e)
     return made
+
+
+def _one_clip(db: DB, llm: LLM, src: dict[str, Any], tr: dict[str, Any], m: dict[str, Any], work: Path, workroot: Path,
+              day: str, slot: str, pa: str, vid: str) -> str | None:
+    from factory.qa.checks import technical
+    raw = download_section(src["url"], m["start"], m["end"], work / f"{vid}_raw.mp4")
+    caps = captions_for(llm, tr, m["start"], m["end"])
+    layout = choose_layout(raw)
+    credit = f"{src['channel']} • YouTube"
+    ass = work / f"{vid}.ass"
+    write_ass(caps, credit, ass, cap_y=1080 if layout["kind"] == "split" else 1250)
+    out = workroot / f"{day}_{slot.replace(':', '')}_CLIP_{vid}.mp4"
+    render_clip(raw, layout, ass, out)
+    dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
+                                str(out)], capture_output=True, text=True).stdout or 0)
+    voice = {"sentences": [{"start": 0.3, "end": max(0.4, dur - 0.5)}], "duration": dur}
+    chunks = [{"start": c["start"], "end": c["end"], "words": c["text"].split()[:3]} for c in caps]
+    tech = technical(out, voice, chunks, None, fmt="short", max_silence=3.0)
+    fails = [f for f in tech["fails"] if "narração" not in f and "legendas cobrem" not in f]
+    if fails or not caps:
+        log.warning("Clipe reprovado no QA: %s", fails or "sem legendas")
+        return None
+    meta = clip_metadata(src, m, vid)
+    db.x("INSERT INTO videos(id,idem_key,topic_id,slot_date,slot_time,publish_at_utc,state,format,video_path,"
+         "metadata,qa,script,duration,hook_style,created_at,updated_at) VALUES (?,?,NULL,?,?,?,?,'clip',?,?,?,?,?,?,?,?)",
+         vid, f"{day}T{slot}", day, slot, pa, State.VALIDATED.value, str(out), json.dumps(meta, ensure_ascii=False),
+         json.dumps({"technical": tech, "layout": layout["kind"]}, ensure_ascii=False),
+         json.dumps({"source": src, "moment": m, "captions": caps}, ensure_ascii=False), dur, "clip", now_iso(), now_iso())
+    db.event(f"clipe pronto de {src['channel']} ({m['start']:.0f}-{m['end']:.0f}s, layout {layout['kind']})", vid)
+    return vid
 
 
 def mode(data_dir: Path) -> str:
