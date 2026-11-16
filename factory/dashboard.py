@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import html
+import os
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -36,6 +37,42 @@ def _fmt(iso: str | None) -> str:
         return iso
 
 
+REPO = os.environ.get("GITHUB_REPOSITORY", "NilsonAndradeNeto/gta6-shorts-factory")
+
+
+def _mode() -> dict:
+    from factory.clips.engine import mode
+    f = settings().path("data_dir") / "mode.json"
+    try:
+        info = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        info = {}
+    return {"mode": mode(settings().path("data_dir")), "changed_at": info.get("changed_at", ""), "by": info.get("by", "")}
+
+
+def _insights(db: DB) -> list[dict]:
+    try:
+        row = db.one("SELECT ts, payload FROM strategy_memory ORDER BY ts DESC LIMIT 1")
+    except Exception:
+        return []
+    if not row:
+        return []
+    out = []
+    for f in json.loads(row["payload"]).get("findings", [])[:8]:
+        out.append({"grupo": " / ".join(str(x) for x in f["cohort"][3:]), "amostra": f["sample"], "mediana": f["median_views"],
+                    "melhor": f"{f['best']['views']} — {f['best']['title'][:60]}",
+                    "pior": f"{f['weak']['views']} — {f['weak']['title'][:60]}"})
+    return out
+
+
+def _clip_sources(db: DB) -> list[dict]:
+    try:
+        return [dict(r) for r in db.q("SELECT channel, title, views, status, basis, url FROM clip_sources "
+                                      "ORDER BY discovered_at DESC LIMIT 12")]
+    except Exception:
+        return []
+
+
 def collect(db: DB) -> dict:
     today = datetime.now(BRT).date().isoformat()
     vids = [dict(r) for r in db.q(
@@ -57,6 +94,9 @@ def collect(db: DB) -> dict:
         "errors": [dict(r) for r in db.q("SELECT ts, video_id, stage, error FROM errors ORDER BY id DESC LIMIT 15")],
         "metrics": comparisons(db),
         "next_runs": next_runs(),
+        "mode": _mode(),
+        "insights": _insights(db),
+        "clip_sources": _clip_sources(db),
     }
 
 
@@ -102,8 +142,16 @@ h1{{font-size:22px}} h2{{font-size:18px;margin-top:28px;border-bottom:1px solid 
 .kpi b{{font-size:24px;color:var(--acc);display:block}} .muted{{color:var(--muted)}}
 table{{width:100%;border-collapse:collapse;font-size:13px;display:block;overflow-x:auto}} th,td{{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}}
 a{{color:var(--acc)}}
+.mode{{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--card);border:2px solid var(--acc);border-radius:12px;padding:14px 16px;margin:12px 0}}
+.mode b{{display:block;font-size:22px;margin:2px 0}} .btn{{background:var(--acc);color:#111;font-weight:700;padding:12px 18px;border-radius:10px;text-decoration:none}}
+.small{{font-size:13px}}
 </style></head><body>
-<h1>Fábrica de Shorts GTA 6</h1><p class="muted">Atualizado em {d['generated']}</p>
+<h1>Fábrica de Conteúdo — Netão Verso</h1><p class="muted">Atualizado em {d['generated']}</p>
+<div class="mode"><div><span class="muted">Modo atual</span><b>{'🎬 Produção própria' if d['mode']['mode'] == 'producao' else '✂️ Clipagem automática'}</b>
+<span class="muted">{('alterado em ' + html.escape(d['mode']['changed_at']) + ' por ' + html.escape(d['mode']['by'])) if d['mode']['changed_at'] else 'padrão'}</span></div>
+<a class="btn" href="https://github.com/{REPO}/actions/workflows/modo.yml">Trocar modo</a></div>
+<p class="muted small">O botão abre o GitHub: clique em <b>Run workflow</b>, escolha <b>producao</b> ou <b>clipagem</b> e confirme.
+O modo escolhido vale para as próximas execuções (a fábrica roda em seguida).</p>
 <div class="kpis"><div class="kpi"><b>{d['published_today']}</b>agendados/publicados hoje</div>
 <div class="kpi"><b>{len(queue)}</b>na fila / em produção</div>
 <div class="kpi"><b>{len(published)}</b>publicados (últimos 60)</div>
@@ -113,6 +161,9 @@ a{{color:var(--acc)}}
 <h2>Pautas candidatas</h2>{_table(d['topics'], [('title', 'pauta'), ('kind', 'tipo'), ('confirmation', 'confirmação'), ('score', 'score')])}
 <h2>Notícias coletadas</h2>{_table(d['news'], [('published_at', 'data'), ('source_name', 'fonte'), ('tier', 'nível'), ('confirmation', 'status'), ('title', 'título'), ('url', 'link')])}
 <h2>Métricas</h2>{metric_html}
+<h2>Aprendizado (comparação de desempenho)</h2>{_table(d['insights'], [('grupo', 'formato / idade'), ('amostra', 'vídeos'), ('mediana', 'views medianas'), ('melhor', 'melhor'), ('pior', 'pior')])}
+<p class="muted small">Associação observada, não prova de causa. As hipóteses entram nos próximos roteiros como testes.</p>
+<h2>Fontes de clipagem (somente permitidas)</h2>{_table(d['clip_sources'], [('channel', 'criador'), ('title', 'vídeo'), ('views', 'views'), ('status', 'status'), ('basis', 'permissão'), ('url', 'link')])}
 <h2>Erros recentes</h2>{_table(d['errors'], [('ts', 'quando'), ('video_id', 'vídeo'), ('stage', 'etapa'), ('error', 'erro')])}
 </body></html>"""
     path.parent.mkdir(parents=True, exist_ok=True)

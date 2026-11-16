@@ -16,4 +16,5 @@ google-api-python-client==2.202.0
 google-auth-oauthlib
 google-auth-httplib2
 json-repair==0.64.9
+yt-dlp==2026.10.26
 pytest

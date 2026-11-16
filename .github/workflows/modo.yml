@@ -1,0 +1,53 @@
+name: Trocar modo de produção
+
+# O "botão" do painel: escolhe QUAL modo a fábrica usa a partir de agora.
+#  - producao: produção própria (Shorts + Games Hoje), como sempre funcionou
+#  - clipagem: melhores momentos de lives/reacts de fontes permitidas, com legenda em português
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "Modo de produção"
+        type: choice
+        required: true
+        default: producao
+        options:
+          - producao
+          - clipagem
+
+permissions:
+  contents: write   # grava data/mode.json no branch de estado
+  actions: write    # dispara a fábrica logo após a troca
+
+concurrency:
+  group: factory
+  cancel-in-progress: false
+
+jobs:
+  trocar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Gravar modo no estado persistente
+        run: |
+          set -e
+          REPO="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          if git ls-remote --exit-code --heads "$REPO" state >/dev/null 2>&1; then
+            git clone --quiet --depth 1 --branch state "$REPO" state
+          fi
+          mkdir -p state/data
+          printf '{"mode": "%s", "changed_at": "%s", "by": "%s"}\n' "${{ inputs.modo }}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${{ github.actor }}" > state/data/mode.json
+          cd state
+          rm -rf .git
+          git init -q -b state
+          git config user.name "gta6-factory-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "modo: ${{ inputs.modo }}"
+          git push -q -f "$REPO" state
+          echo "### Modo alterado para: **${{ inputs.modo }}**" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Rodar a fábrica no modo novo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run factory.yml --repo "${{ github.repository }}"

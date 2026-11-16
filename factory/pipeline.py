@@ -225,9 +225,35 @@ class Factory:
             raise RuntimeError("bloqueado no QA editorial")
         raise RuntimeError("QA técnico/visual reprovado: " + "; ".join(fails[:4]))
 
+    def plan_clip_slots(self) -> list[str]:
+        from factory.clips.engine import discover, produce_clips
+        try:
+            discover(self.db)
+        except Exception as e:
+            self.db.record_error(None, "clips_discover", e)
+        now = datetime.now(timezone.utc)
+        lead = timedelta(minutes=int(self.cfg.get("automation.min_lead_minutes", 40)))
+        window = timedelta(hours=float(self.cfg.get("automation.produce_window_hours", 23)))
+        need = [(day, slot, dt.astimezone(timezone.utc).isoformat()) for day, slot, dt in slot_datetimes()
+                if now + lead <= dt.astimezone(timezone.utc) <= now + window
+                and not self.db.one("SELECT 1 FROM videos WHERE idem_key=?", f"{day}T{slot}")]
+        if not need:
+            return []
+        return produce_clips(self.db, self.llm, need, self.out_root)
+
     def produce(self, vid: str) -> str:
         """Leva um vídeo até VALIDATED. Retorna o estado final."""
         v = self.db.video(vid)
+        if v.get("format") == "clip":
+            # clipe já nasce validado; sem o arquivo (execução anterior) tenta a cópia do release
+            from factory.delivery.telegram import _find_file
+            kept = _find_file(v.get("video_path"))
+            if kept is None:
+                self.db.advance(vid, State.ABANDONED, "arquivo do clipe indisponível")
+                return State.ABANDONED.value
+            if str(kept) != v.get("video_path"):
+                self.db.set_fields(vid, video_path=str(kept))
+            return v["state"]
         if v["state"] in ("RENDERED", "VALIDATED") and v.get("video_path") and not Path(v["video_path"]).exists():
             from factory.delivery.telegram import _find_file
             kept = _find_file(v["video_path"])   # cópia guardada no release entre execuções
@@ -369,7 +395,7 @@ class Factory:
         t = datetime.now(timezone.utc) + timedelta(minutes=20)
         taken = sorted(datetime.fromisoformat(r["publish_at_utc"]) for r in self.db.q(
             "SELECT publish_at_utc FROM videos WHERE state NOT IN ('ABANDONED','BLOCKED') AND publish_at_utc IS NOT NULL "
-            "AND COALESCE(format,'short')='short'"))
+            "AND COALESCE(format,'short') IN ('short','clip')"))
         for x in taken:
             if abs((x - t).total_seconds()) < gap_minutes * 60:
                 t = x + timedelta(minutes=gap_minutes)
@@ -399,7 +425,10 @@ class Factory:
                 self.summary['intelligence'] = monitor(self.db)
             except Exception as e:
                 self.db.record_error(None, 'intelligence', e)
-            if research:
+            from factory.clips.engine import mode as current_mode
+            self.mode = current_mode(self.cfg.path("data_dir"))
+            self.summary["mode"] = self.mode
+            if research and self.mode == "producao":
                 self.summary["research"] = self.research()
             if self.llm.available:
                 try:
@@ -407,14 +436,18 @@ class Factory:
                     tag_pending(self.llm, int(self.cfg.get("automation.tag_assets_per_run", 12)))
                 except Exception as e:
                     self.db.record_error(None, "tagger", e)
-            self.summary["new_slots"] = self.plan_slots()
-            try:
-                from factory.longform import ensure_slot
-                long_vid = ensure_slot(self.db)
-                if long_vid:
-                    self.summary["new_slots"].append(long_vid)
-            except Exception as e:
-                self.db.record_error(None, "longform_slot", e)
+            if self.mode == "clipagem":
+                # Modo clipagem: os horários do dia recebem clipes (produção própria e vídeo longo ficam pausados)
+                self.summary["new_slots"] = self.plan_clip_slots()
+            else:
+                self.summary["new_slots"] = self.plan_slots()
+                try:
+                    from factory.longform import ensure_slot
+                    long_vid = ensure_slot(self.db)
+                    if long_vid:
+                        self.summary["new_slots"].append(long_vid)
+                except Exception as e:
+                    self.db.record_error(None, "longform_slot", e)
             self.check_published()
             max_att = int(self.cfg.get("automation.max_attempts", 4))
             now = datetime.now(timezone.utc)
