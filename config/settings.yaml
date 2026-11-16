@@ -96,8 +96,11 @@ clips:
   #  - busca automática de vídeos Creative Commons de games no YouTube;
   #  - canais autorizados pelo criador (marque authorized: true e informe a base da permissão).
   search_queries: ["GTA 6 reaction live", "gaming live funny moments react", "reagindo gameplay ao vivo"]
-  max_searches_per_day: 2
-  max_age_days: 90
+  max_searches_per_run: 2      # cada termo busca lives longas e reacts médios (4 buscas = 400 de cota)
+  discover_every_hours: 12     # busca 2x por dia
+  fresh_hours: 72              # prioriza o que saiu nas últimas 72 h
+  max_age_days: 7              # nunca usa vídeo com mais de 7 dias
+  min_views_per_hour: 50       # só vira clipe o que está ganhando audiência agora
   authorized_channels: []
   # exemplo:
   # - {url: "https://www.youtube.com/@canal", authorized: true, basis: "programa oficial de clipes do criador"}

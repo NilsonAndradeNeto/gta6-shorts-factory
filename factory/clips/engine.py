@@ -49,6 +49,10 @@ Responda SOMENTE JSON: {"items":[{"id":0,"pt":"..."}]}"""
 
 def initialize(db: DB) -> None:
     db.conn.executescript(SCHEMA)
+    cols = {r[1] for r in db.conn.execute("PRAGMA table_info(clip_sources)")}
+    if "published_at" not in cols:
+        db.conn.execute("ALTER TABLE clip_sources ADD COLUMN published_at TEXT")
+    db.conn.execute("CREATE TABLE IF NOT EXISTS clip_discover_runs(ts TEXT PRIMARY KEY, found INTEGER)")
 
 
 # ----------------------------------------------------------------------------- descoberta
@@ -57,53 +61,94 @@ def _iso_dur(d: str) -> int:
     return sum(int(x or 0) * n for x, n in zip(m.groups(), (3600, 60, 1))) if m else 0
 
 
+def _hours_since(iso: str | None) -> float:
+    if not iso:
+        return 1e9
+    return max(0.5, (datetime.now(timezone.utc) - datetime.fromisoformat(iso.replace("Z", "+00:00"))).total_seconds() / 3600)
+
+
+def velocity(src: dict[str, Any]) -> float:
+    """Visualizações por hora desde a publicação: prioriza o que está bombando AGORA, não o acervo antigo."""
+    return (src.get("views") or 0) / _hours_since(src.get("published_at"))
+
+
 def discover(db: DB) -> int:
-    """Busca fontes permitidas (Creative Commons + canais autorizados). No máximo 1x por dia (cota)."""
+    """Busca fontes permitidas e RECENTES (Creative Commons + canais autorizados), a cada `discover_every_hours`."""
     from factory.youtube import client as yt
     initialize(db)
     cfg = settings()
-    day = datetime.now(timezone.utc).date().isoformat()
-    if db.one("SELECT 1 FROM clip_sources WHERE discovered_at LIKE ?", f"{day}%"):
+    every = float(cfg.get("clips.discover_every_hours", 12))
+    last = db.one("SELECT MAX(ts) t FROM clip_discover_runs")
+    if last and last["t"] and _hours_since(last["t"]) < every:
         return 0
     api = yt.service()
-    found: dict[str, dict[str, Any]] = {}
-    for q in cfg.get("clips.search_queries", [])[: int(cfg.get("clips.max_searches_per_day", 2))]:
-        res = api.search().list(part="snippet", q=q, type="video", videoLicense="creativeCommon", videoCategoryId="20",
-                                order="viewCount", videoDuration="long", maxResults=15,
-                                publishedAfter=(datetime.now(timezone.utc) - timedelta(days=int(cfg.get("clips.max_age_days", 60))))
-                                .isoformat().replace("+00:00", "Z")).execute()
-        for it in res.get("items", []):
-            found[it["id"]["videoId"]] = {"basis": "Creative Commons (filtro oficial da busca do YouTube)"}
-    for ch in cfg.get("clips.authorized_channels", []) or []:
-        if not ch.get("authorized"):
-            continue   # só canais que o dono marcou como autorizados
-        handle = ch["url"].rstrip("/").split("/")[-1]
-        items = api.channels().list(part="contentDetails", forHandle=handle).execute().get("items", [])
-        if not items:
-            continue
-        pl = items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
-        for it in api.playlistItems().list(part="contentDetails", playlistId=pl, maxResults=10).execute().get("items", []):
-            found[it["contentDetails"]["videoId"]] = {"basis": f"canal autorizado pelo criador ({ch.get('basis', 'permissão')})"}
-    if not found:
-        return 0
     n = 0
-    ids = list(found)
-    for off in range(0, len(ids), 50):
-        for v in api.videos().list(part="snippet,statistics,status,contentDetails", id=",".join(ids[off:off + 50])).execute()["items"]:
-            lic = v["status"].get("license")
-            basis = found[v["id"]]["basis"]
-            if lic != "creativeCommon" and not basis.startswith("canal autorizado"):
-                continue   # dupla checagem da licença
-            dur = _iso_dur(v["contentDetails"]["duration"])
-            if not (8 * 60 <= dur <= 4 * 3600):
+    # janela curta primeiro; só amplia se não houver nada novo
+    for hours in (float(cfg.get("clips.fresh_hours", 72)), float(cfg.get("clips.max_age_days", 7)) * 24):
+        after = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat().replace("+00:00", "Z")
+        found: dict[str, dict[str, Any]] = {}
+        for q in cfg.get("clips.search_queries", [])[: int(cfg.get("clips.max_searches_per_run", 2))]:
+            for duration in ("long", "medium"):   # lives longas e reacts de 4-20 min
+                try:
+                    res = api.search().list(part="snippet", q=q, type="video", videoLicense="creativeCommon",
+                                            videoCategoryId="20", order="viewCount", videoDuration=duration,
+                                            maxResults=15, publishedAfter=after).execute()
+                except Exception as e:
+                    log.warning("Busca de clipes falhou (%s): %s", q, e)
+                    continue
+                for it in res.get("items", []):
+                    found[it["id"]["videoId"]] = {"basis": "Creative Commons (filtro oficial da busca do YouTube)"}
+        for ch in cfg.get("clips.authorized_channels", []) or []:
+            if not ch.get("authorized"):
+                continue   # só canais que o dono marcou como autorizados
+            handle = ch["url"].rstrip("/").split("/")[-1]
+            items = api.channels().list(part="contentDetails", forHandle=handle).execute().get("items", [])
+            if not items:
                 continue
-            db.x("INSERT OR IGNORE INTO clip_sources(video_id,title,channel,channel_id,views,duration_s,license,basis,url,status,discovered_at)"
-                 " VALUES (?,?,?,?,?,?,?,?,?, 'NEW', ?)", v["id"], v["snippet"]["title"], v["snippet"]["channelTitle"],
-                 v["snippet"]["channelId"], int(v["statistics"].get("viewCount", 0)), dur, lic, basis,
-                 f"https://www.youtube.com/watch?v={v['id']}", now_iso())
-            n += 1
-    log.info("Clipagem: %d fontes novas permitidas", n)
+            pl = items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
+            for it in api.playlistItems().list(part="contentDetails", playlistId=pl, maxResults=10).execute().get("items", []):
+                found[it["contentDetails"]["videoId"]] = {"basis": f"canal autorizado pelo criador ({ch.get('basis', 'permissão')})"}
+        ids = list(found)
+        for off in range(0, len(ids), 50):
+            for v in api.videos().list(part="snippet,statistics,status,contentDetails", id=",".join(ids[off:off + 50])).execute()["items"]:
+                lic = v["status"].get("license")
+                basis = found[v["id"]]["basis"]
+                if lic != "creativeCommon" and not basis.startswith("canal autorizado"):
+                    continue   # dupla checagem da licença
+                if _hours_since(v["snippet"]["publishedAt"]) > hours:
+                    continue   # canal autorizado: também só vídeos recentes
+                dur = _iso_dur(v["contentDetails"]["duration"])
+                if not (4 * 60 <= dur <= 6 * 3600):
+                    continue
+                n += db.x("INSERT OR IGNORE INTO clip_sources(video_id,title,channel,channel_id,views,duration_s,license,basis,url,"
+                          "status,discovered_at,published_at) VALUES (?,?,?,?,?,?,?,?,?, 'NEW', ?, ?)", v["id"],
+                          v["snippet"]["title"], v["snippet"]["channelTitle"], v["snippet"]["channelId"],
+                          int(v["statistics"].get("viewCount", 0)), dur, lic, basis,
+                          f"https://www.youtube.com/watch?v={v['id']}", now_iso(), v["snippet"]["publishedAt"]) and 1
+        if n:
+            break
+    db.x("INSERT OR REPLACE INTO clip_discover_runs VALUES (?,?)", now_iso(), n)
+    log.info("Clipagem: %d fontes novas, recentes e permitidas", n)
     return n
+
+
+def fresh_sources(db: DB, limit: int = 6) -> list[dict[str, Any]]:
+    """Fontes ainda não usadas, dentro da janela de novidade, ordenadas por velocidade (views/hora)."""
+    max_h = float(settings().get("clips.max_age_days", 7)) * 24
+    rows = [dict(r) for r in db.q("SELECT * FROM clip_sources WHERE status='NEW'")]
+    for r in rows:
+        if _hours_since(r.get("published_at")) > max_h:
+            db.x("UPDATE clip_sources SET status='EXPIRED', processed_at=? WHERE video_id=?", now_iso(), r["video_id"])
+    rows = [r for r in rows if _hours_since(r.get("published_at")) <= max_h]
+    # piso de qualidade: precisa estar ganhando audiência, e nada de sorteio/código/spam
+    min_v = float(settings().get("clips.min_views_per_hour", 50))
+    spam = re.compile(r"giveaway|redeem|code|c[óo]digo|sorteio|uid|free fire diamonds|subscribe to win", re.I)
+    for r in rows:
+        if velocity(r) < min_v or spam.search(r.get("title") or ""):
+            db.x("UPDATE clip_sources SET status='LOW_QUALITY', processed_at=? WHERE video_id=?", now_iso(), r["video_id"])
+    rows = [r for r in rows if velocity(r) >= min_v and not spam.search(r.get("title") or "")]
+    rows.sort(key=velocity, reverse=True)
+    return rows[:limit]
 
 
 # ----------------------------------------------------------------------------- mídia
@@ -370,7 +415,7 @@ def produce_clips(db: DB, llm: LLM, slots: list[tuple[str, str, str]], workroot:
     initialize(db)
     made: list[str] = []
     pending = list(slots)
-    for src in [dict(r) for r in db.q("SELECT * FROM clip_sources WHERE status='NEW' ORDER BY views DESC LIMIT 6")]:
+    for src in fresh_sources(db):
         if not pending:
             break
         work = workroot / f"src_{src['video_id']}"

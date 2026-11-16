@@ -17,3 +17,12 @@ def test_clip_profanity_softened():
     from factory.clips.engine import soften
     assert soften("Caralho, um zumbi do caralho") == "caramba, um zumbi do caramba"
     assert "porra" not in soften("Porra, mano").lower()
+
+
+def test_clip_velocity_prefers_fresh():
+    from datetime import datetime, timedelta, timezone
+    from factory.clips.engine import velocity
+    now = datetime.now(timezone.utc)
+    new = {"views": 50_000, "published_at": (now - timedelta(hours=6)).isoformat()}
+    old = {"views": 1_000_000, "published_at": (now - timedelta(days=700)).isoformat()}
+    assert velocity(new) > velocity(old)
