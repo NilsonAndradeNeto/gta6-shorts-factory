@@ -42,7 +42,7 @@ def _ff_filter(path: Path, args: list[str]) -> str:
 
 
 def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], align_ratio: float | None,
-              fmt: str = "short") -> dict[str, Any]:
+              fmt: str = "short", max_silence: float = 0.9) -> dict[str, Any]:
     cfg = settings()
     from factory.renderer.compositor import PROFILES
     exp_w, exp_h = PROFILES[fmt]["W"], PROFILES[fmt]["H"]
@@ -88,7 +88,8 @@ def technical(path: Path, voice: dict[str, Any], chunks: list[dict[str, Any]], a
     if "black_start" in log_txt:
         fails.append("quadros pretos detectados")
     for st, en in zip(re.findall(r"silence_start: ([\d.]+)", log_txt), re.findall(r"silence_end: ([\d.]+)", log_txt)):
-        if float(st) > 0.3 and float(en) < dur - 0.7:
+        # narração sintética não tem pausas longas; em clipes de live, pausas naturais de até max_silence são normais
+        if float(st) > 0.3 and float(en) < dur - 0.7 and float(en) - float(st) > max_silence:
             fails.append(f"silêncio inesperado em {float(st):.1f}s-{float(en):.1f}s")
     m = re.findall(r"I:\s+(-?[\d.]+) LUFS", log_txt)
     if m:

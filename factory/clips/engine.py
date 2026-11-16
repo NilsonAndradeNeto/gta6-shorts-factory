@@ -274,7 +274,7 @@ WrapStyle: 0
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Cap,Anton,84,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,7,3,8,70,70,{cap_y},1
-Style: Credit,Anton,42,&H00FFFFFF,&H000000FF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,3,2,0,8,40,40,70,1
+Style: Credit,Anton,58,&H00FFFFFF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,1,0,3,10,0,8,40,40,60,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -365,7 +365,7 @@ def produce_clips(db: DB, llm: LLM, slots: list[tuple[str, str, str]], workroot:
                                             str(out)], capture_output=True, text=True).stdout or 0)
                 voice = {"sentences": [{"start": 0.3, "end": max(0.4, dur - 0.5)}], "duration": dur}
                 chunks = [{"start": c["start"], "end": c["end"], "words": c["text"].split()[:3]} for c in caps]
-                tech = technical(out, voice, chunks, None, fmt="short")
+                tech = technical(out, voice, chunks, None, fmt="short", max_silence=3.0)
                 fails = [f for f in tech["fails"] if "narração" not in f and "legendas cobrem" not in f]
                 if fails or not caps:
                     log.warning("Clipe reprovado no QA: %s", fails or "sem legendas")
