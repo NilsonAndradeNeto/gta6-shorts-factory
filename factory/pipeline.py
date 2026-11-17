@@ -247,7 +247,6 @@ class Factory:
             discover(self.db)
         except Exception as e:
             self.db.record_error(None, "clips_discover", e)
-        self.release_production_slots()
         now = datetime.now(timezone.utc)
         lead = timedelta(minutes=int(self.cfg.get("automation.min_lead_minutes", 40)))
         window = timedelta(hours=float(self.cfg.get("automation.produce_window_hours", 23)))
@@ -458,7 +457,7 @@ class Factory:
             from factory.clips.engine import mode as current_mode
             self.mode = current_mode(self.cfg.path("data_dir"))
             self.summary["mode"] = self.mode
-            if research and self.mode == "producao":
+            if research:   # a produção própria cobre os horários que a clipagem não preencher
                 self.summary["research"] = self.research()
             if self.llm.available:
                 try:
@@ -466,11 +465,15 @@ class Factory:
                     tag_pending(self.llm, int(self.cfg.get("automation.tag_assets_per_run", 12)))
                 except Exception as e:
                     self.db.record_error(None, "tagger", e)
+            self.summary["new_slots"] = []
             if self.mode == "clipagem":
-                # Modo clipagem: os horários do dia recebem clipes (produção própria e vídeo longo ficam pausados)
-                self.summary["new_slots"] = self.plan_clip_slots()
-            else:
-                self.summary["new_slots"] = self.plan_slots()
+                # clipes têm prioridade; horário que ficar sem clipe recebe produção própria (nunca fica vazio)
+                try:
+                    self.summary["new_slots"] = self.plan_clip_slots()
+                except Exception as e:
+                    self.db.record_error(None, "clips", e)
+            if True:
+                self.summary["new_slots"] += self.plan_slots()
                 try:
                     from factory.longform import ensure_slot
                     long_vid = ensure_slot(self.db)
