@@ -100,11 +100,11 @@ class Factory:
         return stats
 
     # ------------------------------------------------------------------ slots
-    def plan_slots(self) -> list[str]:
+    def plan_slots(self, window_hours: float | None = None) -> list[str]:
         from factory.editorial.selector import pick
         now = datetime.now(timezone.utc)
         lead = timedelta(minutes=int(self.cfg.get("automation.min_lead_minutes", 40)))
-        window = timedelta(hours=float(self.cfg.get("automation.produce_window_hours", 10)))
+        window = timedelta(hours=float(window_hours or self.cfg.get("automation.produce_window_hours", 10)))
         need = []
         for day, slot, dt in slot_datetimes():
             if now + lead <= dt.astimezone(timezone.utc) <= now + window:
@@ -473,7 +473,9 @@ class Factory:
                 except Exception as e:
                     self.db.record_error(None, "clips", e)
             if True:
-                self.summary["new_slots"] += self.plan_slots()
+                # na clipagem, a produção própria só entra perto do horário (dá tempo de o PC mandar as lives)
+                fb = float(self.cfg.get("clips.fallback_window_hours", 8)) if self.mode == "clipagem" else None
+                self.summary["new_slots"] += self.plan_slots(fb)
                 try:
                     from factory.longform import ensure_slot
                     long_vid = ensure_slot(self.db)

@@ -101,6 +101,7 @@ clips:
   discover_every_hours: 12     # busca 2x por dia
   fresh_hours: 72              # prioriza o que saiu nas últimas 72 h
   max_age_days: 7              # nunca usa vídeo com mais de 7 dias
+  fallback_window_hours: 8     # sem clipe até 01:00 BRT, a produção própria preenche o horário das 9h
   min_views_per_hour: 3        # piso baixo: fontes livres recentes são de canais pequenos
   # reupload de streamer famoso por terceiros: o licenciamento CC de quem republica não vale (risco de strike)
   blocked_title_terms: ["xqc", "kai cenat", "ishowspeed", "speed", "sodapoppin", "asmongold", "pokimane", "mrbeast",
