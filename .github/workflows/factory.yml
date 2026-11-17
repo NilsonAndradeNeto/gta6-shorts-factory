@@ -52,7 +52,7 @@ jobs:
           gh release download videos-pendentes --dir pending --pattern "*.mp4" --clobber 2>/dev/null || true
           # lives/reacts baixados no PC do dono (o YouTube bloqueia download direto nos servidores do GitHub)
           mkdir -p fontes
-          gh release download fontes --dir fontes --pattern "*.mp4" --clobber 2>/dev/null || true
+          gh release download fontes --dir fontes --pattern "*.mp4" --pattern "*.json" --clobber 2>/dev/null || true
           ls -la fontes
           ls -la pending
 
