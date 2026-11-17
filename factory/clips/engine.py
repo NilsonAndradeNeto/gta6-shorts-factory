@@ -37,7 +37,8 @@ PICK_SYSTEM = """Você é editor de clipes virais (estilo OpusClip) para um cana
 Recebe a transcrição de uma live ou react, com tempos em segundos. Escolha os MELHORES MOMENTOS para virar clipes:
 - cada clipe com 20 a 58 segundos, começando no início de uma fala e terminando no fim de uma fala;
 - precisa fazer sentido sozinho para quem não viu a live (tem contexto, começo e fim);
-- priorize: reação forte, momento engraçado, revelação, surpresa, opinião polêmica, frase marcante, clímax de gameplay;
+- PRIORIDADE MÁXIMA: momentos ENGRAÇADOS (risada, zoeira, fail, rage cômico, bug bizarro, resposta ao chat que viraliza);
+- depois: reação forte, revelação, surpresa, opinião polêmica, frase marcante, clímax de gameplay;
 - evite: trechos sem fala, conversa de bastidor, propaganda, pedido de inscrição, discurso de ódio, conteúdo sexual.
 - "title_pt": título curto e chamativo em português, fiel ao que acontece no trecho (sem clickbait falso).
 - "score": 1 a 10 de potencial viral. "why": por que funciona.
@@ -93,7 +94,9 @@ def discover(db: DB) -> int:
                 try:
                     res = api.search().list(part="snippet", q=q, type="video", videoLicense="creativeCommon",
                                             videoCategoryId="20", order="viewCount", videoDuration=duration,
-                                            maxResults=15, publishedAfter=after).execute()
+                                            maxResults=15, publishedAfter=after,
+                                            relevanceLanguage=cfg.get("clips.language", "pt"),
+                                            regionCode=cfg.get("clips.region", "BR")).execute()
                 except Exception as e:
                     log.warning("Busca de clipes falhou (%s): %s", q, e)
                     continue

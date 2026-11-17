@@ -95,8 +95,11 @@ clips:
   # Modo CLIPAGEM (ativado pelo botão do painel). Fontes SOMENTE permitidas:
   #  - busca automática de vídeos Creative Commons de games no YouTube;
   #  - canais autorizados pelo criador (marque authorized: true e informe a base da permissão).
-  search_queries: ["GTA 6 reaction live", "gaming live funny moments react", "reagindo gameplay ao vivo",
-                   "live gameplay engraçado", "funny gameplay highlights", "rage moments gaming live"]
+  # foco: conteúdo BRASILEIRO e momentos engraçados de live (lançamento do GTA 6 em 19/11)
+  search_queries: ["GTA 6 ao vivo", "live GTA 6 lançamento", "momentos engraçados live", "gameplay engraçado ao vivo",
+                   "reagindo GTA 6", "melhores momentos live games"]
+  language: pt                 # busca prioriza vídeos em português
+  region: BR
   max_searches_per_run: 6      # cada termo busca lives longas e reacts médios (12 buscas = 1200 de cota)
   discover_every_hours: 12     # busca 2x por dia
   fresh_hours: 72              # prioriza o que saiu nas últimas 72 h
