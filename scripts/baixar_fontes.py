@@ -29,8 +29,15 @@ WORK = ROOT / ".cache" / "fontes_pc"
 SPAM = re.compile(r"giveaway|redeem|code|c[óo]digo|sorteio|uid|free fire diamonds|subscribe to win", re.I)
 
 
-def sh(*cmd: str, check: bool = True) -> str:
-    return subprocess.run(cmd, check=check, capture_output=True, text=True, encoding="utf-8").stdout
+def sh(*cmd: str, check: bool = True, tries: int = 3) -> str:
+    import time
+    for i in range(tries):
+        r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
+        if r.returncode == 0 or not check:
+            return r.stdout
+        print("comando falhou (tentativa %d): %s" % (i + 1, (r.stderr or "").strip()[:300]))
+        time.sleep(15)
+    raise RuntimeError(f"falhou: {' '.join(cmd[:4])}")
 
 
 def cloud_db() -> Path:
@@ -77,7 +84,7 @@ def candidates(db_path: Path, want: int, have: set[str]) -> list[dict]:
     rows = [dict(r) for r in db.q("SELECT * FROM clip_sources WHERE status='NEW' OR "
                                   "(status='FAILED' AND (note LIKE '%bot%' OR note LIKE '%yt_dlp%'))")]
     rows = [r for r in rows if engine._hours_since(r.get("published_at")) <= max_h
-            and engine.velocity(r) >= min_v and not SPAM.search(r.get("title") or "")
+            and engine.velocity(r) >= min_v and not engine.is_blocked(r.get("title"))
             and f"{r['video_id']}.mp4" not in have]
     rows.sort(key=engine.velocity, reverse=True)
     return rows[:want]
@@ -117,8 +124,9 @@ def main() -> int:
             print("enviada:", s["video_id"], "-", s["title"][:70])
         except Exception as e:
             print("falhou:", s["video_id"], e)
-    shutil.rmtree(WORK, ignore_errors=True)
-    if not a.sem_disparo:
+    if sent:
+        shutil.rmtree(WORK, ignore_errors=True)
+    if not a.sem_disparo and (sent or have):
         args = ["gh", "workflow", "run", "factory.yml"] + (["-f", f"agora={a.agora}"] if a.agora else [])
         sh(*args)
         print("fábrica na nuvem iniciada", f"(agora={a.agora})" if a.agora else "")

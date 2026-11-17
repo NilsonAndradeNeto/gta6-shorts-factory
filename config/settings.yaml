@@ -95,12 +95,16 @@ clips:
   # Modo CLIPAGEM (ativado pelo botão do painel). Fontes SOMENTE permitidas:
   #  - busca automática de vídeos Creative Commons de games no YouTube;
   #  - canais autorizados pelo criador (marque authorized: true e informe a base da permissão).
-  search_queries: ["GTA 6 reaction live", "gaming live funny moments react", "reagindo gameplay ao vivo"]
-  max_searches_per_run: 2      # cada termo busca lives longas e reacts médios (4 buscas = 400 de cota)
+  search_queries: ["GTA 6 reaction live", "gaming live funny moments react", "reagindo gameplay ao vivo",
+                   "live gameplay engraçado", "funny gameplay highlights", "rage moments gaming live"]
+  max_searches_per_run: 6      # cada termo busca lives longas e reacts médios (12 buscas = 1200 de cota)
   discover_every_hours: 12     # busca 2x por dia
   fresh_hours: 72              # prioriza o que saiu nas últimas 72 h
   max_age_days: 7              # nunca usa vídeo com mais de 7 dias
-  min_views_per_hour: 50       # só vira clipe o que está ganhando audiência agora
+  min_views_per_hour: 3        # piso baixo: fontes livres recentes são de canais pequenos
+  # reupload de streamer famoso por terceiros: o licenciamento CC de quem republica não vale (risco de strike)
+  blocked_title_terms: ["xqc", "kai cenat", "ishowspeed", "speed", "sodapoppin", "asmongold", "pokimane", "mrbeast",
+                        "casimiro", "gaules", "cellbit", "alanzoka", "loud", "tfue", "ninja", "shroud", "summit1g"]
   authorized_channels: []
   # exemplo:
   # - {url: "https://www.youtube.com/@canal", authorized: true, basis: "programa oficial de clipes do criador"}

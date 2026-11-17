@@ -137,6 +137,15 @@ SOURCE_COLS = ("video_id", "title", "channel", "channel_id", "views", "duration_
                "published_at")
 
 
+def is_blocked(title: str | None) -> bool:
+    """Spam (códigos/sorteios) ou reupload de streamer famoso por terceiros."""
+    t = title or ""
+    if re.search(r"giveaway|redeem|code|c[óo]digo|sorteio|uid|free fire diamonds|subscribe to win", t, re.I):
+        return True
+    terms = [re.escape(x) for x in settings().get("clips.blocked_title_terms", []) or []]
+    return bool(terms) and bool(re.search(r"\b(" + "|".join(terms) + r")\b", t, re.I))
+
+
 def import_sources(db: DB) -> int:
     """Registra as fontes que o PC baixou e descreveu em fontes/<id>.json (se a nuvem ainda não as conhecia)."""
     n = 0
@@ -163,7 +172,7 @@ def fresh_sources(db: DB, limit: int = 6) -> list[dict[str, Any]]:
     rows = [r for r in rows if r["status"] == "NEW"]
     if os.environ.get("GITHUB_ACTIONS"):
         # na nuvem o YouTube bloqueia download: só usa fontes que o PC já enviou
-        return sorted(have, key=velocity, reverse=True)[:limit]
+        return sorted([r for r in have if not is_blocked(r.get("title"))], key=velocity, reverse=True)[:limit]
     for r in rows:
         if _hours_since(r.get("published_at")) > max_h:
             db.x("UPDATE clip_sources SET status='EXPIRED', processed_at=? WHERE video_id=?", now_iso(), r["video_id"])
@@ -172,9 +181,9 @@ def fresh_sources(db: DB, limit: int = 6) -> list[dict[str, Any]]:
     min_v = float(settings().get("clips.min_views_per_hour", 50))
     spam = re.compile(r"giveaway|redeem|code|c[óo]digo|sorteio|uid|free fire diamonds|subscribe to win", re.I)
     for r in rows:
-        if velocity(r) < min_v or spam.search(r.get("title") or ""):
+        if velocity(r) < min_v or is_blocked(r.get("title")):
             db.x("UPDATE clip_sources SET status='LOW_QUALITY', processed_at=? WHERE video_id=?", now_iso(), r["video_id"])
-    rows = [r for r in rows if velocity(r) >= min_v and not spam.search(r.get("title") or "")]
+    rows = [r for r in rows if velocity(r) >= min_v and not is_blocked(r.get("title"))]
     rows.sort(key=velocity, reverse=True)
     return rows[:limit]
 
