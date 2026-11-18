@@ -261,7 +261,8 @@ def loudness_peaks(audio: Path) -> list[float]:
 
 
 # ----------------------------------------------------------------------------- seleção
-def pick_moments(llm: LLM, tr: dict[str, Any], peaks: list[float], max_clips: int) -> list[dict[str, Any]]:
+def pick_moments(llm: LLM, tr: dict[str, Any], peaks: list[float], max_clips: int,
+                 lessons: str = "") -> list[dict[str, Any]]:
     segs = tr["segments"]
     lines = [f"[{s['start']:.1f}-{s['end']:.1f}] {s['text']}" for s in segs]
     peak_txt = ", ".join(f"{p:.0f}" for p in peaks[:60])
@@ -278,7 +279,7 @@ def pick_moments(llm: LLM, tr: dict[str, Any], peaks: list[float], max_clips: in
         chunks.append(window)
     for ch in chunks:
         try:
-            out = llm.json(PICK_SYSTEM, f"PICOS DE ENERGIA (segundos com grito/risada): {peak_txt}\n\nTRANSCRIÇÃO:\n" + "\n".join(ch),
+            out = llm.json(PICK_SYSTEM, lessons + f"PICOS DE ENERGIA (segundos com grito/risada): {peak_txt}\n\nTRANSCRIÇÃO:\n" + "\n".join(ch),
                            purpose="clip_pick", temperature=0.3, max_tokens=2000)
         except LLMError as e:
             log.warning("Seleção de momentos falhou: %s", e)
@@ -482,6 +483,12 @@ def produce_clips(db: DB, llm: LLM, slots: list[tuple[str, str, str]], workroot:
     initialize(db)
     made: list[str] = []
     pending = list(slots)
+    try:   # aprendizado: o que mais deu views no canal orienta a escolha dos cortes e dos títulos
+        from factory.analytics.strategy import performance_brief
+        lessons = performance_brief(db)
+    except Exception as e:
+        log.warning("Resumo de desempenho indisponível: %s", e)
+        lessons = ""
     for src in fresh_sources(db):
         if not pending:
             break
@@ -489,7 +496,7 @@ def produce_clips(db: DB, llm: LLM, slots: list[tuple[str, str, str]], workroot:
         try:
             audio = download_audio(src["url"], work)
             tr = transcribe(audio)
-            moments = pick_moments(llm, tr, loudness_peaks(audio), max_clips=min(len(pending), 3))
+            moments = pick_moments(llm, tr, loudness_peaks(audio), max_clips=min(len(pending), 3), lessons=lessons)
             if not moments:
                 db.x("UPDATE clip_sources SET status='NO_MOMENTS', processed_at=? WHERE video_id=?", now_iso(), src["video_id"])
                 continue

@@ -196,8 +196,8 @@ def validate_shape(script: dict[str, Any], prev_hooks: list[str]) -> list[str]:
 
 
 def write_script(db: DB, llm: LLM, topic: dict[str, Any], feedback: str = "", hook_style: str | None = None) -> dict[str, Any]:
-    from factory.analytics.strategy import context
-    strategy = context(db)
+    from factory.analytics.strategy import context, performance_brief
+    strategy = context(db) + performance_brief(db)
     hook_style = hook_style or choose_hook_style(db, topic)
     prev = [h for _, h in recent_hooks(db)]
     user = build_user_prompt(topic, hook_style, prev, feedback)
